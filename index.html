@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css">
+    <script type="module" src="/src/main.ts"></script>
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <h1>Generator Test</h1>
+    <div id="main-generator" class="weapon-generator">
+      <div class="weapon-generator-output" hidden>
+        <h2 class="weapon-name"></h2>
+        <p class="weapon-description"></p>
+        <div class="weapon-generator-row-flex">
+          <p class="weapon-damage-title">Damage:</p>
+          <p class="weapon-damage"></p>
+        </div>
+        <div>
+          <h2>Active Powers</h2>
+          <ul class="weapon-active-powers-root"></ul>
+        </div>
+        <div>
+          <h2>Passive Powers</h2>
+          <ul class="weapon-passive-powers-root"></ul>
+        </div>
+        <div class="weapon-is-sentient" hidden>
+          <p class="weapon-is-sentient-title">This is a sentient weapon.</p>
+          <div>
+            <h2>Personality</h2>
+            <ul class="weapon-personality-root"></ul>
+          </div>
+          <div>
+            <h2>Languages</h2>
+            <ul class="weapon-languages-root"></ul>
+          </div>
+        </div>
+      </div>
+      <button class="generate-button">Generate</button>
+    </div>
+  </body>
+</html>
