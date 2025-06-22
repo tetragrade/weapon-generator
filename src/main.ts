@@ -113,7 +113,7 @@ class WeaponGeneratorController {
         this.view.outputRoot.hidden = false;
 
         if(rngSeed===undefined) {
-          rngSeed = new Date().getTime().toString();
+          rngSeed = (Math.floor(Math.random() * 10e19)).toString();
         }
 
         const weaponViewModel = WEAPON_GENERATOR(rngSeed);
