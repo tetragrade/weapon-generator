@@ -1,5 +1,5 @@
 import './choice.ts';
-import { WEAPON_GENERATOR } from './generators/weapon_generator.ts';
+import { WEAPON_GENERATOR } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
 
