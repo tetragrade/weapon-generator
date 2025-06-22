@@ -1,3 +1,3 @@
 export default {
-    base: 'weapon-generator'
+    base: '/weapon-generator'
 }

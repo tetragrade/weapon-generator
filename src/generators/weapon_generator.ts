@@ -1,19 +1,19 @@
-import { foeType } from "./foes";
+import { pluralUnholyFoe, singularUnholyFoe } from "./foes";
 import { mundaneNameGenerator } from "./nameGenerator";
 import { mkGen, RecursiveGenerator, type LeafGenerator } from "./recursiveGenerator";
+import '../string.ts';
 
-const capFirst = (s: string) => s.slice(0,1).toUpperCase() + s.slice(1);
-
-const MAX_THEMES = 3;
-type ThemeOptionList<T> = [T,T,T, ...T[]];
-
-export type WeaponViewModel = {
+export type Weapon = {
     themes: Theme[],
     
     name: string;
 
     damage: DamageDice;
-    activePowers: (ChargedPower | UnlimitedChargedPower)[];
+    active: {
+        maxCharges: number,
+        rechargeMethod: string
+        powers: (ChargedPower | UnlimitedChargedPower)[];
+    }
     passivePowers: PassivePower[];
 } & (
     { isSentient: false; } | {
@@ -72,7 +72,7 @@ const mkNonSentientNameGenerator = (themes: Theme[]) => mkGen(() => {
         mkGen(' '),
         weaponShapeGenerator
     ]).generate();
-    return string.split(/\s/).map(capFirst).join(' ');
+    return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
 const mkSentientNameGenerator = (themes: Theme[]) => mkGen(() => {
     const string = new RecursiveGenerator([
@@ -82,7 +82,7 @@ const mkSentientNameGenerator = (themes: Theme[]) => mkGen(() => {
         mkGen(' '),
         weaponShapeGenerator
     ]).generate();
-    return string.split(/\s/).map(capFirst).join(' ');
+    return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
         
 
@@ -138,17 +138,13 @@ const weaponMaterialGenerator = mkGen(() => {
 
 const weaponShapeGenerator = mkGen(() => {
     const n = Math.random();
-    console.log('weapon shape');
     if(n>.75) {
-        console.log(1);
         return exoticWeaponShapeGenerator.generate();
     }
     else if(n>.5) {
-        console.log(2);
         return normalWeaponShapeGenerator.generate();
     }
     else {
-        console.log(3);
         return crummyWeaponShapeGenerator.generate();
     }
 });
@@ -199,10 +195,10 @@ interface PassiveBonus {
 } // TODO
 
 interface ChargedPower extends Power {
-    chargeCost: number;
+    cost: number;
 }
 interface UnlimitedChargedPower extends Power {
-    charges: "at";
+    cost: "at will";
 }
 
 interface MiscPower extends Power {
@@ -221,101 +217,101 @@ const POSSIBLE_ACTIVE_POWERS = {
     "fire": [
         {
             desc: "Fire Ball",
-            chargeCost: 3
+            cost: 3
         },
         {
             desc: "Wall of Fire",
-            chargeCost: 4,
+            cost: 4,
         },
         {
-            desc: "Control Weather (hot)",
-            chargeCost: 2,
-            additionalNotes: ["must move conditions towards heatwave"]
+            desc: "Control Weather",
+            cost: 2,
+            additionalNotes: ["Must move conditions towards heatwave."]
         },
         {
             desc: "Control Flames",
-            chargeCost: 1,
-            additionalNotes: ["flames larger than wielder submit only after a save"]
+            cost: 1,
+            additionalNotes: ["Flames larger than wielder submit only after a save."]
         }
     ],
     "ice": [
         {
             desc: "Wall of Ice",
-            chargeCost: 2,
+            cost: 2,
         },
         {
-            desc: "Control Weather (cold)",
-            chargeCost: 3,
-            additionalNotes: ["must move conditions towards blizzard"]
+            desc: "Control Weather",
+            cost: 3,
+            additionalNotes: ["Must move conditions towards blizzard."]
         },
         {
             desc: "Chilling Strike",
-            chargeCost: 2,
-            additionalNotes: ["struck foes save or be frozen solid next turn"]
+            cost: 2,
+            additionalNotes: ["Struck foes save or be frozen solid next turn."]
         }
     ],
     "dark": [
         {
             desc: "Commune With Demon",
-            chargeCost: 2
+            cost: 2
         },
         {
             desc: "Turn Priests & Angels",
-            chargeCost: 1
+            cost: 1
         },
         {
             desc: "Darkness",
-            chargeCost: 1
+            cost: 1
         },
     ],
     "light": [
         {
             desc: "Commune With Divinity",
-            chargeCost: 2
+            cost: 2
         },
         {
             desc: "Turn Undead",
-            chargeCost: 1
+            cost: 1
         },
         {
             desc: "Light",
-            chargeCost: 1
+            cost: 1
         },
     ],
     "sweet": [
         {
             desc: "Charm Person",
-            chargeCost: 2,
+            cost: 2,
         },
         {
             desc: "Sweetberry",
-            chargeCost: 1,
+            cost: 1,
             additionalNotes: ["Create a small berry, stats as healing potion."]
         },
         {
             desc: "Sugar Spray",
-            chargeCost: 1,
+            cost: 1,
             additionalNotes: ["Sprays a sweet and sticky syrup, enough to coat the floor of a small room. Makes movement difficult."]
         },
     ],
     "sour": [
         {
             desc: "Caustic Strike",
-            chargeCost: 2,
-            additionalNotes: ["Melts objects, damages armor of struck characters"]
+            cost: 2,
+            additionalNotes: ["Melts objects, damages armor of struck characters."]
         },
         {
             desc: "Locate Lemon",
-            chargeCost: 1,
-            additionalNotes: ["Locates the closest lemon."]
+            cost: 1,
+            additionalNotes: ["Wielder learns the exact location of the closest lemon."]
         },
         {
             desc: "Cause Nausea",
-            chargeCost: 1,
+            cost: 1,
             additionalNotes: ["Target must save or waste their turn vomiting."]
         },
     ],
-} satisfies Record<Theme | string, ThemeOptionList<ChargedPower>>;
+} satisfies Record<Theme | string, Iterable<ChargedPower>>;
 
 const POSSIBLE_PASSIVE_POWERS = {
     "fire": [
@@ -389,7 +385,7 @@ const POSSIBLE_PASSIVE_POWERS = {
                     d6: 1,
                 }
             }
-        }
+        },
     ],
     "light": [
         {
@@ -408,7 +404,7 @@ const POSSIBLE_PASSIVE_POWERS = {
             miscPower: true,
             desc: new RecursiveGenerator([
                 mkGen("Glows like a torch when "), 
-                foeType,
+                pluralUnholyFoe,
                 mkGen(" are near")
             ]),
         },
@@ -457,7 +453,7 @@ const POSSIBLE_PASSIVE_POWERS = {
             desc: "Licking the weapon cures scurvy. It tastes sour."
         }
     ],
-} satisfies Record<Theme | string,ThemeOptionList<PassivePower>>;
+} satisfies Record<Theme | string, Iterable<PassivePower>>;
 
 const POSSIBLE_PERSONALITIES = {
     "fire": [
@@ -527,47 +523,46 @@ const POSSIBLE_PERSONALITIES = {
             "pious",
             "zealous",
         ]
-} satisfies Record<Theme | string, ThemeOptionList<string>>;
+} satisfies Record<Theme | string, Iterable<string>>;
 
-// const POSSIBLE_RECHARGE_METHODS = {
-//     fire: [
-//         mkGen("regains all charges after being superheated"),
-//         mkGen("regains a charge at the end of each scene where its wielder started a fire"),
-//         mkGen("regains all charges when its wielder wins an argument"),
-//     ],
-//     ice: [
-//         mkGen("regains all charges after being cooled to sub-zero"),
-//         mkGen("regains a changes whenever its wielder builds a snowman"),
-//         mkGen("regains a charge at the end of each scene where its wielder made an ice pun")
-//     ],
-//     dark: [
-//         mkGen("regains a charge upon absorbing a human soul"),
-//         mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
-//         mkGen("regains all charges each day at the witching hour")
-//     ],
-//     light: [
-//         mkGen("regains all charges after an hour in a sacred space"),
-//         mkGen("regains a charges each day at sunrise"),
-//         new RecursiveGenerator([
-//             mkGen("regains a charges after defeating a"), 
-//             foeType,
-//             mkGen(".")
-//         ])
-//     ],
-//     sweet: [
-//         mkGen("regains a charge each time it eats an extravagant dessert"),
-//         mkGen("regains all charges each time its wielder hosts a feast"),
-//         mkGen("regains charge whenever its wielder complements someone")
-//     ],
-//     sour: [
-//         mkGen("regains all charges after an hour immersed in acid"),
-//         mkGen("regains all charges when used to fell a citrus tree"),
-//         mkGen("regains a charge each time its wielder insults someone")
-//     ],
-//     // electric: [
-//     //     "regains all charges when struck by lightning",
-//     // ]
-// } satisfies Record<Theme | string,ThemeOptionList<LeafGenerator | RecursiveGenerator>>;
+const POSSIBLE_RECHARGE_METHODS = {
+    fire: [
+        mkGen("regains all charges after being superheated"),
+        mkGen("regains a charge at the end of each scene where its wielder started a fire"),
+        mkGen("regains all charges when its wielder wins an argument"),
+    ],
+    ice: [
+        mkGen("regains all charges after being cooled to sub-zero"),
+        mkGen("regains a changes whenever its wielder builds a snowman"),
+        mkGen("regains a charge at the end of each scene where its wielder made an ice pun")
+    ],
+    dark: [
+        mkGen("regains a charge upon absorbing a human soul"),
+        mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
+        mkGen("regains all charges each day at the witching hour")
+    ],
+    light: [
+        mkGen("regains all charges after an hour in a sacred space"),
+        mkGen("regains a charges each day at sunrise"),
+        new RecursiveGenerator([
+            mkGen("regains a charge after defeating a "), 
+            singularUnholyFoe,
+        ])
+    ],
+    sweet: [
+        mkGen("regains a charge each time it eats an extravagant dessert"),
+        mkGen("regains all charges each time its wielder hosts a feast"),
+        mkGen("regains charge whenever its wielder complements someone")
+    ],
+    sour: [
+        mkGen("regains all charges after an hour immersed in acid"),
+        mkGen("regains all charges when used to fell a citrus tree"),
+        mkGen("regains a charge each time its wielder insults someone")
+    ],
+    // electric: [
+    //     "regains all charges when struck by lightning",
+    // ]
+} satisfies Record<Theme | string, Iterable<LeafGenerator | RecursiveGenerator>>;
 
 const POSSIBLE_THEMES = [
     "fire", "ice",
@@ -575,19 +570,21 @@ const POSSIBLE_THEMES = [
     "sweet", "sour",
     // "poison", "water"
     // "earth", "cloud",
-    // "truth", "deceit",
-    // "love", "domination",
-    // "telekinesis", "divination"
+    // "psychic", "electric"
+    // "wizard", "thief"
+    // "jungle",
+    // "space"
+    // 
 ] as const;
 type Theme = (typeof POSSIBLE_THEMES)[number];
 
-export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) => {
+export const WEAPON_GENERATOR: (gpValue: number) => Weapon = (gpValue) => {
     interface WeaponGenerationParams {
         damage: DamageDice;
-        passive: number;
+        nPassivePowers: number;
         nChargesProvider: () => number;
         active: number;
-        unlimitedCharged: number;
+        nUnlimitedChargedPowers: number;
         sentienceChance: number;
     }
     function mkUnusedFromPossible<T>(possible: Record<Theme, T[]>): Record<Theme,Set<T>> {  
@@ -608,27 +605,27 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
     const paramsFor: (gpValue: number) => WeaponGenerationParams = (gpValue) => {
         if(gpValue < 500) {
             return {
-                damage: { d6: 1 }, passive: 0, nChargesProvider: () => Math.ceil(Math.random() * 4), active: 1, unlimitedCharged: 0, sentienceChance: 0.1
+                damage: { d6: 1 }, nPassivePowers: 0, nChargesProvider: () => Math.ceil(Math.random() * 4), active: 1, nUnlimitedChargedPowers: 0, sentienceChance: 0.1
             }
         }
         else if (gpValue < 750) {
             return {
-                damage: { d6: 1 },  passive: 1, nChargesProvider: () => Math.ceil(Math.random() * 6), active: 1, unlimitedCharged: 0, sentienceChance: 0.5
+                damage: { d6: 1 },  nPassivePowers: 1, nChargesProvider: () => Math.ceil(Math.random() * 6), active: 1, nUnlimitedChargedPowers: 0, sentienceChance: 0.5
             }
         }
         else if (gpValue < 950) {
             return {
-                damage: { d6: 1 }, passive: 1, nChargesProvider: () => Math.ceil(Math.random() * 8), active: 2, unlimitedCharged: 0, sentienceChance: 0.1
+                damage: { d6: 1 }, nPassivePowers: 1, nChargesProvider: () => Math.ceil(Math.random() * 8), active: 2, nUnlimitedChargedPowers: 0, sentienceChance: 0.1
             }
         }
         else if(gpValue < 1000) {
             return {
-                damage: { d6: 1 }, passive: 1, nChargesProvider: () => Math.ceil(Math.random() * 10), active: 3, unlimitedCharged: 0, sentienceChance: 1
+                damage: { d6: 1 }, nPassivePowers: 1, nChargesProvider: () => Math.ceil(Math.random() * 10), active: 3, nUnlimitedChargedPowers: 0, sentienceChance: 1
             }
         }
         else {
             return {
-                damage: { d6: 1 }, passive: 1, nChargesProvider: () => Math.ceil(Math.random() * 12), active: 2, unlimitedCharged: 1, sentienceChance: 1
+                damage: { d6: 1 }, nPassivePowers: 1, nChargesProvider: () => Math.ceil(Math.random() * 12), active: 2, nUnlimitedChargedPowers: 1, sentienceChance: 1
             }
         }
     };
@@ -637,15 +634,19 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
     
     // copy over all the powers to the structure we'll draw from
     const unusedActivePowers = mkUnusedFromPossible(POSSIBLE_ACTIVE_POWERS);
-    const unusedPassivePowers = mkUnusedFromPossible(POSSIBLE_PASSIVE_POWERS)
+    const unusedPassivePowers = mkUnusedFromPossible(POSSIBLE_PASSIVE_POWERS);
+    const unusedRechargeMethods = mkUnusedFromPossible(POSSIBLE_RECHARGE_METHODS);
     
     // decide power level
     const params = paramsFor(gpValue);
     
-    // determine themes
-    let nThemes = Math.ceil(Math.random() * MAX_THEMES);
-    const themes: Theme[] = [];
-    while(nThemes-->0) {
+    // draw themes until we have enough to cover our number of powers
+    const themes = [] as Theme[];
+    while(
+        themes.length <= 0 ||
+        themes.reduce((acc,x) => acc+unusedPassivePowers[x].size, 0) < params.nPassivePowers || //not enough passive powers
+        themes.reduce((acc,x) => acc+unusedActivePowers[x].size, 0) < (params.nPassivePowers + params.nUnlimitedChargedPowers) //not enough active powers 
+    ) {
         const chosen = unusedThemes.choice();
         unusedThemes.delete(chosen);
         themes.push(chosen);
@@ -660,11 +661,15 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
     // determine description
 
     // determine personality
-    const viewModel: WeaponViewModel = isSentient ? {
+    const weapon: Weapon = isSentient ? {
         themes,
         name,
         damage: params.damage,
-        activePowers: [],
+        active: {
+            maxCharges: params.nChargesProvider(),
+            rechargeMethod: drawFrom(themes, unusedRechargeMethods).generate(),
+            powers: []
+        },
         passivePowers: [],
         isSentient: true,
         personalityTraits: [],
@@ -673,12 +678,16 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
         themes,
         name,
         damage: params.damage,
-        activePowers: [],
+        active: {
+            maxCharges: params.nChargesProvider(),
+            rechargeMethod: drawFrom(themes, unusedRechargeMethods).generate(),
+            powers: []
+        },
         passivePowers: [],
         isSentient: false
     };
 
-    if(viewModel.isSentient) {
+    if(weapon.isSentient) {
         // copy over all the charged powers
         const unusedPersonalities = mkUnusedFromPossible(POSSIBLE_PERSONALITIES)
 
@@ -687,22 +696,22 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
             const chosen  = unusedPersonalities[theme].choice();
             if(chosen !== undefined) {
                 unusedThemes.delete(theme);
-                viewModel.personalityTraits.push(capFirst(chosen) + '.');
+                weapon.personalityTraits.push(chosen.capFirst() + '.');
             }
         })
     }
 
-    while(params.passive-->0) {
-        viewModel.passivePowers.push(drawFrom(themes, unusedPassivePowers));
+    while(params.nPassivePowers-->0) {
+        weapon.passivePowers.push(drawFrom(themes, unusedPassivePowers));
     }
 
     while(params.active-->0) {
-        viewModel.activePowers.push(drawFrom(themes, unusedActivePowers));
+        weapon.active.powers.push(drawFrom(themes, unusedActivePowers));
     }
 
-    while(params.unlimitedCharged-->0) {
-        viewModel.activePowers.push(drawFrom(themes, unusedActivePowers));
+    while(params.nUnlimitedChargedPowers-->0) {
+        weapon.active.powers.push(drawFrom(themes, unusedActivePowers));
     }
     
-    return viewModel;
+    return weapon;
 }
