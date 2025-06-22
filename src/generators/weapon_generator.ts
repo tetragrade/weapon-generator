@@ -570,7 +570,7 @@ const POSSIBLE_RECHARGE_METHODS = {
     sweet: [
         mkGen("regains a charge each time it eats an extravagant dessert"),
         mkGen("regains all charges each time its wielder hosts a feast"),
-        mkGen("regains charge whenever its wielder complements someone")
+        mkGen("regains charge whenever its wielder compliments someone")
     ],
     sour: [
         mkGen("regains all charges after an hour immersed in acid"),
