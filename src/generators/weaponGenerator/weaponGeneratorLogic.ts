@@ -2,45 +2,8 @@ import { mundaneNameGenerator } from "../nameGenerator.ts";
 import { mkGen, RecursiveGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_RECHARGE_METHODS, POSSIBLE_PERSONALITIES } from "../weaponGenerator.options.ts";
+import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_RECHARGE_METHODS, POSSIBLE_PERSONALITIES, OBJECT_ADJECTIVES } from "./weaponGeneratorConfig.ts";
 import type { Weapon, DamageDice } from "./weaponGeneratorTypes.ts";
-
-export const OBJECT_ADJECTIVES = {
-    metal: [
-        "adamant",
-        "unbreakable",
-        "razor-sharp",
-    ],
-    fire: [
-        "fiery",
-        "blazing",
-        "blazed",
-        "roaring",
-        "crackling",
-    ],
-    ice: [
-        "icy",
-        "frigid",
-        "silent",
-        "Glass-Forged",
-        "polar",
-    ],
-    dark: [
-        "Shadow-Wreathed",
-        "stygian",
-        "abyssal"
-    ],
-    light: [
-        "rainbow",
-        "translucent",
-        "moonlit",
-        "glittery",
-        "lucent",
-        "prismatic"
-    ],
-    sweet: ["saccharine", "candied", "glazed"], 
-    sour: ["corroded", "corrosive"]
-} satisfies Record<Theme | string, [string, ...string[]]>;
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])

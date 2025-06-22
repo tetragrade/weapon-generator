@@ -21,6 +21,8 @@ export const exoticWeaponShapeGenerator = mkGen((rng) => [
     "macuahuitl",
     "katana",
     "lance",
+    "chain whip",
+    "pair of clawed gauntlets"
 ].choice(rng));
 
 const normalWeaponShapeGenerator = mkGen((rng) => [
@@ -35,13 +37,67 @@ const normalWeaponShapeGenerator = mkGen((rng) => [
     "mace",
     "spear",
     "pike",
-    "staff"
+    "staff",
+    "rapier",
 ].choice(rng));
 
 const crummyWeaponShapeGenerator = mkGen((rng) => [
     "club",
     "rod"
 ].choice(rng));
+
+
+/*
+    an adjective that could describe a physical object
+    the adjective should be simple and describe its physical state,
+    no vibes/moral/metaphysical descriptors i.e. just, terrifying, gothic
+*/
+export const OBJECT_ADJECTIVES = {
+    /**
+     * can be chosen by any theme. not implemented. how does this affect the probs?
+     */
+    any: [
+        "adamant",
+        "unbreakable",
+        "razor-sharp",
+    ],
+    fire: [
+        "fiery",
+        "blazing",
+        "blazed",
+        "roaring",
+        "crackling",
+    ],
+    ice: [
+        "icy",
+        "frigid",
+        "silent",
+        "glassy",
+        "polar",
+    ],
+    dark: [
+        "Shadow-Wreathed",
+        "stygian",
+        "abyssal",
+        "spiked",
+        "Blood-Stained",
+    ],
+    light: [
+        "rainbow",
+        "translucent",
+        "moonlit",
+        "glittery",
+        "lucent",
+        "prismatic"
+    ],
+    sweet: ["saccharine", "candied", "glazed"], 
+    sour: ["corroded", "corrosive"],
+    jungle: [
+        'gold-banded',
+        'silver-strapped',
+        "spiked"
+    ],
+} satisfies Record<Theme | string, [string, ...string[]]>;
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
