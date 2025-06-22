@@ -1,5 +1,4 @@
 import './choice.ts';
-import seedrandom from "seedrandom";
 import { WEAPON_GENERATOR } from './generators/weapon_generator.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 

@@ -1,4 +1,3 @@
-import type seedrandom from "seedrandom";
 import { mkGen } from "./recursiveGenerator";
 
 export const singularHolyFoe = mkGen((rng) => [
