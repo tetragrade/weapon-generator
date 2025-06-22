@@ -529,45 +529,45 @@ const POSSIBLE_PERSONALITIES = {
         ]
 } satisfies Record<Theme | string, ThemeOptionList<string>>;
 
-const POSSIBLE_RECHARGE_METHODS = {
-    fire: [
-        mkGen("regains all charges after being superheated"),
-        mkGen("regains a charge at the end of each scene where its wielder started a fire"),
-        mkGen("regains all charges when its wielder wins an argument"),
-    ],
-    ice: [
-        mkGen("regains all charges after being cooled to sub-zero"),
-        mkGen("regains a changes whenever its wielder builds a snowman"),
-        mkGen("regains a charge at the end of each scene where its wielder made an ice pun")
-    ],
-    dark: [
-        mkGen("regains a charge upon absorbing a human soul"),
-        mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
-        mkGen("regains all charges each day at the witching hour")
-    ],
-    light: [
-        mkGen("regains all charges after an hour in a sacred space"),
-        mkGen("regains a charges each day at sunrise"),
-        new RecursiveGenerator([
-            mkGen("regains a charges after defeating a"), 
-            foeType,
-            mkGen(".")
-        ])
-    ],
-    sweet: [
-        mkGen("regains a charge each time it eats an extravagant dessert"),
-        mkGen("regains all charges each time its wielder hosts a feast"),
-        mkGen("regains charge whenever its wielder complements someone")
-    ],
-    sour: [
-        mkGen("regains all charges after an hour immersed in acid"),
-        mkGen("regains all charges when used to fell a citrus tree"),
-        mkGen("regains a charge each time its wielder insults someone")
-    ],
-    // electric: [
-    //     "regains all charges when struck by lightning",
-    // ]
-} satisfies Record<Theme | string,ThemeOptionList<LeafGenerator | RecursiveGenerator>>;
+// const POSSIBLE_RECHARGE_METHODS = {
+//     fire: [
+//         mkGen("regains all charges after being superheated"),
+//         mkGen("regains a charge at the end of each scene where its wielder started a fire"),
+//         mkGen("regains all charges when its wielder wins an argument"),
+//     ],
+//     ice: [
+//         mkGen("regains all charges after being cooled to sub-zero"),
+//         mkGen("regains a changes whenever its wielder builds a snowman"),
+//         mkGen("regains a charge at the end of each scene where its wielder made an ice pun")
+//     ],
+//     dark: [
+//         mkGen("regains a charge upon absorbing a human soul"),
+//         mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
+//         mkGen("regains all charges each day at the witching hour")
+//     ],
+//     light: [
+//         mkGen("regains all charges after an hour in a sacred space"),
+//         mkGen("regains a charges each day at sunrise"),
+//         new RecursiveGenerator([
+//             mkGen("regains a charges after defeating a"), 
+//             foeType,
+//             mkGen(".")
+//         ])
+//     ],
+//     sweet: [
+//         mkGen("regains a charge each time it eats an extravagant dessert"),
+//         mkGen("regains all charges each time its wielder hosts a feast"),
+//         mkGen("regains charge whenever its wielder complements someone")
+//     ],
+//     sour: [
+//         mkGen("regains all charges after an hour immersed in acid"),
+//         mkGen("regains all charges when used to fell a citrus tree"),
+//         mkGen("regains a charge each time its wielder insults someone")
+//     ],
+//     // electric: [
+//     //     "regains all charges when struck by lightning",
+//     // ]
+// } satisfies Record<Theme | string,ThemeOptionList<LeafGenerator | RecursiveGenerator>>;
 
 const POSSIBLE_THEMES = [
     "fire", "ice",
