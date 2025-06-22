@@ -1,4 +1,5 @@
 import './choice.ts';
+import seedrandom from "seedrandom";
 import { WEAPON_GENERATOR } from './generators/weapon_generator.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
@@ -47,7 +48,7 @@ function isWeaponView(x: unknown): x is WeaponView {
 class WeaponGeneratorController {
   view: unknown;
 
-  constructor(rootId: string) {
+  constructor(rootId: string, initialWeaponId?: string) {
     const root = document.getElementById(rootId);
     if(root) {
       this.view = {
@@ -66,7 +67,12 @@ class WeaponGeneratorController {
         personality: root.querySelector('.weapon-personality-root') as HTMLElement,
         languages: root.querySelector('.weapon-languages-root') as HTMLElement,
       } satisfies Nullable<WeaponView>;
-      root.querySelector('.generate-button')?.addEventListener('click', this.update.bind(this));
+      root.querySelector('.generate-button')?.addEventListener('click', (() => this.update()).bind(this));
+
+      if(initialWeaponId!==undefined) {
+        this.update(initialWeaponId);
+      }
+
     }
     else {
       throw new Error(`couldn't find weapon generator root with id ${rootId}`)
@@ -102,12 +108,16 @@ class WeaponGeneratorController {
     }
   }
   
-  update() {
+  update(rngSeed?: string) {
     if(isWeaponView(this.view)) {
       try {
         this.view.outputRoot.hidden = false;
-        const weaponViewModel = WEAPON_GENERATOR(Math.random() * 1000);
-        console.log(weaponViewModel);
+
+        if(rngSeed===undefined) {
+          rngSeed = new Date().getTime().toString();
+        }
+
+        const weaponViewModel = WEAPON_GENERATOR(rngSeed);
   
         this.view.name.innerText = weaponViewModel.name;
   
@@ -130,10 +140,8 @@ class WeaponGeneratorController {
           (elem, x) => {
             elem.classList.add('weapon-generator-active-list-item');
 
-            const desc = typeof(x.desc) === 'string' ? x.desc : x.desc.generate();
-
             const descNode = document.createElement('p');
-            descNode.innerText  = `${desc.capFirst()} (${this.textForCharges(x.cost)}).`; 
+            descNode.innerText  = `${x.desc.capFirst()} (${this.textForCharges(x.cost)}).`; 
             elem.appendChild(descNode);
             
             if(x.additionalNotes && x.additionalNotes.length > 0) {
@@ -154,7 +162,7 @@ class WeaponGeneratorController {
           this.view.passivePowers,
           weaponViewModel.passivePowers,
           (elem, x) => {
-            elem.innerText = typeof(x.desc) === 'string' ? x.desc : x.desc.generate();
+            elem.innerText = x.desc;
             elem.classList.add('weapon-generator-active-list-item');
           }
         );
@@ -176,6 +184,13 @@ class WeaponGeneratorController {
           this.view.languages.innerHTML = '';
           this.view.personality.innerHTML = '';
         }
+
+        // update the url params to point to the new weapon
+        window.history.replaceState( //navigate back to main
+          null,
+          "",
+          `?id=${rngSeed}`
+        );
       }
       catch(e) {
         this.view.outputRoot.hidden = true;
@@ -188,5 +203,8 @@ class WeaponGeneratorController {
   }
 }
 
-console.log('loaded');
-new WeaponGeneratorController("main-generator");
+// load the seed if one exists
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+console.log(id);
+new WeaponGeneratorController("main-generator", id ?? undefined);

@@ -1,16 +1,17 @@
+import type seedrandom from "seedrandom";
 import { mkGen } from "./recursiveGenerator";
 
-export const singularHolyFoe = mkGen(() => [
+export const singularHolyFoe = mkGen((rng) => [
     "angel",
     "priest"
-].choice());
+].choice(rng));
 
-export const pluralHolyFoe = mkGen(() => [
+export const pluralHolyFoe = mkGen((rng) => [
     "angels",
     "priests",
-].choice())
+].choice(rng))
 
-export const singularUnholyFoe = mkGen(() => [
+export const singularUnholyFoe = mkGen((rng) => [
     "satanist",
     "cannibal",
 
@@ -22,8 +23,9 @@ export const singularUnholyFoe = mkGen(() => [
     "skinwalker",
     
     "automaton",
-].choice());
-export const pluralUnholyFoe = mkGen(() => [
+].choice(rng));
+
+export const pluralUnholyFoe = mkGen((rng) => [
     "satanists",
     "cannibals",
 
@@ -36,12 +38,12 @@ export const pluralUnholyFoe = mkGen(() => [
     
     "automatons",
     "blood beasts"
-].choice());
+].choice(rng));
 
-export const singularBeastFoe = mkGen(() => [
+export const singularBeastFoe = mkGen((rng) => [
     "shark",
     "bear",
     "dinosaurs",
     "giant animal",
     "human-eating worm",
-].choice())
+].choice(rng))
