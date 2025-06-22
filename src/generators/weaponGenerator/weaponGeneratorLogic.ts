@@ -144,9 +144,10 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     const params = paramsFor(gpValue);
     
     // draw themes until we have enough to cover our number of powers
+    const minThemes = [1,2,3].choice(rng);
     const themes = [] as Theme[];
     while(
-        themes.length <= 0 ||
+        themes.length < minThemes ||
         themes.reduce((acc,x) => acc+unusedPassivePowers[x].size, 0) < params.nPassivePowers || //not enough passive powers
         themes.reduce((acc,x) => acc+unusedActivePowers[x].size, 0) < (params.nPassivePowers + params.nUnlimitedChargedPowers) //not enough active powers 
     ) {
