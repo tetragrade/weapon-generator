@@ -11,7 +11,6 @@ export type WeaponViewModel = {
     themes: Theme[],
     
     name: string;
-    description: string;
 
     damage: DamageDice;
     activePowers: (ChargedPower | UnlimitedChargedPower)[];
@@ -370,7 +369,7 @@ const POSSIBLE_PASSIVE_POWERS = {
         },
         {
             miscPower: true,
-            desc: "1-in-2 change to sense icy weather before it hits, giving just enough time to escape"
+            desc: "1-in-2 chance to sense icy weather before it hits, giving just enough time to escape"
         }
     ],
     "dark": [
@@ -513,7 +512,7 @@ const POSSIBLE_PERSONALITIES = {
         ],
     "dark": [
             "shy",
-            "mysterious",
+            "tries to act mysterious",
             "quiet",
             "depressive",
             "cruel",
@@ -633,6 +632,7 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
             }
         }
     };
+
     const unusedThemes = new Set<Theme>(POSSIBLE_THEMES);
     
     // copy over all the powers to the structure we'll draw from
@@ -658,13 +658,11 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
     const name = (isSentient ? mkSentientNameGenerator(themes) : mkNonSentientNameGenerator(themes)).generate();
     
     // determine description
-    const description = ''; // TODO
 
     // determine personality
     const viewModel: WeaponViewModel = isSentient ? {
         themes,
         name,
-        description,
         damage: params.damage,
         activePowers: [],
         passivePowers: [],
@@ -674,7 +672,6 @@ export const WEAPON_GENERATOR: (gpValue: number) => WeaponViewModel = (gpValue) 
     } : {
         themes,
         name,
-        description,
         damage: params.damage,
         activePowers: [],
         passivePowers: [],

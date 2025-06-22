@@ -8,7 +8,6 @@ interface WeaponView {
   outputRoot: HTMLElement;
 
   name: HTMLElement;
-  description: HTMLElement;
 
   damage: HTMLElement;
   activePowers: HTMLElement;
@@ -26,7 +25,6 @@ function isWeaponView(x: unknown): x is WeaponView {
     wv.root &&
     wv.outputRoot && 
     wv.name &&
-    wv.description &&
     wv.damage && 
     wv.activePowers && 
     wv.passivePowers &&
@@ -46,7 +44,6 @@ class WeaponGeneratorController {
         root: root,
         outputRoot: root.querySelector('.weapon-generator-output'),
         name: root.querySelector('.weapon-name'),
-        description: root.querySelector('.weapon-description'),
         damage: root.querySelector('.weapon-damage'),
         activePowers: root.querySelector('.weapon-active-powers-root'),
         passivePowers: root.querySelector('.weapon-passive-powers-root'),
@@ -63,6 +60,12 @@ class WeaponGeneratorController {
   }
   
   buildList(root: HTMLElement, source: string[]) {
+    // hide the whole list if there are no elements
+    if(root.parentElement) {
+      root.hidden = source.length==0;
+    }
+
+    // update the list
     root.innerHTML = '';
     for(const x of source) {
       const elem = document.createElement("li");
@@ -79,7 +82,6 @@ class WeaponGeneratorController {
         const weaponViewModel = WEAPON_GENERATOR(Math.random() * 1000);
   
         this.view.name.innerText = weaponViewModel.name;
-        this.view.description.innerText = weaponViewModel.description;
   
         const damageEntries = Object.entries(weaponViewModel.damage);
         this.view.damage.innerText = damageEntries.length>1 ?
