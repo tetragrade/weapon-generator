@@ -166,7 +166,7 @@ const weaponMaterialGenerator = mkGen((rng) => {
     if(n>.75) {
         return exoticWeaponMaterialsGenerator.generate(rng);
     }
-    else if(n>.5) {
+    else if(n>.05) {
         return normalWeaponMaterialsGenerator.generate(rng);
     }
     else {
@@ -181,7 +181,7 @@ const weaponShapeGenerator = mkGen((rng) => {
     if(n>.75) {
         return exoticWeaponShapeGenerator.generate(rng);
     }
-    else if(n>.5) {
+    else if(n>.05) {
         return normalWeaponShapeGenerator.generate(rng);
     }
     else {
