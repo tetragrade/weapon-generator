@@ -1,9 +1,9 @@
 import { mundaneNameGenerator } from "../nameGenerator.ts";
-import { mkGen, RecursiveGenerator } from "../recursiveGenerator.ts";
+import { mkGen, RecursiveGenerator, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_RECHARGE_METHODS, POSSIBLE_PERSONALITIES, OBJECT_ADJECTIVES, weaponRarityConfig } from "./weaponGeneratorConfig.ts";
-import { type Weapon, type WeaponRarity, isRarity } from "./weaponGeneratorTypes.ts";
+import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, POSSIBLE_PERSONALITIES, OBJECT_ADJECTIVES, weaponRarityConfig } from "./weaponGeneratorConfig.ts";
+import { type ActivePower, type ConditionalThingProvider, type PassivePower, type Weapon, type WeaponPowerCond as WeaponConds, type WeaponRarity, isRarity } from "./weaponGeneratorTypes.ts";
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])
@@ -11,7 +11,7 @@ const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) =>
     .choice(rng);  //choose an adjective
 
 const mkNonSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new RecursiveGenerator([
+    const string = new StringGenerator([
         mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
         mkGen(' '),
@@ -20,7 +20,7 @@ const mkNonSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mk
     return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
 const mkSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new RecursiveGenerator([
+    const string = new StringGenerator([
         mundaneNameGenerator,
         mkGen(', the '),
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
@@ -88,15 +88,6 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
         }, {} as Record<Theme, Set<T>>);
     }
 
-    function drawFrom<T>(keys: Theme[], from: Record<Theme,Set<T>>, rng: seedrandom.PRNG): T {
-        // choose a theme that still has powers left
-        const chosenTheme = keys.filter(x => from[x].size>0).choice(rng);
-        // choose a power for that theme
-        const chosenT  = from[chosenTheme].choice(rng);
-        from[chosenTheme].delete(chosenT);
-        return chosenT;
-    }
-
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
         // sort in ascending order of draw chance
@@ -115,10 +106,11 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     const unusedThemes = new Set<Theme>(POSSIBLE_THEMES);
     
     // copy over all the powers to the structure we'll draw from
-    const unusedActivePowers = mkUnusedFromPossible(POSSIBLE_ACTIVE_POWERS);
-    const unusedPassivePowers = mkUnusedFromPossible(POSSIBLE_PASSIVE_POWERS);
-    const unusedRechargeMethods = mkUnusedFromPossible(POSSIBLE_RECHARGE_METHODS);
-    
+    //TODO
+    const rechargeMethodsProvider: ConditionalThingProvider<TGenerator<string>, WeaponConds> = undefined as any;
+    const activePowersProvider: ConditionalThingProvider<TGenerator<ActivePower>, WeaponConds> = undefined as any;
+    const passivePowersProvider: ConditionalThingProvider<TGenerator<PassivePower>, WeaponConds> = undefined as any;
+
     // decide power level
     const rarity = generateRarity(rng);
     const params = weaponRarityConfig[rarity].paramsProvider(rng);
@@ -126,27 +118,30 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     // TODO remove me
     params.damage = { d6: 1}
     
+    // determine sentience
+    const isSentient = rng() < params.sentienceChance;
+    
     // draw themes until we have enough to cover our number of powers
     const minThemes = [1,2,3].choice(rng);
     const themes = [] as Theme[];
     while(
-        themes.length < minThemes ||
-        themes.reduce((acc,x) => acc+unusedPassivePowers[x].size, 0) < params.nPassive || //not enough passive powers
-        themes.reduce((acc,x) => acc+unusedActivePowers[x].size, 0) < (params.nPassive + params.nUnlimitedActive) //not enough active powers 
+        themes.length < minThemes || activePowersProvider.available({ themes, rarity, isSentient })
     ) {
         const chosen = unusedThemes.choice(rng);
         unusedThemes.delete(chosen);
         themes.push(chosen);
     }
     
-    // determine sentience
-    const isSentient = rng() < params.sentienceChance;
     
     // determine name
     const name = (isSentient ? mkSentientNameGenerator(themes, rng) : mkNonSentientNameGenerator(themes, rng)).generate(rng);
     
     // determine description
     const description = 'TODO';
+
+    const finalConds: WeaponConds = { themes, rarity, isSentient };
+
+    const rechargeMethod = rechargeMethodsProvider.draw(rng, finalConds).generate(rng);
 
     // determine personality
     const weapon: Weapon = isSentient ? {
@@ -158,7 +153,7 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
         damage: params.damage,
         active: {
             maxCharges: params.nCharges,
-            rechargeMethod: drawFrom(themes, unusedRechargeMethods, rng).generate(rng),
+            rechargeMethod,
             powers: []
         },
         passivePowers: [],
@@ -174,7 +169,7 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
         damage: params.damage,
         active: {
             maxCharges: params.nCharges,
-            rechargeMethod: drawFrom(themes, unusedRechargeMethods, rng).generate(rng),
+            rechargeMethod,
             powers: []
         },
         passivePowers: [],
@@ -182,41 +177,28 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     };
 
     if(weapon.isSentient) {
-        // copy over all the charged powers
-        const unusedPersonalities = mkUnusedFromPossible(POSSIBLE_PERSONALITIES)
-
+        const personalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = undefined as any;
+        
         // choose one personality for each theme
         themes.forEach(theme => {
-            const chosen  = unusedPersonalities[theme].choice(rng);
-            if(chosen !== undefined) {
-                unusedThemes.delete(theme);
-                weapon.personalityTraits.push(chosen.capFirst() + '.');
-            }
+            const chosen = personalityProvider.draw(rng, theme).generate(rng);
+            weapon.personalityTraits.push(chosen.capFirst() + '.');
         })
     }
 
     while(params.nPassive-->0) {
-        const x = drawFrom(themes, unusedPassivePowers, rng);
-        weapon.passivePowers.push({
-            ...x,
-            desc: typeof(x.desc) === 'string' ? x.desc : x.desc.generate(rng)
-        });
+        weapon.passivePowers.push(passivePowersProvider.draw(rng,finalConds).generate(rng));
     }
 
     while(params.nActive-->0) {
-        const x = drawFrom(themes, unusedActivePowers, rng);
-        weapon.active.powers.push({
-            ...x,
-            desc: typeof(x.desc) === 'string' ? x.desc : x.desc.generate(rng)
-        });
+        weapon.active.powers.push(activePowersProvider.draw(rng,finalConds).generate(rng));
     }
 
     while(params.nUnlimitedActive-->0) {
-        const x = drawFrom(themes, unusedActivePowers, rng);
+        const x = activePowersProvider.draw(rng,finalConds).generate(rng);
         weapon.active.powers.push({
             ...x,
             cost: 'at will',
-            desc: typeof(x.desc) === 'string' ? x.desc : x.desc.generate(rng)
         });
     }
     
