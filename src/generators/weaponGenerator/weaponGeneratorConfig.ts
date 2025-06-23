@@ -1,6 +1,64 @@
 import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
 import {mkGen, type StringGenerator, RecursiveGenerator } from "../recursiveGenerator";
-import type { ChargedPower, UnlimitedChargedPower, Language, MiscPower } from "./weaponGeneratorTypes";
+import type { ChargedPower, UnlimitedChargedPower, Language, MiscPower, WeaponRarityConfig } from "./weaponGeneratorTypes";
+
+export const weaponRarityConfig: WeaponRarityConfig = {
+    common: {
+        percentile: 1,
+        paramsProvider: (rng) => ({
+            damage: {},
+            nPassive: 1,
+            nCharges: 0,
+            nActive: rng() > .9 ? 1 : 0,
+            nUnlimitedActive: 0,
+            sentienceChance: 0
+        })
+    },
+    uncommon: {
+        percentile: 0.45,
+        paramsProvider: (rng) => ({
+            damage: {},
+            nPassive: 1,
+            nCharges: Math.ceil(rng() * 4),
+            nActive: [0,1].choice(rng),
+            nUnlimitedActive: 0,
+            sentienceChance: 0
+        })
+    },
+    rare: {
+        percentile: 0.15,
+        paramsProvider: (rng) => ({
+            damage: {},
+            nPassive: [1,2].choice(rng),
+            nCharges: Math.ceil(rng() * 4),
+            nActive: [1,2].choice(rng),
+            nUnlimitedActive: 0,
+            sentienceChance: 0.25
+        })
+    },
+    epic: {
+        percentile: 0.05,
+        paramsProvider: (rng) => ({
+            damage: {},
+            nPassive: [1,2,3].choice(rng),
+            nCharges: Math.ceil(rng() * 8),
+            nActive: [1,2,3].choice(rng),
+            nUnlimitedActive: 0,
+            sentienceChance: 0.5
+        })
+    },
+    legendary: {
+        percentile: 0.01,
+        paramsProvider: (rng) => ({
+            damage: {},
+            nPassive: 3,
+            nCharges: Math.ceil(rng() * 10),
+            nActive: [2,3,4].choice(rng),
+            nUnlimitedActive: 1,
+            sentienceChance: 1
+        })
+    }
+}
 
 export const weaponShapeGenerator = mkGen((rng) => {
     const n = rng();

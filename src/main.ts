@@ -1,5 +1,6 @@
 import './choice.ts';
 import { WEAPON_GENERATOR } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
+import { weaponRarities } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
 
@@ -95,7 +96,7 @@ class WeaponGeneratorController {
   buildList<T>(root: HTMLElement, source: T[], action: (elem: HTMLElement, x: T) => void) {
     // hide the whole list if there are no elements
     if(root.parentElement) {
-      root.hidden = source.length==0;
+      root.parentElement.hidden = source.length===0;
     }
 
     // update the list
@@ -117,8 +118,13 @@ class WeaponGeneratorController {
         }
 
         const weaponViewModel = WEAPON_GENERATOR(rngSeed);
+        console.log('generated weapon', weaponViewModel);
   
         this.view.name.innerText = weaponViewModel.name;
+        // remove the old rarity class & add the new one
+        this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
+        this.view.name.classList.add(`weapon-rarity-${weaponViewModel.rarity}`);
+
   
         const damageEntries = Object.entries(weaponViewModel.damage);
         this.view.damage.innerText = damageEntries.length>1 ?
@@ -205,5 +211,4 @@ class WeaponGeneratorController {
 // load the seed if one exists
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
-console.log(id);
 new WeaponGeneratorController("main-generator", id ?? undefined);

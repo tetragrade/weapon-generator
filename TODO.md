@@ -1,7 +1,13 @@
-- Color-coded rarities.
-- Weapon type based damage.
-- Proper namelist.
-- More themes & abilities.
-- UX.
-- User configuration menu & settings.
-- Testing.
+- TODO
+    - Basic Functionality
+        - ~~Color-coded rarities.~~
+        - More themes & abilities.
+        - Weapon type based damage.
+        
+        - UX.
+        - Proper namelist.
+        - Automated Testing.
+    - Advanced.
+        - User configuration menu & settings.
+        - Bookmark weapons functionality.
+        - Automated Testing.

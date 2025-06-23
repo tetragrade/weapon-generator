@@ -1,4 +1,29 @@
-import type { Theme } from "../weaponGenerator.options";
+import type seedrandom from "seedrandom";
+import type { Theme } from "./weaponGeneratorConfig";
+
+export type WeaponRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary']
+export type WeaponRarityConfig = {
+    common: {
+        percentile: 1;
+        paramsProvider: (rng: seedrandom.PRNG) => WeaponGenerationParams;
+    };
+} & {
+    [k in Exclude<WeaponRarity, 'common'>]: {
+        percentile: number;
+        paramsProvider: (rng: seedrandom.PRNG) => WeaponGenerationParams;
+    }
+}
+export interface WeaponGenerationParams {
+    damage: DamageDice;
+    nPassive: number;
+    nCharges: number;
+    nActive: number;
+    nUnlimitedActive: number;
+    sentienceChance: number;
+}
+
+export const isRarity: ((x: unknown) => x is WeaponRarity) = (x) => (x==='common' || x==='uncommon' || x==='rare' || x==='epic' || x==='legendary');
 
 export type Weapon = {
     /**
@@ -8,7 +33,9 @@ export type Weapon = {
 
     themes: Theme[],
     
+    rarity: WeaponRarity;
     name: string;
+    description: string;
 
     damage: DamageDice;
     active: {
