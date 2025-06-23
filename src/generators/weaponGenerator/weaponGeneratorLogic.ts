@@ -1,9 +1,20 @@
 import { mundaneNameGenerator } from "../nameGenerator.ts";
-import { mkGen, RecursiveGenerator, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
+import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, POSSIBLE_PERSONALITIES, OBJECT_ADJECTIVES, weaponRarityConfig } from "./weaponGeneratorConfig.ts";
+import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, OBJECT_ADJECTIVES, weaponRarityConfig } from "./weaponGeneratorConfig.ts";
 import { type ActivePower, type ConditionalThingProvider, type PassivePower, type Weapon, type WeaponPowerCond as WeaponConds, type WeaponRarity, isRarity } from "./weaponGeneratorTypes.ts";
+
+class PersonalityProvider implements ConditionalThingProvider<TGenerator<string>, Theme> {
+    constructor() {}
+    
+    draw: (rng: seedrandom.PRNG, conditions: "fire" | "ice" | "dark" | "light" | "sweet" | "sour") => TGenerator<string> = (rng, conditions) => {
+        throw new Error('Not Implemented');
+    };
+    available: (conditions: "fire" | "ice" | "dark" | "light" | "sweet" | "sour") => Set<TGenerator<string>> = (conditions) => {
+        throw new Error('Not Implemented');
+    };
+}
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])
@@ -79,15 +90,7 @@ const weaponMaterialGenerator = mkGen((rng) => {
     }
 });
 
-export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
-    function mkUnusedFromPossible<T>(possible: Record<Theme, T[]>): Record<Theme,Set<T>> {  
-        return Object.entries(possible).reduce((acc, [k,vs]) => {
-            acc[k as Theme] = new Set<T>();
-            vs.forEach(v => acc[k as Theme].add(v));
-            return acc;
-        }, {} as Record<Theme, Set<T>>);
-    }
-
+export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
         // sort in ascending order of draw chance
@@ -107,9 +110,9 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     
     // copy over all the powers to the structure we'll draw from
     //TODO
-    const rechargeMethodsProvider: ConditionalThingProvider<TGenerator<string>, WeaponConds> = undefined as any;
-    const activePowersProvider: ConditionalThingProvider<TGenerator<ActivePower>, WeaponConds> = undefined as any;
-    const passivePowersProvider: ConditionalThingProvider<TGenerator<PassivePower>, WeaponConds> = undefined as any;
+    const rechargeMethodsProvider: ConditionalThingProvider<TGenerator<string>, WeaponConds> = undefined as never;
+    const activePowersProvider: ConditionalThingProvider<TGenerator<ActivePower>, WeaponConds> = undefined as never;
+    const passivePowersProvider: ConditionalThingProvider<TGenerator<PassivePower>, WeaponConds> = undefined as never;
 
     // decide power level
     const rarity = generateRarity(rng);
@@ -125,7 +128,9 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     const minThemes = [1,2,3].choice(rng);
     const themes = [] as Theme[];
     while(
-        themes.length < minThemes || activePowersProvider.available({ themes, rarity, isSentient })
+        themes.length < minThemes || 
+        activePowersProvider.available({ themes, rarity, isSentient }).size < params.nActive+params.nUnlimitedActive ||
+        passivePowersProvider.available({ themes, rarity, isSentient }).size < params.nPassive
     ) {
         const chosen = unusedThemes.choice(rng);
         unusedThemes.delete(chosen);
@@ -177,7 +182,7 @@ export const WEAPON_GENERATOR: (rngSeed: string) => Weapon = (rngSeed) => {
     };
 
     if(weapon.isSentient) {
-        const personalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = undefined as any;
+        const personalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = new PersonalityProvider();
         
         // choose one personality for each theme
         themes.forEach(theme => {

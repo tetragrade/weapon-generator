@@ -1,5 +1,5 @@
 import './choice.ts';
-import { WEAPON_GENERATOR } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
+import { mkWeapon } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
 import { weaponRarities } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
@@ -117,7 +117,7 @@ class WeaponGeneratorController {
           rngSeed = (Math.floor(Math.random() * 10e19)).toString();
         }
 
-        const weaponViewModel = WEAPON_GENERATOR(rngSeed);
+        const weaponViewModel = mkWeapon(rngSeed);
         console.log('generated weapon', weaponViewModel);
   
         this.view.name.innerText = weaponViewModel.name;

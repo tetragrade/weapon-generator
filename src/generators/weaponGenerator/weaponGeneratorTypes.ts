@@ -1,6 +1,5 @@
 import type seedrandom from "seedrandom";
 import type { Theme } from "./weaponGeneratorConfig";
-import type { TGenerator } from "../recursiveGenerator";
 
 export type WeaponRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary']
@@ -98,8 +97,8 @@ export type ConditionalThingProvider<TThing,TCond> = {
     draw: (rng: seedrandom.PRNG, conditions: TCond) => TThing;
     
     /**
-     * Returns the number of things available given this condition.
-     * @param conditions the condition to get the number of things available for
+     * Returns the set of things available given this condition.
+     * @param conditions the condition to get the things available for
      * @returns the set of things that may possibly be returned by calling this.draw with conditions 
      */
     available: (conditions: TCond) => Set<TThing>;
