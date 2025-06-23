@@ -1,6 +1,6 @@
-import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
-import {mkGen, type StringGenerator, RecursiveGenerator } from "../recursiveGenerator";
-import type { ChargedPower, UnlimitedChargedPower, Language, MiscPower, WeaponRarityConfig } from "./weaponGeneratorTypes";
+import { singularUnholyFoe } from "../foes";
+import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
+import type { WeaponRarityConfig, PassivePower, ActivePower } from "./weaponGeneratorTypes";
 
 export const weaponRarityConfig: WeaponRarityConfig = {
     common: {
@@ -162,7 +162,7 @@ export const OBJECT_ADJECTIVES = {
 export const POSSIBLE_ACTIVE_POWERS = {
     "fire": [
         {
-            desc: mkGen("Fire Ball"),
+            desc: "Fire Ball",
             cost: 3
         },
         {
@@ -259,10 +259,7 @@ export const POSSIBLE_ACTIVE_POWERS = {
     ],
 } satisfies Record<
     Theme | string,
-    Iterable<
-        Omit<ChargedPower, 'desc'> & {desc: string | StringGenerator} | 
-        Omit<UnlimitedChargedPower, 'desc'> & {desc: string | StringGenerator}
-    >    
+    Iterable<ActivePower>    
 >;
 
 export const POSSIBLE_PASSIVE_POWERS = {
@@ -354,11 +351,12 @@ export const POSSIBLE_PASSIVE_POWERS = {
         },
         {
             miscPower: true,
-            desc: new RecursiveGenerator([
-                mkGen("Glows like a torch when "), 
-                pluralUnholyFoe,
-                mkGen(" are near")
-            ]),
+            desc: 'TODO move my generator up'
+            // desc: new StringGenerator([
+            //     mkGen("Glows like a torch when "), 
+            //     pluralUnholyFoe,
+            //     mkGen(" are near")
+            // ]),
         },
         {
             miscPower: true,
@@ -407,10 +405,7 @@ export const POSSIBLE_PASSIVE_POWERS = {
     ],
 } satisfies Record<
     Theme | string,
-    Iterable<
-        Omit<Language, 'desc'> & {desc: string | StringGenerator} | 
-        Omit<MiscPower, 'desc'> & {desc: string | StringGenerator}
-    >
+    Iterable<PassivePower>
 >;
 
 export const POSSIBLE_PERSONALITIES = {
@@ -502,7 +497,7 @@ export const POSSIBLE_RECHARGE_METHODS = {
     light: [
         mkGen("regains all charges after an hour in a sacred space"),
         mkGen("regains a charges each day at sunrise"),
-        new RecursiveGenerator([
+        new StringGenerator([
             mkGen("regains a charge after defeating a "), 
             singularUnholyFoe,
         ])
@@ -520,7 +515,7 @@ export const POSSIBLE_RECHARGE_METHODS = {
     // electric: [
     //     "regains all charges when struck by lightning",
     // ]
-} satisfies Record<Theme | string, Iterable<StringGenerator>>;
+} satisfies Record<Theme | string, Iterable<TGenerator<string>>>;
 
 export const POSSIBLE_THEMES = [
     "fire", "ice",
