@@ -2,18 +2,14 @@ import { mundaneNameGenerator } from "../nameGenerator.ts";
 import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, OBJECT_ADJECTIVES, weaponRarityConfig } from "./weaponGeneratorConfig.ts";
+import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES } from "./weaponGeneratorConfig.ts";
 import { type ActivePower, type ConditionalThingProvider, type PassivePower, type Weapon, type WeaponPowerCond as WeaponConds, type WeaponRarity, isRarity } from "./weaponGeneratorTypes.ts";
 
-class PersonalityProvider implements ConditionalThingProvider<TGenerator<string>, Theme> {
-    constructor() {}
-    
-    draw: (rng: seedrandom.PRNG, conditions: "fire" | "ice" | "dark" | "light" | "sweet" | "sour") => TGenerator<string> = (rng, conditions) => {
-        throw new Error('Not Implemented');
-    };
-    available: (conditions: "fire" | "ice" | "dark" | "light" | "sweet" | "sour") => Set<TGenerator<string>> = (conditions) => {
-        throw new Error('Not Implemented');
-    };
+const PersonalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = {
+    draw: (rng, conditions) => 
+        mkGen(POSSIBLE_PERSONALITIES[conditions].choice(rng)),
+    available: (conditions) =>
+        new Set(POSSIBLE_PERSONALITIES[conditions].map(x => mkGen(x))),
 }
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
