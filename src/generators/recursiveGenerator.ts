@@ -1,21 +1,20 @@
-import seedrandom from "seedrandom";
+import type seedrandom from "seedrandom";
 
-export interface LeafGenerator<T> {
+export interface LeafGenerator {
     /**
      * Execute the random generator.
      * @returns one of the possible strings that the random generator can yield.
      */
-    generate: (rng: seedrandom.PRNG) => T;
+    generate: (rng: seedrandom.PRNG) => string;
 }
-export function mkGen<T>(x: T | ((rng: seedrandom.PRNG) => T)): LeafGenerator<T> {
-    return x instanceof Function ? {generate: x} : {generate: () => x};
-}
-export type TGenerator<T> = LeafGenerator<T> | RecursiveGenerator<T>;
+export const mkGen: (x: string | ((rng: seedrandom.PRNG) => string)) => LeafGenerator = (x) =>(typeof x=='string' ? {generate: () => x} : {generate: x});
 
-export abstract class RecursiveGenerator<T> {
-    children: (TGenerator<T>)[];
+export type StringGenerator = LeafGenerator | RecursiveGenerator;
 
-    constructor(children: (TGenerator<T>)[]) {
+export class RecursiveGenerator {
+    children: (StringGenerator)[];
+
+    constructor(children: (StringGenerator)[]) {
         this.children = children;
     }
 
@@ -23,10 +22,7 @@ export abstract class RecursiveGenerator<T> {
      * Execute the random generator.
      * @returns one of the possible strings that the random generator can yield.
      */
-    abstract generate: (rng: seedrandom.PRNG) => T;
-}
-
-export class StringGenerator extends RecursiveGenerator<string> {
     generate: (rng: seedrandom.PRNG) => string = (rng) => this.children.reduce((acc, x) => acc+x.generate(rng), "");
-}
 
+    toString = this.generate;
+}

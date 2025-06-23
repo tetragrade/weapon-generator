@@ -1,7 +1,6 @@
 - TODO
     - Basic Functionality
         - ~~Color-coded rarities.~~
-        - Support for conditionally available abilities, beyond themes. 
         - More themes & abilities.
         - Weapon type based damage.
         
