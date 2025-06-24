@@ -2,15 +2,16 @@ import { mundaneNameGenerator } from "../nameGenerator.ts";
 import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { type Theme, weaponShapeGenerator, POSSIBLE_THEMES, OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES } from "./weaponGeneratorConfig.ts";
-import { type ActivePower, type ConditionalThingProvider, type PassivePower, type Weapon, type WeaponPowerCond as WeaponConds, type WeaponRarity, isRarity } from "./weaponGeneratorTypes.ts";
+import { OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator } from "./weaponGeneratorConfig.ts";
+import { type ActivePower, type ConditionalThingProvider, type PassivePower, type Theme, type Weapon, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity, mockProvider, personalityExecutor } from "./weaponGeneratorTypes.ts";
 
-const PersonalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = {
-    draw: (rng, conditions) => 
-        mkGen(POSSIBLE_PERSONALITIES[conditions].choice(rng)),
-    available: (conditions) =>
-        new Set(POSSIBLE_PERSONALITIES[conditions].map(x => mkGen(x))),
+
+// this also needs to block picking duplicates
+const PersonalityProvider: ConditionalThingProvider<TGenerator<string>, WeaponPowerCondParams> = {
+    draw: (rng, params) => POSSIBLE_PERSONALITIES.filter(x => personalityExecutor(x, params)).choice(rng).personalityGenerator,
+    available: (params) => new Set(POSSIBLE_PERSONALITIES.filter(x => personalityExecutor(x, params)).map(x => x.personalityGenerator))
 }
+
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])
@@ -102,13 +103,14 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     }
 
     const rng = seedrandom(rngSeed);
-    const unusedThemes = new Set<Theme>(POSSIBLE_THEMES);
+    const unusedThemes = new Set<Theme>(allThemes);
     
     // copy over all the powers to the structure we'll draw from
     //TODO
-    const rechargeMethodsProvider: ConditionalThingProvider<TGenerator<string>, WeaponConds> = undefined as never;
-    const activePowersProvider: ConditionalThingProvider<TGenerator<ActivePower>, WeaponConds> = undefined as never;
-    const passivePowersProvider: ConditionalThingProvider<TGenerator<PassivePower>, WeaponConds> = undefined as never;
+    const rechargeMethodsProvider: ConditionalThingProvider<TGenerator<string>, WeaponPowerCondParams> = mockProvider;
+    const activePowersProvider: ConditionalThingProvider<TGenerator<ActivePower>, WeaponPowerCondParams> = mockProvider;
+    const passivePowersProvider: ConditionalThingProvider<TGenerator<PassivePower>, WeaponPowerCondParams> = mockProvider;
+
 
     // decide power level
     const rarity = generateRarity(rng);
@@ -118,29 +120,39 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     params.damage = { d6: 1}
     
     // determine sentience
-    const isSentient = rng() < params.sentienceChance;
+    const isSentient = true; //rng() < params.sentienceChance;
     
     // draw themes until we have enough to cover our number of powers
     const minThemes = [1,2,3].choice(rng);
     const themes = [] as Theme[];
     while(
         themes.length < minThemes || 
-        activePowersProvider.available({ themes, rarity, isSentient }).size < params.nActive+params.nUnlimitedActive ||
-        passivePowersProvider.available({ themes, rarity, isSentient }).size < params.nPassive
+        activePowersProvider.available({ themes, personalityTraits: [], rarity, isSentient }).size < params.nActive+params.nUnlimitedActive ||
+        passivePowersProvider.available({ themes, personalityTraits: [], rarity, isSentient }).size < params.nPassive
     ) {
         const chosen = unusedThemes.choice(rng);
         unusedThemes.delete(chosen);
         themes.push(chosen);
     }
-    
-    
+        
     // determine name
     const name = (isSentient ? mkSentientNameGenerator(themes, rng) : mkNonSentientNameGenerator(themes, rng)).generate(rng);
     
     // determine description
     const description = 'TODO';
 
-    const finalConds: WeaponConds = { themes, rarity, isSentient };
+    const personalityTraits: string[] = [];
+
+
+    if(isSentient) {
+        // choose one personality for each theme
+        themes.forEach(_ => {
+            const chosen = PersonalityProvider.draw(rng, { themes, personalityTraits, rarity, isSentient }).generate(rng);
+            personalityTraits.push(chosen.capFirst() + '.');
+        })
+    }
+
+    const finalConds: WeaponPowerCondParams = { themes, personalityTraits, rarity, isSentient };
 
     const rechargeMethod = rechargeMethodsProvider.draw(rng, finalConds).generate(rng);
 
@@ -159,7 +171,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         },
         passivePowers: [],
         isSentient: true,
-        personalityTraits: [],
+        personalityTraits,
         languages: ['Common']
     } : {
         id: rngSeed,
@@ -174,18 +186,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             powers: []
         },
         passivePowers: [],
-        isSentient: false
+        isSentient: false,
     };
-
-    if(weapon.isSentient) {
-        const personalityProvider: ConditionalThingProvider<TGenerator<string>, Theme> = new PersonalityProvider();
-        
-        // choose one personality for each theme
-        themes.forEach(theme => {
-            const chosen = personalityProvider.draw(rng, theme).generate(rng);
-            weapon.personalityTraits.push(chosen.capFirst() + '.');
-        })
-    }
 
     while(params.nPassive-->0) {
         weapon.passivePowers.push(passivePowersProvider.draw(rng,finalConds).generate(rng));

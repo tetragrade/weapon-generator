@@ -1,6 +1,6 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
-import type { WeaponRarityConfig, PassivePower, ActivePower } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, PersonalityCondProvider } from "./weaponGeneratorTypes";
 
 export const weaponRarityConfig: WeaponRarityConfig = {
     common: {
@@ -408,7 +408,7 @@ export const POSSIBLE_PASSIVE_POWERS = {
     Iterable<PassivePower>
 >;
 
-export const POSSIBLE_PERSONALITIES = {
+export const POSSIBLE_PERSONALITIES = Object.entries({
     "fire": [
             "compassionate",
             "irritable",
@@ -476,7 +476,7 @@ export const POSSIBLE_PERSONALITIES = {
             "pious",
             "zealous",
         ]
-} satisfies Record<Theme | string, Iterable<string>>;
+}).map(([k,v]) => v.map(x => ({ personalityGenerator: mkGen(x), cond: { themes: { all: [k as Theme]} }} satisfies PersonalityCondProvider))).flat() satisfies PersonalityCondProvider[];
 
 export const POSSIBLE_RECHARGE_METHODS = {
     fire: [
@@ -516,17 +516,3 @@ export const POSSIBLE_RECHARGE_METHODS = {
     //     "regains all charges when struck by lightning",
     // ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>;
-
-export const POSSIBLE_THEMES = [
-    "fire", "ice",
-    "dark", "light",
-    "sweet", "sour",
-    // "poison", "water"
-    // "earth", "cloud",
-    // "psychic", "electric"
-    // "wizard", "thief"
-    // "jungle",
-    // "space"
-    // 
-] as const;
-export type Theme = (typeof POSSIBLE_THEMES)[number];

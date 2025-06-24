@@ -48,7 +48,7 @@ function isWeaponView(x: unknown): x is WeaponView {
 class WeaponGeneratorController {
   view: unknown;
 
-  constructor(rootId: string, initialWeaponId?: string) {
+  constructor(rootId: string) {
     const root = document.getElementById(rootId);
     if(root) {
       this.view = {
@@ -67,11 +67,29 @@ class WeaponGeneratorController {
         personality: root.querySelector('.weapon-personality-root') as HTMLElement,
         languages: root.querySelector('.weapon-languages-root') as HTMLElement,
       } satisfies Nullable<WeaponView>;
-      root.querySelector('.generate-button')?.addEventListener('click', (() => this.update()).bind(this));
+      root.querySelector('.generate-button')?.addEventListener('click', (() => {
+        const rngSeed = (Math.floor(Math.random() * 10e19)).toString();
+        
+        // update the view with the weapon
+        this.update(rngSeed);
 
-      if(initialWeaponId!==undefined) {
-        this.update(initialWeaponId);
-      }
+        // and update the url params to point to its id
+        window.history.pushState( //navigate back to main
+          null,
+          "",
+          `?id=${rngSeed}`
+        );
+      }).bind(this));
+
+      // init the view state with the weapon id in the initial url params (if there is one)
+      this.onIDChanged();
+      
+      // then observe for any future changes in the url params,
+      // updating the weapon view for the new params
+      window.addEventListener('popstate', (() => {
+        console.log('navigation event');
+        this.onIDChanged();
+      }).bind(this));
 
     }
     else {
@@ -108,14 +126,18 @@ class WeaponGeneratorController {
     }
   }
   
-  update(rngSeed?: string) {
+  protected onIDChanged() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentId = urlParams.get('id');
+    if(currentId) {
+      this.update(currentId);
+    }
+  }
+
+  update(rngSeed: string) {
     if(isWeaponView(this.view)) {
       try {
         this.view.outputRoot.hidden = false;
-
-        if(rngSeed===undefined) {
-          rngSeed = (Math.floor(Math.random() * 10e19)).toString();
-        }
 
         const weaponViewModel = mkWeapon(rngSeed);
         console.log('generated weapon', weaponViewModel);
@@ -189,13 +211,6 @@ class WeaponGeneratorController {
           this.view.languages.innerHTML = '';
           this.view.personality.innerHTML = '';
         }
-
-        // update the url params to point to the new weapon
-        window.history.replaceState( //navigate back to main
-          null,
-          "",
-          `?id=${rngSeed}`
-        );
       }
       catch(e) {
         this.view.outputRoot.hidden = true;
@@ -209,6 +224,4 @@ class WeaponGeneratorController {
 }
 
 // load the seed if one exists
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get('id');
-new WeaponGeneratorController("main-generator", id ?? undefined);
+new WeaponGeneratorController("main-generator");
