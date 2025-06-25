@@ -3,7 +3,7 @@ import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.t
 import '../../string.ts';
 import seedrandom from "seedrandom";
 import { OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS } from "./weaponGeneratorConfig.ts";
-import { type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
+import { type ActivePower, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 
 class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>, WeaponPowerCond, WeaponPowerCondParams> {
@@ -31,11 +31,11 @@ class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>,
     }
 }
 
-const personalityProvider = new WeaponFeatureProvider(POSSIBLE_PERSONALITIES);
-const rechargeMethodsProvider = new WeaponFeatureProvider(POSSIBLE_RECHARGE_METHODS);
+const personalityProvider = new WeaponFeatureProvider<string>(POSSIBLE_PERSONALITIES);
+const rechargeMethodsProvider = new WeaponFeatureProvider<string>(POSSIBLE_RECHARGE_METHODS);
 
-const activePowersProvider = new WeaponFeatureProvider(POSSIBLE_ACTIVE_POWERS);
-const passivePowersProvider = new WeaponFeatureProvider(POSSIBLE_PASSIVE_POWERS);
+const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACTIVE_POWERS);
+const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])
@@ -159,7 +159,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     
     // draw themes until we have enough to cover our number of powers
     const unusedThemes = new Set<Theme>(allThemes); // this could be a provider but whatever go my Set<Theme>
-    const minThemes = [1,2,3].choice(rng);
+    const minThemes = [1,2].choice(rng);
     while(
         weapon.themes.length < minThemes || 
         activePowersProvider.available(weapon).size < params.nActive+params.nUnlimitedActive ||
@@ -186,7 +186,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
 
     // draw passive powers
     while(params.nPassive-->0) {
-        weapon.passivePowers.push(passivePowersProvider.draw(rng, weapon).generate(rng));
+        const choice = passivePowersProvider.draw(rng, weapon).generate(rng);
+        ('language' in choice ? (weapon.sentient as { languages: string[]})?.languages.push(choice.desc) : weapon.passivePowers.push(choice));
     }
 
     // draw active powers

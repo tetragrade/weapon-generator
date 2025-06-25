@@ -6,16 +6,16 @@
             - ~~Active Abilities.~~
             - ~~Passive Abilities.~~
             - ~~Recharge Method.~~
-            - Implement Quant for active & passive powers.
+            - ~~Implement Quant for active & passive powers.~~
 
-        - More themes & abilities.
-        - Weapon shape type based damage.
+        - More themes & abilities.                      EASY LONG
+        - Weapon shape type based damage.               EASY SHORT
         
-        - Better names & descriptions.
-        - UX.
-        - Proper namelist.
-        - Automated Testing.
+        - Better names & descriptions.                  HARD LONG
+        - UX.                                           EASY LONG
+        - Proper namelist.                              EASY LONG
+        - Automated Testing.                            HARD LONG
     - Advanced.
-        - User configuration menu & settings.
-        - Bookmark weapons functionality.
-        - Automated Testing.
+        - User configuration menu & settings.           EASY SHORT
+        - Bookmark weapons functionality.               EASY SHORT
+        - Automated Testing.                            HARD SHORT
