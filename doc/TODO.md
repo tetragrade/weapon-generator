@@ -1,10 +1,16 @@
 - TODO
     - Basic Functionality
         - ~~Color-coded rarities.~~
-        - Support for conditionally available abilities, beyond themes. 
+        - Support for conditionally available abilities, beyond themes.
+            - ~~Personality.~~
+            - Active Abilities.
+            - Passive Abilities.
+            - Recharge Method.
+
         - More themes & abilities.
-        - Weapon type based damage.
+        - Weapon shape type based damage.
         
+        - Better names & descriptions.
         - UX.
         - Proper namelist.
         - Automated Testing.

@@ -1,6 +1,11 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, PersonalityCondProvider } from "./weaponGeneratorTypes";
+import type { ProviderElement } from "./provider";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, DamageDice, PassiveBonus } from "./weaponGeneratorTypes";
+
+function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
+    return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
+}
 
 export const weaponRarityConfig: WeaponRarityConfig = {
     common: {
@@ -159,15 +164,21 @@ export const OBJECT_ADJECTIVES = {
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
-export const POSSIBLE_ACTIVE_POWERS = {
+export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
     "fire": [
         {
             desc: "Fire Ball",
-            cost: 3
+            cost: 3,
+            rarity: {
+                gte: 'rare'
+            }
         },
         {
             desc: "Wall of Fire",
             cost: 4,
+            rarity: {
+                gte: 'rare'
+            }
         },
         {
             desc: "Control Weather",
@@ -257,12 +268,12 @@ export const POSSIBLE_ACTIVE_POWERS = {
             additionalNotes: ["Target must save or waste their turn vomiting."]
         },
     ],
-} satisfies Record<
+} as Record<
     Theme | string,
-    Iterable<ActivePower>    
->;
+    (ActivePower & WeaponPowerCond)[]
+>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, rarity: 'rarity' in x ? x.rarity : undefined }}));
 
-export const POSSIBLE_PASSIVE_POWERS = {
+export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     "fire": [
         {
             language: true,
@@ -274,7 +285,10 @@ export const POSSIBLE_PASSIVE_POWERS = {
         },
         {
             miscPower: true,
-            desc: "Wielder cannot be harmed by fire"
+            desc: "Wielder cannot be harmed by fire",
+            rarity: {
+                gte: 'rare'
+            }
         },
         {
             miscPower: true,
@@ -403,12 +417,12 @@ export const POSSIBLE_PASSIVE_POWERS = {
             desc: "Licking the weapon cures scurvy. It tastes sour."
         }
     ],
-} satisfies Record<
+} as Record<
     Theme | string,
-    Iterable<PassivePower>
->;
+    (PassivePower & WeaponPowerCond)[]
+>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, rarity: 'rarity' in x ? x.rarity : undefined }}));
 
-export const POSSIBLE_PERSONALITIES = Object.entries({
+export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
             "compassionate",
             "irritable",
@@ -476,9 +490,9 @@ export const POSSIBLE_PERSONALITIES = Object.entries({
             "pious",
             "zealous",
         ]
-}).map(([k,v]) => v.map(x => ({ personalityGenerator: mkGen(x), cond: { themes: { all: [k as Theme]} }} satisfies PersonalityCondProvider))).flat() satisfies PersonalityCondProvider[];
+} satisfies Record<Theme | string, string[]>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, personalities: { none: [x] } }}));
 
-export const POSSIBLE_RECHARGE_METHODS = {
+export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     fire: [
         mkGen("regains all charges after being superheated"),
         mkGen("regains a charge at the end of each scene where its wielder started a fire"),
@@ -515,4 +529,4 @@ export const POSSIBLE_RECHARGE_METHODS = {
     // electric: [
     //     "regains all charges when struck by lightning",
     // ]
-} satisfies Record<Theme | string, Iterable<TGenerator<string>>>;
+} satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
