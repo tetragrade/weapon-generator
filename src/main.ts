@@ -87,7 +87,6 @@ class WeaponGeneratorController {
       // then observe for any future changes in the url params,
       // updating the weapon view for the new params
       window.addEventListener('popstate', (() => {
-        console.log('navigation event');
         this.onIDChanged();
       }).bind(this));
 

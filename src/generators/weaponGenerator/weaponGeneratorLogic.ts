@@ -137,7 +137,6 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     // decide power level
     const rarity = generateRarity(rng);
     const params = weaponRarityConfig[rarity].paramsProvider(rng);
-    console.log(params);
 
     // TODO remove me
     params.damage = { d6: 1}
