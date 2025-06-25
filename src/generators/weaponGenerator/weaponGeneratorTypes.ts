@@ -60,16 +60,14 @@ export type Weapon = {
     active: {
         maxCharges: number,
         rechargeMethod: string
-        powers: (ChargedPower | UnlimitedChargedPower)[];
+        powers: ActivePower[];
     }
     passivePowers: PassivePower[];
-} & (
-    { isSentient: false; } | {
-        isSentient: true;
-        personalityTraits: string[];
+    sentient: false | {
+        personality: string[];
         languages: string[];
     }
-)
+}
 
 export interface Power {
     desc: string;
@@ -109,13 +107,14 @@ export type AnyPower = ActivePower | PassivePower;
 
 export interface WeaponPowerCond extends Cond {
     themes?: Quant<Theme>;
-    personalities?: Quant<string>;
+    personality?: Quant<string>;
+    activePowers?: Quant<ActivePower>;
+    passivePowers?: Quant<PassivePower>;
     rarity?: Comp<WeaponRarity>;
     isSentient?: boolean;
 }
-export interface WeaponPowerCondParams {
-    themes: Theme[];
-    personalityTraits: string[];
-    rarity: WeaponRarity;
-    isSentient: boolean;
-}
+
+/**
+ * TODO this should really just accept weapon
+ */
+export type WeaponPowerCondParams = Pick<Weapon, 'active' | 'passivePowers' | 'sentient' | 'rarity' | 'themes'>

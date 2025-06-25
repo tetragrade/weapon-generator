@@ -3,9 +3,10 @@
         - ~~Color-coded rarities.~~
         - Support for conditionally available abilities, beyond themes.
             - ~~Personality.~~
-            - Active Abilities.
-            - Passive Abilities.
-            - Recharge Method.
+            - ~~Active Abilities.~~
+            - ~~Passive Abilities.~~
+            - ~~Recharge Method.~~
+            - Implement Quant for active & passive powers.
 
         - More themes & abilities.
         - Weapon shape type based damage.

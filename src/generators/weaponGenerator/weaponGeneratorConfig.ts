@@ -1,7 +1,7 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, DamageDice, PassiveBonus } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond } from "./weaponGeneratorTypes";
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
@@ -183,42 +183,66 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
         {
             desc: "Control Weather",
             cost: 2,
-            additionalNotes: ["Must move conditions towards heatwave."]
+            additionalNotes: ["Must move conditions towards heatwave."],
+            rarity: {
+                lte: 'uncommon'
+            }
         },
         {
             desc: "Control Flames",
             cost: 1,
-            additionalNotes: ["Flames larger than wielder submit only after a save."]
+            additionalNotes: ["Flames larger than wielder submit only after a save."],
+            rarity: {
+                lte: 'uncommon'
+            }
         }
     ],
     "ice": [
         {
             desc: "Wall of Ice",
             cost: 2,
+            rarity: {
+                lte: 'uncommon'
+            }
         },
         {
             desc: "Control Weather",
             cost: 3,
-            additionalNotes: ["Must move conditions towards blizzard."]
+            additionalNotes: ["Must move conditions towards blizzard."],
+            rarity: {
+                lte: 'uncommon'
+            }
         },
         {
             desc: "Chilling Strike",
             cost: 2,
-            additionalNotes: ["Struck foes save or be frozen solid next turn."]
+            additionalNotes: ["Struck foes save or be frozen solid next turn."],
+            rarity: {
+                lte: 'uncommon'
+            }
         }
     ],
     "dark": [
         {
             desc: "Commune With Demon",
-            cost: 2
+            cost: 2,
+            rarity: {
+                lte: 'uncommon'
+            }
         },
         {
             desc: "Turn Priests & Angels",
-            cost: 1
+            cost: 1,
+            rarity: {
+                lte: 'uncommon'
+            }
         },
         {
             desc: "Darkness",
-            cost: 1
+            cost: 1,
+            rarity: {
+                lte: 'uncommon'
+            }
         },
     ],
     "light": [
@@ -271,7 +295,14 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
 } as Record<
     Theme | string,
     (ActivePower & WeaponPowerCond)[]
->, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, rarity: 'rarity' in x ? x.rarity : undefined }}));
+>, (k,x) => ({
+    thing: mkGen(x),
+    cond: {
+        themes: { all: [k as Theme]},
+        activePowers: { none: [x]},
+        rarity: 'rarity' in x ? x.rarity : undefined
+    }
+}));
 
 export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     "fire": [
@@ -420,7 +451,13 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
 } as Record<
     Theme | string,
     (PassivePower & WeaponPowerCond)[]
->, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, rarity: 'rarity' in x ? x.rarity : undefined }}));
+>, (k,x) => ({ 
+    thing: mkGen(x), 
+    cond: { 
+        themes: { all: [k as Theme]}, 
+        passivePowers: { none: [x]}, 
+        rarity: 'rarity' in x ? x.rarity : undefined 
+    }}));
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
@@ -490,7 +527,7 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
             "pious",
             "zealous",
         ]
-} satisfies Record<Theme | string, string[]>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, personalities: { none: [x] } }}));
+} satisfies Record<Theme | string, string[]>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, personality: { none: [x] } }}));
 
 export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     fire: [

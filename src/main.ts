@@ -194,13 +194,13 @@ class WeaponGeneratorController {
         );
         
         // add sentient box & info
-        if(weaponViewModel.isSentient) {
+        if(weaponViewModel.sentient) {
           this.view.isSentient.hidden = false;
-          this.buildList(this.view.languages, weaponViewModel.languages, (elem, x) => {
+          this.buildList(this.view.languages, weaponViewModel.sentient.languages, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });
-          this.buildList(this.view.personality, weaponViewModel.personalityTraits, (elem, x) => {
+          this.buildList(this.view.personality, weaponViewModel.sentient.personality, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });
