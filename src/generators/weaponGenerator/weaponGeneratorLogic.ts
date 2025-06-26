@@ -64,7 +64,7 @@ const mkSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen
 });
         
 
-const exoticWeaponMaterialsGenerator = mkGen((rng) => [
+const exoticWeaponMaterialsGenerator = mkGen((rng) => [,
     "silver",
     "gold",
     "black iron",
@@ -79,16 +79,15 @@ const exoticWeaponMaterialsGenerator = mkGen((rng) => [
 ].choice(rng));
 
 const normalWeaponMaterialsGenerator = mkGen((rng) => [
-    "tin",
-    "copper",
     "bronze",
     "iron",
     "steel",
-    "silver",
-    "gold"
+    "silver-plated"
 ].choice(rng));
 
 const crummyWeaponMaterialsGenerator = mkGen((rng) => [
+    "tin",
+    "copper",
     "oak",
     "pine",
     "granite",

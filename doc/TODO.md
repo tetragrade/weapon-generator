@@ -11,6 +11,7 @@
         - Implement bonuses for passive abilities.
 
         - More themes & abilities.                      EASY LONG
+            - 'pets'
         - Weapon shape type based damage.               EASY SHORT
         
         - Better names & descriptions.                  HARD LONG

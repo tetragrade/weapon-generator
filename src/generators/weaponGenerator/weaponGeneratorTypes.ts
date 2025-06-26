@@ -3,8 +3,10 @@ import type { Comp, Cond, Quant } from "./provider";
 
 export const allThemes = [
     "fire", "ice",
+    "cloud",
     "dark", "light",
     "sweet", "sour",
+    "wizard", "steampunk"
     // "poison", "water"
     // "earth", "cloud",
     // "psychic", "electric"
@@ -17,9 +19,9 @@ export type Theme = (typeof allThemes)[number];
 const themesSet = new Set(allThemes);
 export const isTheme = (x: unknown): x is Theme => themesSet.has(x as Theme);
 
-export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'] as const;
 const weaponRaritiesSet = new Set(weaponRarities);
-export type WeaponRarity = 'common'| 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type WeaponRarity = (typeof weaponRarities)[number];
 export const isRarity = (x: unknown): x is WeaponRarity => weaponRaritiesSet.has(x as WeaponRarity);
 
 

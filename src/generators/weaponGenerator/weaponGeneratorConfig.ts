@@ -126,10 +126,8 @@ export const OBJECT_ADJECTIVES = {
     ],
     fire: [
         "fiery",
-        "blazing",
-        "blazed",
-        "roaring",
-        "crackling",
+        "blazing", "roaring", "crackling",
+        'ruby','opal'
     ],
     ice: [
         "icy",
@@ -155,6 +153,26 @@ export const OBJECT_ADJECTIVES = {
     ],
     sweet: ["saccharine", "candied", "glazed"], 
     sour: ["corroded", "corrosive"],
+    wizard: [
+        'crystal',
+        'silk-wrapped',
+        'amethyst'
+    ],
+    steampunk: [
+        'brass',
+        'clockwork'
+    ],
+    earth: [
+        'heavy',
+        'rough',
+        'onyx',
+        'slag'
+    ],
+    cloud: [
+        'gossamer',
+        'rusty',
+        'silver'
+    ],
     jungle: [
         'gold-banded',
         'silver-strapped',
@@ -168,7 +186,7 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
     "fire": [
         {
             desc: "Fire Ball",
-            cost: 3,
+            cost: 4,
             rarity: {
                 gte: 'rare'
             }
@@ -200,7 +218,7 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
     "ice": [
         {
             desc: "Wall of Ice",
-            cost: 2,
+            cost: 4,
             rarity: {
                 lte: 'uncommon'
             }
@@ -292,6 +310,41 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
             additionalNotes: ["Target must save or waste their turn vomiting."]
         },
     ],
+    "wizard": [
+        {
+            desc: "Magic Missile",
+            cost: 1,
+        },
+        {
+            desc: "Magic Shield",
+            cost: 1,
+        },
+    ],
+    "steampunk": [
+        {
+            desc: "Summon Steam Elemental",
+            cost: 6,
+        },
+        {
+            desc: "Power Machine",
+            cost: 1,
+            additionalNotes: ["Touching the weapon to a machine causes it to activates under magical power. It operates for 24 hours."]
+        },
+    ],
+    "earth": [
+        {
+            desc: "Wall of stone",
+            cost: 4,
+        },
+        {
+            desc: "Petrify Person",
+            cost: 5,
+        },
+        {
+            desc: "Cure Petrification",
+            cost: 2,
+        },
+    ]
 } as Record<
     Theme | string,
     (ActivePower & WeaponPowerCond)[]
@@ -339,7 +392,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: "Weapon is a master blacksmith."
+            desc: "Weapon is an expert blacksmith."
         }
     ],
     "ice": [
@@ -421,7 +474,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     "sweet": [
         {
             miscPower: true,
-            desc: "Weapon is a master chef.",
+            desc: "Weapon is an expert chef.",
         },
         {
             miscPower: true,
@@ -439,7 +492,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     "sour": [
         {
             miscPower: true,
-            desc: "Weapon is a master alchemist."
+            desc: "Weapon is an expert alchemist."
         },
         {
             miscPower: true,
@@ -454,6 +507,81 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
             desc: "Licking the weapon cures scurvy. It tastes sour."
         }
     ],
+    "wizard": [
+        {
+            miscPower: true,
+            desc: "Weapon is an expert astrologer."
+        },
+        {
+            miscPower: true,
+            desc: "If you are not wounded, the weapon can also fire a spectral copy of itself as a projectile attack. Damage as weapon, range as bow.",
+            rarity: {
+                gte: 'rare'
+            }
+        },
+        {
+            miscPower: true,
+            desc: "Each hit you land with the weapon generates a wisp. On your turn, you can launch any number of wisps at no cost. d4 damage, range as bow.",
+            rarity: {
+                gte: 'epic'
+            }
+        },
+    ],
+    "steampunk": [
+        {
+            miscPower: true,
+            desc: "Weapon is an expert tinkerer."
+        },
+        {
+            miscPower: true,
+            desc: "Weapon always knows which was is north."
+        },
+        {
+            miscPower: true,
+            desc: "A widget on the weapon displays the time."
+        },
+    ],
+    "cloud": [
+        {
+            miscPower: true,
+            desc: "Can shoot an endless stream of water from its tip, pressure as garden hose."
+        },
+        {
+            miscPower: true,
+            desc: "Can transform into an umbrella."
+        },
+        {
+            miscPower: true,
+            desc: "You can fly, as fast as you can walk.",
+            rarity: {gte: 'epic' }
+        },
+    ],
+    "earth": [
+        {
+            miscPower: true,
+            desc: "Wielder cannot be petrified."
+        },
+        {
+            miscPower: true,
+            desc: "Can transform into a shovel."
+        },
+        {
+            miscPower: true,
+            desc: "Can transform into a pickaxe."
+        },
+        {
+            miscPower: true,
+            desc: "Weapon is an expert jeweller. It can identify any gemstone."
+        },
+        {
+            miscPower: true,
+            desc: "Stats as (function as) a shield."
+        },
+        {
+            miscPower: true,
+            desc: "Unaware targets that are hit by the weapon must save or be petrified."
+        },
+    ]
 } as Record<
     Theme | string,
     (PassivePower & WeaponPowerCond)[]
@@ -492,7 +620,7 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
             "stubborn",
             "vengeful",
         ],
-    "water": [
+    "cloud": [
             "easy-going",
             "easy-going",
             "easy-going"
@@ -576,7 +704,25 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen("regains all charges when used to fell a citrus tree"),
         mkGen("regains a charge each time its wielder insults someone")
     ],
-    // electric: [
-    //     "regains all charges when struck by lightning",
-    // ]
+    cloud: [
+        mkGen("regains all charges when struck by lightning"),
+        mkGen('regains all charges when you survive a significant fall'),
+        mkGen('regains a charge when you kill a winged creature, or all charges if it was also a powerful foe'),
+    ],
+    wizard: [
+        mkGen('regains a charge when you cast one of your own spells'),
+        mkGen('regains all charges when you learn a new spell'),
+        mkGen('regains all charges when you win a wizard duel'),
+        mkGen('regains a charges when you finish reading a new book'),
+    ],
+    steampunk: [
+        mkGen('regains all charges when you invent something'),
+        mkGen('regains all charge when you throw a tea party'),
+        mkGen("regains a charge when you fulfil someone's desire to know the time"),
+    ],
+    earth: [
+        mkGen('regains a charge when you throw a rock at something important'),
+        mkGen('regains all charge when you meditate atop a mountain'),
+        mkGen('regains all charges when driven into the ground while something important is happening')
+    ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
