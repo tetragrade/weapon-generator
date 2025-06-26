@@ -112,7 +112,7 @@ const weaponMaterialGenerator = mkGen((rng) => {
     }
 });
 
-export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
+export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
         // sort in ascending order of draw chance
@@ -128,7 +128,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     }
 
     const rng = seedrandom(rngSeed);
-
+    
     // decide power level
     const rarity = generateRarity(rng);
     const params = weaponRarityConfig[rarity].paramsProvider(rng);
@@ -162,15 +162,20 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const unusedThemes = new Set<Theme>(allThemes); // this could be a provider but whatever go my Set<Theme>
     const minThemes = [1,2].choice(rng);
     while(
-        weapon.themes.length < minThemes || 
+        weapon.themes.length < minThemes ||
         activePowersProvider.available(weapon).size < params.nActive+params.nUnlimitedActive ||
         passivePowersProvider.available(weapon).size < params.nPassive
     ) {
-        const chosen = unusedThemes.choice(rng);
-        unusedThemes.delete(chosen);
-        weapon.themes.push(chosen);
+        const choice = unusedThemes.choice(rng);
+        if(choice!=undefined) {
+            unusedThemes.delete(choice);
+            weapon.themes.push(choice);
+        }
+        else {
+            // there were not enough themes available, but try to continue anyway in case we get lucky & generate a valid weapon anyway
+            break;
+        }
     }
-        
     // determine name
     weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, rng) : mkNonSentientNameGenerator(weapon.themes, rng)).generate(rng);
     
@@ -180,51 +185,60 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     if(weapon.sentient) {
         // choose one personality for each theme
         for(const _ of weapon.themes) {
-            const chosen = personalityProvider.draw(rng, weapon).generate(rng);
-            weapon.sentient.personality.push(chosen);
+            const choice = personalityProvider.draw(rng, weapon).generate(rng);
+            if(choice!=undefined) {
+                weapon.sentient.personality.push(choice);
+            }
         }
     }
 
     // draw passive powers
     while(params.nPassive-->0) {
         const choice = passivePowersProvider.draw(rng, weapon).generate(rng);
-        if('language' in choice && weapon.sentient) {
-            weapon.sentient.languages.push(choice.desc);
-        }
-        else if ('miscPower' in choice) {
-            weapon.passivePowers.push(choice);
-            for(const bonus in choice.bonus) {
-                switch(bonus as keyof PassiveBonus) {
-                    case 'addDamageDie':
-                        // apply all damage dice to the weapon
-                        for(const k in choice.bonus.addDamageDie) {
-                            const die = k as keyof DamageDice; 
-                            if(typeof weapon.damage[die] === 'number' && typeof choice.bonus.addDamageDie[die] === 'number') {
-                                weapon.damage[die] += choice.bonus.addDamageDie[die];
-                            }
-                             
-                        }    
-                    break;
+        if(choice!=undefined) {
+            if('language' in choice && weapon.sentient) {
+                weapon.sentient.languages.push(choice.desc);
+            }
+            else if ('miscPower' in choice) {
+                weapon.passivePowers.push(choice);
+                for(const bonus in choice.bonus) {
+                    switch(bonus as keyof PassiveBonus) {
+                        case 'addDamageDie':
+                            // apply all damage dice to the weapon
+                            for(const k in choice.bonus.addDamageDie) {
+                                const die = k as keyof DamageDice; 
+                                if(typeof weapon.damage[die] === 'number' && typeof choice.bonus.addDamageDie[die] === 'number') {
+                                    weapon.damage[die] += choice.bonus.addDamageDie[die];
+                                }
+                                
+                            }    
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            throw new Error('This should never happen. A misc power was configured in an invalid way invalidly & did not require the weapon to be sentient.');
+            else {
+                throw new Error('This should never happen. A misc power was configured in an invalid way invalidly & did not require the weapon to be sentient.');
+            }
         }
     }
 
     // draw active powers
     weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon).generate(rng);
     while(params.nActive-->0) {
-        weapon.active.powers.push(activePowersProvider.draw(rng, weapon).generate(rng));
+        const choice = activePowersProvider.draw(rng, weapon).generate(rng);
+        if(choice!=undefined) {
+            weapon.active.powers.push();
+        }
     }
 
     while(params.nUnlimitedActive-->0) {
-        const x = activePowersProvider.draw(rng, weapon).generate(rng);
-        weapon.active.powers.push({
-            ...x,
-            cost: 'at will',
-        });
+        const choice = activePowersProvider.draw(rng, weapon).generate(rng);
+        if(choice!=undefined) {
+            weapon.active.powers.push({
+                ...choice,
+                cost: 'at will',
+            });
+        }
     }
     
     // set the weapon's max charges to be enough to cast its most expensive power, if it was previously lower

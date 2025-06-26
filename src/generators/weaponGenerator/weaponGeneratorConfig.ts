@@ -1,7 +1,7 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponRarity } from "./weaponGeneratorTypes";
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
@@ -304,169 +304,17 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
     }
 }));
 
-export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
-    "fire": [
-        {
-            language: true,
-            desc: "The language of Fire"
-        },
-        {
-            miscPower: true,
-            desc: "Wielder takes half damage from fire."
-        },
-        {
-            miscPower: true,
-            desc: "Wielder cannot be harmed by fire",
-            rarity: {
-                gte: 'rare'
-            }
-        },
-        {
-            miscPower: true,
-            desc: "Wreathed in flames, glows like a torch",
-            bonus: {
-                addDamageDie: {
-                    d6: 1,
-                }
-            }
-        },
-        {
-            miscPower: true,
-            desc: "Weapon is a master blacksmith."
-        }
-    ],
-    "ice": [
-        {
-            language: true,
-            desc: "The language of Ice & Snow"
-        },
-        {
-            miscPower: true,
-            desc: "Wielder takes half damage from ice & cold."
-        },
-        {
-            miscPower: true,
-            desc: "Wielder cannot be harmed by ice & cold."
-        },
-        {
-            miscPower: true,
-            desc: "Wreathed in ice, always frozen into its sheath. Requires a strength save to draw.",
-            bonus: {
-                addDamageDie: {
-                    d8: 1,
-                }
-            }
-        },
-        {
-            miscPower: true,
-            desc: "1-in-2 chance to sense icy weather before it hits, giving just enough time to escape."
-        },
-        {
-            miscPower: true,
-            desc: "Wielder can walk on all kinds of ice without breaking it."
-        }
-    ],
-    "dark": [
-        {
-            miscPower: true,
-            desc: "Menacing aura. Bonus to saves to frighten & intimate."
-        },
-        {
-            miscPower: true,
-            desc: "Traps the souls of its victims. They haunt the weapon, and obey the wielder's commands."
-        },
-        {
-            miscPower: true,
-            desc: "Wreathed in lightless black flames.",
-            bonus: {
-                addDamageDie: {
-                    d6: 1,
-                }
-            }
-        },
-    ],
-    "light": [
-        {
-            language: true,
-            desc: "Angelic"
-        },
-        {
-            miscPower: true,
-            desc:"Wielder takes half damage from rays & beams"
-        },
-        {
-            miscPower: true,
-            desc: "Wielder is immune to the effects of rays & beams"
-        },
-        {
-            miscPower: true,
-            desc: 'TODO move my generator up'
-            // desc: new StringGenerator([
-            //     mkGen("Glows like a torch when "), 
-            //     pluralUnholyFoe,
-            //     mkGen(" are near")
-            // ]),
-        },
-        {
-            miscPower: true,
-            desc: "Can reflect and focus light as a damaging beam (2d6 damage)",
-        },
-        {
-            miscPower: true,
-            desc: "Wielder has a wholesome aura. Bonus to saves to spread cheer and/or appear nonthreatening.",
-        }
-    ],
-    "sweet": [
-        {
-            miscPower: true,
-            desc: "Weapon is a master chef.",
-        },
-        {
-            miscPower: true,
-            desc: "The wielder magically knows the recipe of any dessert they taste.",
-        },
-        {
-            miscPower: true,
-            desc: "Cute animals follow the wielder's polite requests i.e. cats and forest birds.",
-        },
-        {
-            miscPower: true,
-            desc: "Eat business end to heal HP equal to damage roll. Renders weapon unusable until it reforms, 24 hours later."
-        }
-    ],
-    "sour": [
-        {
-            miscPower: true,
-            desc: "Weapon is a master alchemist."
-        },
-        {
-            miscPower: true,
-            desc: "Wielder takes half damage from corrosive chemicals."
-        },
-        {
-            miscPower: true,
-            desc: "Wielder is immune to the harmful effects of corrosive chemicals."
-        },
-        {
-            miscPower: true,
-            desc: "Licking the weapon cures scurvy. It tastes sour."
-        }
-    ],
-} as Record<
-    Theme | string,
-    (PassivePower & WeaponPowerCond)[]
->, (k,x) => ({ 
+export const POSSIBLE_PASSIVE_POWERS = Array(100).map((_,i) => (i%2===0 ? { language: true as true, desc: 'Test 1'} : { language: true as true, desc: 'Test 2'})).map((x) => ({ 
     thing: mkGen(x), 
     cond: {
-        themes: { all: [k as Theme]}, 
         passivePowers: { none: [x]}, 
-        rarity: x?.rarity,
-        isSentient: 'language' in x ? true : x.isSentient, // languages should always require the weapon to be sentient
+        rarity: { gte: 'common' as WeaponRarity},
+        isSentient: 'language' in x ? true : false, // languages should always require the weapon to be sentient
         languages: {
             none: [x.desc]
         }
     }}));
-
+    
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
             "compassionate",
