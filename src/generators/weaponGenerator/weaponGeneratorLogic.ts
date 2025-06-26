@@ -206,12 +206,14 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
                         case 'addDamageDie':
                             // apply all damage dice to the weapon
                             for(const k in choice.bonus.addDamageDie) {
-                                const die = k as keyof DamageDice; 
-                                if(typeof weapon.damage[die] === 'number' && typeof choice.bonus.addDamageDie[die] === 'number') {
+                                const die = k as keyof DamageDice;
+                                if(typeof choice.bonus.addDamageDie[die] === 'number') {
+                                    if(weapon.damage[die] === undefined) {                                    
+                                        weapon.damage[die] = 0;
+                                    }
                                     weapon.damage[die] += choice.bonus.addDamageDie[die];
                                 }
-                                
-                            }    
+                            }
                         break;
                     }
                 }

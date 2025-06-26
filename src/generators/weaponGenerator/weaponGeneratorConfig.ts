@@ -413,7 +413,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
             desc: "Wreathed in ice, always frozen into its sheath. Requires a strength save to draw.",
             bonus: {
                 addDamageDie: {
-                    d8: 1,
+                    d8: 1, // doesn't work
                 }
             }
         },
