@@ -180,7 +180,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         // choose one personality for each theme
         for(const _ of weapon.themes) {
             const chosen = personalityProvider.draw(rng, weapon).generate(rng);
-            weapon.sentient.personality.push(chosen.capFirst() + '.');
+            weapon.sentient.personality.push(chosen);
         }
     }
 

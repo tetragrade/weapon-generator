@@ -496,39 +496,42 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
         "vengeful",
     ],
     "sour": [
-            "antagonistic",
-            "cruel",
-            "pitiless",
-            "manic",
-            "sassy"
-        ],
+        "antagonistic",
+        "cruel",
+        "pitiless",
+        "manic",
+        "sassy"
+    ],
     "poison": [
-            "antagonistic",
-            "cruel",
-            "pitiless",
-            "violent",
-            "standoffish",
-            "sadistic",
-            "enjoys provoking others"
-        ],
+        "antagonistic",
+        "cruel",
+        "pitiless",
+        "violent",
+        "standoffish",
+        "sadistic",
+        "enjoys provoking others"
+    ],
     "dark": [
-            "shy",
-            "tries to act mysterious",
-            "quiet",
-            "depressive",
-            "cruel",
-            "angry",
-            "vengeful",
-            "sadistic",
-            "enjoys provoking others"
-        ],
+        "shy",
+        "tries to act mysterious",
+        "quiet",
+        "depressive",
+        "cruel",
+        "angry",
+        "vengeful",
+        "sadistic",
+        "enjoys provoking others"
+    ],
     "light": [
-            "logical",
-            "honest",
-            "pious",
-            "zealous",
-        ]
-} satisfies Record<Theme | string, string[]>, (k,x) => ({ thing: mkGen(x), cond: { themes: { all: [k as Theme]}, personality: { none: [x] } }}));
+        "logical",
+        "honest",
+        "pious",
+        "zealous",
+    ]
+} satisfies Record<Theme | string, string[]>, (k,x) => {
+    const formatted = x.capFirst() + '.';
+    return ({ thing: mkGen(formatted), cond: { themes: { all: [k as Theme]}, personality: { none: [formatted] } }})
+});
 
 export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     fire: [
