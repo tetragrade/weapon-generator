@@ -138,16 +138,16 @@ class WeaponGeneratorController {
       try {
         this.view.outputRoot.hidden = false;
 
-        const weaponViewModel = mkWeapon(rngSeed);
-        console.log('generated weapon', weaponViewModel);
-  
-        this.view.name.innerText = weaponViewModel.name;
+        const weapon = mkWeapon(rngSeed);
+        console.log(weapon);
+
+        this.view.name.innerText = weapon.name;
         // remove the old rarity class & add the new one
         this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
-        this.view.name.classList.add(`weapon-rarity-${weaponViewModel.rarity}`);
+        this.view.name.classList.add(`weapon-rarity-${weapon.rarity}`);
 
   
-        const damageEntries = Object.entries(weaponViewModel.damage);
+        const damageEntries = Object.entries(weapon.damage);
         this.view.damage.innerText = damageEntries.length>1 ?
           damageEntries
           .filter(([k]) => k!='d4')
@@ -158,11 +158,11 @@ class WeaponGeneratorController {
           ) : `${damageEntries[0][1]}${damageEntries[0][0]}`;
   
         // add the active powers
-        this.view.active.maxCharges.innerText = `${this.textForCharges(weaponViewModel.active.maxCharges)}.`;
-        this.view.active.rechargeMethod.innerText = weaponViewModel.active.rechargeMethod.capFirst() + '.';
+        this.view.active.maxCharges.innerText = `${this.textForCharges(weapon.active.maxCharges)}.`;
+        this.view.active.rechargeMethod.innerText = weapon.active.rechargeMethod.capFirst() + '.';
         this.buildList(
           this.view.active.powers, 
-          weaponViewModel.active.powers,
+          weapon.active.powers,
           (elem, x) => {
             elem.classList.add('weapon-generator-active-list-item');
 
@@ -186,7 +186,7 @@ class WeaponGeneratorController {
         // add the passive powers
         this.buildList(
           this.view.passivePowers,
-          weaponViewModel.passivePowers,
+          weapon.passivePowers,
           (elem, x) => {
             elem.innerText = x.desc;
             elem.classList.add('weapon-generator-active-list-item');
@@ -194,13 +194,13 @@ class WeaponGeneratorController {
         );
         
         // add sentient box & info
-        if(weaponViewModel.sentient) {
+        if(weapon.sentient) {
           this.view.isSentient.hidden = false;
-          this.buildList(this.view.languages, weaponViewModel.sentient.languages, (elem, x) => {
+          this.buildList(this.view.languages, weapon.sentient.languages, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });
-          this.buildList(this.view.personality, weaponViewModel.sentient.personality, (elem, x) => {
+          this.buildList(this.view.personality, weapon.sentient.personality, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });

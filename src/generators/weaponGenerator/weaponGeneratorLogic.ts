@@ -49,7 +49,7 @@ const mkNonSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mk
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
         mkGen(' '),
         weaponShapeGenerator
-    ]).generate(rng);
+    ])?.generate(rng);
     return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
 const mkSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen(() => {
@@ -59,7 +59,7 @@ const mkSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
         mkGen(' '),
         weaponShapeGenerator
-    ]).generate(rng);
+    ])?.generate(rng);
     return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
         
@@ -112,7 +112,7 @@ const weaponMaterialGenerator = mkGen((rng) => {
     }
 });
 
-export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
+export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
         // sort in ascending order of draw chance
@@ -132,7 +132,8 @@ export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
     // decide power level
     const rarity = generateRarity(rng);
     const params = weaponRarityConfig[rarity].paramsProvider(rng);
-    
+    console.log(params)
+
     // determine sentience
     const isSentient = rng() < params.sentienceChance;
 
@@ -172,12 +173,12 @@ export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
             weapon.themes.push(choice);
         }
         else {
-            // there were not enough themes available, but try to continue anyway in case we get lucky & generate a valid weapon anyway
+            // there were not enough themes available, but continue anyway in case we get lucky & still generate a valid weapon
             break;
         }
     }
     // determine name
-    weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, rng) : mkNonSentientNameGenerator(weapon.themes, rng)).generate(rng);
+    weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, rng) : mkNonSentientNameGenerator(weapon.themes, rng))?.generate(rng);
     
     // determine description
     weapon.description = 'TODO';
@@ -185,7 +186,7 @@ export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
     if(weapon.sentient) {
         // choose one personality for each theme
         for(const _ of weapon.themes) {
-            const choice = personalityProvider.draw(rng, weapon).generate(rng);
+            const choice = personalityProvider.draw(rng, weapon)?.generate(rng);
             if(choice!=undefined) {
                 weapon.sentient.personality.push(choice);
             }
@@ -194,7 +195,7 @@ export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
 
     // draw passive powers
     while(params.nPassive-->0) {
-        const choice = passivePowersProvider.draw(rng, weapon).generate(rng);
+        const choice = passivePowersProvider.draw(rng, weapon)?.generate(rng);
         if(choice!=undefined) {
             if('language' in choice && weapon.sentient) {
                 weapon.sentient.languages.push(choice.desc);
@@ -217,22 +218,24 @@ export const mkWeapon: (rngSeed: string) => Weapon | null = (rngSeed) => {
                 }
             }
             else {
-                throw new Error('This should never happen. A misc power was configured in an invalid way invalidly & did not require the weapon to be sentient.');
+                // Probably because a passive power was missing a type key.
+                // Or because a language was configured in an invalid way & did not require the weapon to be sentient.
+                throw new Error('Could not assign passive power, config was invalid.');
             }
         }
     }
 
     // draw active powers
-    weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon).generate(rng);
+    weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon)?.generate(rng);
     while(params.nActive-->0) {
-        const choice = activePowersProvider.draw(rng, weapon).generate(rng);
+        const choice = activePowersProvider.draw(rng, weapon)?.generate(rng);
         if(choice!=undefined) {
-            weapon.active.powers.push();
+            weapon.active.powers.push(choice);
         }
     }
 
     while(params.nUnlimitedActive-->0) {
-        const choice = activePowersProvider.draw(rng, weapon).generate(rng);
+        const choice = activePowersProvider.draw(rng, weapon)?.generate(rng);
         if(choice!=undefined) {
             weapon.active.powers.push({
                 ...choice,

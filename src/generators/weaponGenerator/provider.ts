@@ -1,16 +1,16 @@
 import type seedrandom from "seedrandom";
+import * as _ from 'lodash';
 
 export type Quant<T> = { any: T[]} | { all: T[] } | { none: T[] }
-export function evQuant<T>(req: Quant<T>, act: T[]) {
-    const actSet = new Set(act);
+export function evQuant<T>(req: Quant<T>, actual: T[]) {
     if('any' in req) {
-        return actSet.size>0 && req.any.some(x => actSet.has(x));
+        return actual.length>0 && req.any.some(x => actual.some(y => _.isEqual(x,y)));
     }
     else if('all' in req) {
-        return actSet.size>0 && req.all.every(x => actSet.has(x));
+        return actual.length>0 && req.all.every(x => actual.some(y => _.isEqual(x,y)));
     }
     else if('none' in req) {
-        return actSet.size===0 || !req.none.some(x => actSet.has(x));
+        return actual.length===0 || !req.none.some(x => actual.some(y => _.isEqual(x,y)));
     }
     return true;
 }
@@ -53,7 +53,7 @@ export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCond
      * @param params the params that the return value's condition must hold for
      * @returns a random thing meeting that is valid for conditions
      */
-    draw = (rng: seedrandom.PRNG, params: TCondParams) => this.source.filter(x => this.condExecutor(x.cond, params)).choice(rng).thing;
+    draw = (rng: seedrandom.PRNG, params: TCondParams) => this.source.filter(x => this.condExecutor(x.cond, params)).choice(rng)?.thing;
     
     /**
      * Returns the set of things whose condition holds for given params.
