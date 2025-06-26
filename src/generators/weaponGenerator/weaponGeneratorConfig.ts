@@ -304,6 +304,13 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource({
     }
 }));
 
+
+// this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
+// desc: new StringGenerator([
+//     mkGen("Glows like a torch when "), 
+//     pluralUnholyFoe,
+//     mkGen(" are near")
+// ]),
 export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     "fire": [
         {
@@ -400,12 +407,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: 'TODO move my generator up'
-            // desc: new StringGenerator([
-            //     mkGen("Glows like a torch when "), 
-            //     pluralUnholyFoe,
-            //     mkGen(" are near")
-            // ]),
+            desc: 'Extremely shiny, functions as a mirror.'
         },
         {
             miscPower: true,
