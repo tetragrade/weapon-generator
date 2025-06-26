@@ -312,7 +312,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: "Wielder takes half damage from fire"
+            desc: "Wielder takes half damage from fire."
         },
         {
             miscPower: true,
@@ -342,11 +342,11 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: "Wielder takes half damage from ice & cold"
+            desc: "Wielder takes half damage from ice & cold."
         },
         {
             miscPower: true,
-            desc: "Wielder cannot be harmed by ice & cold"
+            desc: "Wielder cannot be harmed by ice & cold."
         },
         {
             miscPower: true,
@@ -359,7 +359,11 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: "1-in-2 chance to sense icy weather before it hits, giving just enough time to escape"
+            desc: "1-in-2 chance to sense icy weather before it hits, giving just enough time to escape."
+        },
+        {
+            miscPower: true,
+            desc: "Wielder can walk on all kinds of ice without breaking it."
         }
     ],
     "dark": [
@@ -369,7 +373,7 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         },
         {
             miscPower: true,
-            desc: "Traps the souls of its victims. They haunt the weapon, and obey the wielder's commands"
+            desc: "Traps the souls of its victims. They haunt the weapon, and obey the wielder's commands."
         },
         {
             miscPower: true,
@@ -453,11 +457,11 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
     (PassivePower & WeaponPowerCond)[]
 >, (k,x) => ({ 
     thing: mkGen(x), 
-    cond: { 
+    cond: {
         themes: { all: [k as Theme]}, 
         passivePowers: { none: [x]}, 
-        rarity: 'rarity' in x ? x.rarity : undefined,
-        isSentient: 'language' in x ? true : undefined,
+        rarity: x?.rarity,
+        isSentient: 'language' in x ? true : x.isSentient, // languages should always require the weapon to be sentient
         languages: {
             none: [x.desc]
         }

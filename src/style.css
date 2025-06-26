@@ -139,6 +139,8 @@ h1 {
 	justify-content: center;
 
 	margin-top: auto;
+
+	width: fit-content;
 }
 
 .weapon-generator-output {
@@ -159,8 +161,20 @@ h1 {
 	gap: 20pt;
 }
 
+@media (orientation: portrait) {
+	.weapon-generator-output-body {
+		flex-direction: column;
+	}
+}
+
 .weapon-generator-output-body > * {
 	flex-basis: 0;
+}
+
+.weapon-generator-powers {
+	flex-grow: 2;
+}
+.weapon-is-sentient {
 	flex-grow: 1;
 }
 
