@@ -108,6 +108,7 @@ export type AnyPower = ActivePower | PassivePower;
 export interface WeaponPowerCond extends Cond {
     themes?: Quant<Theme>;
     personality?: Quant<string>;
+    languages?: Quant<string>;
     activePowers?: Quant<ActivePower>;
     passivePowers?: Quant<PassivePower>;
     rarity?: Comp<WeaponRarity>;

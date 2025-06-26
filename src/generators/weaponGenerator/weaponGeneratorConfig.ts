@@ -457,7 +457,10 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource({
         themes: { all: [k as Theme]}, 
         passivePowers: { none: [x]}, 
         rarity: 'rarity' in x ? x.rarity : undefined,
-        isSentient: 'language' in x ? true : undefined
+        isSentient: 'language' in x ? true : undefined,
+        languages: {
+            none: [x.desc]
+        }
     }}));
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({

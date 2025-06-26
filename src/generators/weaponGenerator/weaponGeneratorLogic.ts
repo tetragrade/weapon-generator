@@ -26,7 +26,8 @@ class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>,
             (!cond.themes || evQuant(cond.themes, params.themes)) && // themes OK
             (!cond.personality || evQuant(cond.personality, params.sentient ? params.sentient.personality : [])) && // personality OK
             (!cond.activePowers || evQuant(cond.activePowers, params.active.powers)) && // actives OK
-            (!cond.passivePowers || evQuant(cond.passivePowers, params.passivePowers))    // passives OK
+            (!cond.passivePowers || evQuant(cond.passivePowers, params.passivePowers)) &&   // passives OK
+            (!cond.languages || evQuant(cond.languages, params.sentient ? params.sentient.languages : []))    // passives OK
         );
     }
 }
