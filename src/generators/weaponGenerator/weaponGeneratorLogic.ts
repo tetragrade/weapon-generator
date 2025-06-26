@@ -132,7 +132,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     // decide power level
     const rarity = generateRarity(rng);
     const params = weaponRarityConfig[rarity].paramsProvider(rng);
-    console.log(params)
+    const paramsClone = structuredClone(params)
 
     // determine sentience
     const isSentient = rng() < params.sentienceChance;
@@ -250,6 +250,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         .filter(x => x.cost!='at will')
         .reduce((acc,x) => Math.max(x.cost, acc), weapon.active.maxCharges);
     
+    console.log('generated weapon', weapon, paramsClone);
     return weapon;
 }
 

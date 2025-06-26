@@ -139,7 +139,6 @@ class WeaponGeneratorController {
         this.view.outputRoot.hidden = false;
 
         const weapon = mkWeapon(rngSeed);
-        console.log(weapon);
 
         this.view.name.innerText = weapon.name;
         // remove the old rarity class & add the new one
