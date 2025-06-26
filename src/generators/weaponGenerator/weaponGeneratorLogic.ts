@@ -3,7 +3,7 @@ import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.t
 import '../../string.ts';
 import seedrandom from "seedrandom";
 import { OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS } from "./weaponGeneratorConfig.ts";
-import { type ActivePower, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
+import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 
 class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>, WeaponPowerCond, WeaponPowerCondParams> {
@@ -187,7 +187,29 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     // draw passive powers
     while(params.nPassive-->0) {
         const choice = passivePowersProvider.draw(rng, weapon).generate(rng);
-        ('language' in choice ? (weapon.sentient as { languages: string[]})?.languages.push(choice.desc) : weapon.passivePowers.push(choice));
+        if('language' in choice && weapon.sentient) {
+            weapon.sentient.languages.push(choice.desc);
+        }
+        else if ('miscPower' in choice) {
+            weapon.passivePowers.push(choice);
+            for(const bonus in choice.bonus) {
+                switch(bonus as keyof PassiveBonus) {
+                    case 'addDamageDie':
+                        // apply all damage dice to the weapon
+                        for(const k in choice.bonus.addDamageDie) {
+                            const die = k as keyof DamageDice; 
+                            if(typeof weapon.damage[die] === 'number' && typeof choice.bonus.addDamageDie[die] === 'number') {
+                                weapon.damage[die] += choice.bonus.addDamageDie[die];
+                            }
+                             
+                        }    
+                    break;
+                }
+            }
+        }
+        else {
+            throw new Error('This should never happen. A misc power was configured in an invalid way invalidly & did not require the weapon to be sentient.');
+        }
     }
 
     // draw active powers

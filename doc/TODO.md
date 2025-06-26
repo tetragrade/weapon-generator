@@ -8,6 +8,8 @@
             - ~~Recharge Method.~~
             - ~~Implement Quant for active & passive powers.~~
 
+        - Implement bonuses for passive abilities.
+
         - More themes & abilities.                      EASY LONG
         - Weapon shape type based damage.               EASY SHORT
         
