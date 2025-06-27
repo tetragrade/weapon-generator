@@ -1,0 +1,219 @@
+{
+    "fire": [
+        {
+            "language": true,
+            "desc": "The language of Fire"
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder takes half damage from fire."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder cannot be harmed by fire",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "miscPower": true,
+            "desc": "Wreathed in flames, glows like a torch",
+            "bonus": {
+                "addDamageDie": {
+                    "d6": 1
+                }
+            }
+        },
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert blacksmith."
+        }
+    ],
+    "ice": [
+        {
+            "language": true,
+            "desc": "The language of Ice & Snow"
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder takes half damage from ice & cold."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder cannot be harmed by ice & cold."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wreathed in ice, always frozen into its sheath. Requires a strength save to draw.",
+            "bonus": {
+                "addDamageDie": {
+                    "d8": 1
+                }
+            }
+        },
+        {
+            "miscPower": true,
+            "desc": "1-in-2 chance to sense icy weather before it hits, giving just enough time to escape."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder can walk on all kinds of ice without breaking it."
+        }
+    ],
+    "dark": [
+        {
+            "miscPower": true,
+            "desc": "Menacing aura. Bonus to saves to frighten & intimate."
+        },
+        {
+            "miscPower": true,
+            "desc": "Traps the souls of its victims. They haunt the weapon, and obey the wielder's commands."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wreathed in lightless black flames.",
+            "bonus": {
+                "addDamageDie": {
+                    "d6": 1
+                }
+            }
+        }
+    ],
+    "light": [
+        {
+            "language": true,
+            "desc": "Angelic"
+        },
+        {
+            "miscPower": true,
+            "desc":"Wielder takes half damage from rays & beams"
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder is immune to the effects of rays & beams"
+        },
+        {
+            "miscPower": true,
+            "desc": "Extremely shiny, functions as a mirror."
+        },
+        {
+            "miscPower": true,
+            "desc": "Can reflect and focus light as a damaging beam (2d6 damage)"
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder has a wholesome aura. Bonus to saves to spread cheer and/or appear nonthreatening."
+        }
+    ],
+    "sweet": [
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert chef."
+        },
+        {
+            "miscPower": true,
+            "desc": "The wielder magically knows the recipe of any dessert they taste."
+        },
+        {
+            "miscPower": true,
+            "desc": "Cute animals follow the wielder's polite requests i.e. cats and forest birds."
+        },
+        {
+            "miscPower": true,
+            "desc": "Eat business end to heal HP equal to damage roll. Renders weapon unusable until it reforms, 24 hours later."
+        }
+    ],
+    "sour": [
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert alchemist."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder takes half damage from corrosive chemicals."
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder is immune to the harmful effects of corrosive chemicals."
+        },
+        {
+            "miscPower": true,
+            "desc": "Licking the weapon cures scurvy. It tastes sour."
+        }
+    ],
+    "wizard": [
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert astrologer."
+        },
+        {
+            "miscPower": true,
+            "desc": "If you are not wounded, the weapon can also fire a spectral copy of itself as a projectile attack. Damage as weapon, range as bow.",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "miscPower": true,
+            "desc": "Each hit you land with the weapon generates a wisp. On your turn, you can launch any number of wisps at no cost. d4 damage, range as bow.",
+            "rarity": {
+                "gte": "epic"
+            }
+        }
+    ],
+    "steampunk": [
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert tinkerer."
+        },
+        {
+            "miscPower": true,
+            "desc": "Weapon always knows which was is north."
+        },
+        {
+            "miscPower": true,
+            "desc": "A widget on the weapon displays the time."
+        }
+    ],
+    "cloud": [
+        {
+            "miscPower": true,
+            "desc": "Can shoot an endless stream of water from its tip, pressure as garden hose."
+        },
+        {
+            "miscPower": true,
+            "desc": "Can transform into an umbrella."
+        },
+        {
+            "miscPower": true,
+            "desc": "You can fly, as fast as you can walk.",
+            "rarity": {"gte": "epic" }
+        }
+    ],
+    "earth": [
+        {
+            "miscPower": true,
+            "desc": "Wielder cannot be petrified."
+        },
+        {
+            "miscPower": true,
+            "desc": "Can transform into a shovel."
+        },
+        {
+            "miscPower": true,
+            "desc": "Can transform into a pickaxe."
+        },
+        {
+            "miscPower": true,
+            "desc": "Weapon is an expert jeweller. It can identify any gemstone."
+        },
+        {
+            "miscPower": true,
+            "desc": "Stats as (function as) a shield."
+        },
+        {
+            "miscPower": true,
+            "desc": "Unaware targets that are hit by the weapon must save or be petrified."
+        }
+    ]
+}

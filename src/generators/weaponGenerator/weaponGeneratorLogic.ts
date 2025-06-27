@@ -2,7 +2,7 @@ import { mundaneNameGenerator } from "../nameGenerator.ts";
 import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { OBJECT_ADJECTIVES, weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS } from "./weaponGeneratorConfig.ts";
+import { weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
 import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 

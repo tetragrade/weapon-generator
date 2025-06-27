@@ -1,0 +1,170 @@
+{
+    "fire": [
+        {
+            "desc": "Fire Ball",
+            "cost": 4,
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "desc": "Wall of Fire",
+            "cost": 4,
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "desc": "Control Weather",
+            "cost": 2,
+            "additionalNotes": ["Must move conditions towards heatwave."],
+            "rarity": {
+                "lte": "rare"
+            }
+        },
+        {
+            "desc": "Control Flames",
+            "cost": 1,
+            "additionalNotes": ["Flames larger than wielder submit only after a save."],
+            "rarity": {
+                "lte": "rare"
+            }
+        }
+    ],
+    "ice": [
+        {
+            "desc": "Wall of Ice",
+            "cost": 4,
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "desc": "Control Weather",
+            "cost": 3,
+            "additionalNotes": ["Must move conditions towards blizzard."],
+            "rarity": {
+                "lte": "rare"
+            }
+        },
+        {
+            "desc": "Chilling Strike",
+            "cost": 2,
+            "additionalNotes": ["Struck foes save or be frozen solid next turn."],
+            "rarity": {
+                "lte": "rare"
+            }
+        }
+    ],
+    "dark": [
+        {
+            "desc": "Commune With Demon",
+            "cost": 2,
+            "rarity": {
+                "gte": "uncommon"
+            }
+        },
+        {
+            "desc": "Turn Priests & Angels",
+            "cost": 1,
+            "rarity": {
+                "gte": "uncommon"
+            }
+        },
+        {
+            "desc": "Darkness",
+            "cost": 1
+        }
+    ],
+    "light": [
+        {
+            "desc": "Commune With Divinity",
+            "cost": 2,
+            "rarity": {
+                "gte": "uncommon"
+            }
+        },
+        {
+            "desc": "Turn Undead",
+            "cost": 1
+        },
+        {
+            "desc": "Light",
+            "cost": 1
+        }
+    ],
+    "sweet": [
+        {
+            "desc": "Charm Person",
+            "cost": 2
+        },
+        {
+            "desc": "Sweetberry",
+            "cost": 1,
+            "additionalNotes": ["Create a small berry, stats as healing potion."]
+        },
+        {
+            "desc": "Sugar Spray",
+            "cost": 1,
+            "additionalNotes": ["Sprays a sweet and sticky syrup, enough to coat the floor of a small room. Makes movement difficult."]
+        }
+    ],
+    "sour": [
+        {
+            "desc": "Caustic Strike",
+            "cost": 2,
+            "additionalNotes": ["Melts objects, damages armor of struck characters."]
+        },
+        {
+            "desc": "Locate Lemon",
+            "cost": 1,
+            "additionalNotes": ["Wielder learns the exact location of the closest lemon."]
+        },
+        {
+            "desc": "Cause Nausea",
+            "cost": 1,
+            "additionalNotes": ["Target must save or waste their turn vomiting."]
+        }
+    ],
+    "wizard": [
+        {
+            "desc": "Magic Missile",
+            "cost": 1
+        },
+        {
+            "desc": "Magic Shield",
+            "cost": 1
+        }
+    ],
+    "steampunk": [
+        {
+            "desc": "Summon Steam Elemental",
+            "cost": 6
+        },
+        {
+            "desc": "Power Machine",
+            "cost": 1,
+            "additionalNotes": ["Touching the weapon to a machine causes it to activates under magical power. It operates for 24 hours."]
+        }
+    ],
+    "earth": [
+        {
+            "desc": "Wall of stone",
+            "cost": 4,
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "desc": "Petrify Person",
+            "cost": 5,
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "desc": "Cure Petrification",
+            "cost": 2
+        }
+    ]
+}

@@ -1,0 +1,61 @@
+{
+    "any": [
+        "adamant",
+        "unbreakable",
+        "razor-sharp"
+    ],
+    "fire": [
+        "fiery",
+        "blazing", "roaring", "crackling",
+        "ruby","opal"
+    ],
+    "ice": [
+        "icy",
+        "frigid",
+        "silent",
+        "glassy",
+        "polar"
+    ],
+    "dark": [
+        "Shadow-Wreathed",
+        "stygian",
+        "abyssal",
+        "spiked",
+        "Blood-Stained"
+    ],
+    "light": [
+        "rainbow",
+        "translucent",
+        "moonlit",
+        "glittery",
+        "lucent",
+        "prismatic"
+    ],
+    "sweet": ["saccharine", "candied", "glazed"], 
+    "sour": ["corroded", "corrosive"],
+    "wizard": [
+        "crystal",
+        "silk-wrapped",
+        "amethyst"
+    ],
+    "steampunk": [
+        "brass",
+        "clockwork"
+    ],
+    "earth": [
+        "heavy",
+        "rough",
+        "onyx",
+        "slag"
+    ],
+    "cloud": [
+        "gossamer",
+        "rusty",
+        "silver"
+    ],
+    "jungle": [
+        "gold-banded",
+        "silver-strapped",
+        "spiked"
+    ]
+}
