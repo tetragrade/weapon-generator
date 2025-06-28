@@ -285,8 +285,8 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen("regains a charge when its wielder breaks news"),
     ],
     earth: [
-        mkGen('regains a charge when you throw a rock at something important'),
-        mkGen('regains all charge when you meditate atop a mountain'),
+        mkGen('regains a charge when its wielder throws a rock at something important'),
+        mkGen('regains all charge when its wielder meditates atop a mountain'),
         mkGen('regains all charges when driven into the ground while something important is happening')
     ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
