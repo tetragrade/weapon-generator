@@ -252,7 +252,7 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     ],
     light: [
         mkGen("regains all charges after an hour in a sacred space"),
-        mkGen("regains a charges each day at sunrise"),
+        mkGen("regains all charges each day at sunrise"),
         new StringGenerator([
             mkGen("regains a charge after defeating a "), 
             singularUnholyFoe,
@@ -277,16 +277,16 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen('regains a charge when you cast one of your own spells'),
         mkGen('regains all charges when its wielder learns a new spell'),
         mkGen('regains all charges when its wielder wins a wizard duel'),
-        mkGen('regains a charges when its wielder finishes reading a new book'),
+        mkGen('regains a charge when its wielder finishes reading a new book'),
     ],
     steampunk: [
         mkGen('regains all charges when its wielder invents something'),
-        mkGen('regains all charge when its wielder throws a tea party'),
+        mkGen('regains all charges when its wielder throws a tea party'),
         mkGen("regains a charge when its wielder breaks news"),
     ],
     earth: [
         mkGen('regains a charge when its wielder throws a rock at something important'),
-        mkGen('regains all charge when its wielder meditates atop a mountain'),
+        mkGen('regains all charges when its wielder meditates atop a mountain'),
         mkGen('regains all charges when driven into the ground while something important is happening')
     ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
