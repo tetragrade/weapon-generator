@@ -64,7 +64,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     // determine sentience
     const isSentient = rng() < params.sentienceChance;
 
-    // TODO move out
+    const toHit = WEAPON_TO_HIT[rarity].generate(rng);
+    
     // init weapon
     const weapon: Weapon = {
         id: rngSeed,
@@ -77,9 +78,10 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             group: "sword"
         },
         damage: {
-            as: 'sword'
+            as: 'sword',
+            const: toHit,
         },
-        toHit: WEAPON_TO_HIT[rarity].generate(rng),
+        toHit,
         active: {
             maxCharges: params.nCharges,
             rechargeMethod: '',

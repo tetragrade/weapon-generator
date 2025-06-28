@@ -148,14 +148,17 @@ class WeaponGeneratorController {
         this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
         this.view.name.classList.add(`weapon-rarity-${weapon.rarity}`);
 
-        // add damage 
+        // add damage
         const acc = `as ${weapon.damage.as}`;
-        const damageKeys = Object.keys(weapon.damage) as [keyof typeof weapon['damage']];
-        this.view.damage.innerText = damageKeys.length>1 ?
-          damageKeys
+        const damageKeys = (Object.keys(weapon.damage) as [keyof typeof weapon['damage']])
           .filter(k => k!='as')
-          .reduce<string>(
-            (acc, k) => acc + ` + ${weapon.damage[k]}${k==='const' ? '' : k}`, 
+          .sort((k1,k2) => {
+            const ord = ['d20', 'd12', 'd10', 'd8', 'd6', 'd4', 'const'];
+            return ord.findIndex(x => x===k1) - ord.findIndex(x => x===k2)
+          });
+        this.view.damage.innerText = damageKeys.length>0 ?
+          damageKeys.reduce<string>(
+            (acc, k) => (weapon.damage[k] ?? 0) > 0 ? (acc + ` + ${weapon.damage[k]}${k==='const' ? '' : k}`) : acc, 
             acc
           ) : acc;
 
