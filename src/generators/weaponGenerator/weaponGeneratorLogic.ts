@@ -2,12 +2,12 @@ import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.t
 import '../../string.ts';
 import seedrandom from "seedrandom";
 import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
-import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity } from "./weaponGeneratorTypes.ts";
+import { type ActivePower, type DamageDice, type PassiveBonus, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity, type PassivePower } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
-class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>, WeaponPowerCond, WeaponPowerCondParams> {
-    constructor(source: ProviderElement<TGenerator<T1>, WeaponPowerCond>[]) {
+class WeaponFeatureProvider<T> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
+    constructor(source: ProviderElement<T, WeaponPowerCond>[]) {
         super(source);
     }
     
@@ -33,15 +33,14 @@ class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>,
     }
 }
 
-const personalityProvider = new WeaponFeatureProvider<string>(POSSIBLE_PERSONALITIES);
-const rechargeMethodsProvider = new WeaponFeatureProvider<string>(POSSIBLE_RECHARGE_METHODS);
-
-const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACTIVE_POWERS);
+const personalityProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_PERSONALITIES);
+const rechargeMethodsProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_RECHARGE_METHODS);
+const activePowersProvider = new WeaponFeatureProvider<TGenerator<ActivePower>>(POSSIBLE_ACTIVE_POWERS);
 const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
-const shapeProvider = new WeaponFeatureProvider<WeaponShape>(POSSIBLE_SHAPES);
+const shapeProvider = new WeaponFeatureProvider<TGenerator<WeaponShape>>(POSSIBLE_SHAPES);
 
 
-const objectAdjectivesProvider =  new WeaponFeatureProvider<string>(POSSIBLE_OBJECT_ADJECTIVES);
+const objectAdjectivesProvider =  new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_OBJECT_ADJECTIVES);
 
 const articles = new Set(['the', 'a', 'an', 'by', 'of'])
 const mkNonSentientNameGenerator = (weapon: Weapon, shape: string, rng: seedrandom.PRNG) => mkGen(() => {
@@ -160,14 +159,17 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
 
     // draw passive powers
     while(params.nPassive-->0) {
-        const choice = passivePowersProvider.draw(rng, weapon)?.generate(rng);
+        const choice = passivePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             if('language' in choice && weapon.sentient) {
                 weapon.sentient.languages.push(choice.desc);
             }
             else if ('miscPower' in choice) {
-                if(choice.desc !== null) {                
-                    weapon.passivePowers.push(choice);
+                if(choice.desc !== null) {
+                    weapon.passivePowers.push({
+                        ...choice,
+                        desc: typeof choice.desc === 'string' ? choice.desc : choice.desc.generate(rng)
+                    });
                 }
                 for(const k in choice.bonus) {
                     const bonus = k as keyof PassiveBonus

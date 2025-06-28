@@ -1,7 +1,7 @@
-import { singularUnholyFoe } from "../foes";
+import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, Language, MiscPower } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
@@ -121,19 +121,45 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
 
 
 // this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
-// desc: new StringGenerator([
-//     mkGen("Glows like a torch when "), 
-//     pluralUnholyFoe,
-//     mkGen(" are near")
-// ]),
-export const POSSIBLE_PASSIVE_POWERS = toProviderSource(passivePowers as Record<
+const mixinPassivePowers = ([
+    {
+        thing: {
+            miscPower: true,
+            desc: new StringGenerator([
+                mkGen("Glows like a torch when "), 
+                pluralUnholyFoe,
+                mkGen(" are near")
+            ])
+        },
+        cond: {
+            themes: {
+                any: ['light']
+            },
+        }
+    }
+] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]).map(x => {
+    x.cond.passivePowers = { none: [x.thing] };
+    return x;
+});
+
+export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSource(passivePowers as Record<
     Theme | string,
     (PassivePower & WeaponPowerCond)[]
 >, (k,x) => ({
-    thing: mkGen(x), 
+    thing: {
+        miscPower: 'miscPower' in x ? true as true : undefined as never,
+        language: 'miscPower' in x ? undefined as never : true as true,
+        desc: typeof x.desc === 'string' ? mkGen(x.desc) : x.desc,
+    } satisfies MiscPower | Language as MiscPower | Language,
     cond: {
-        themes: k==='any' ? undefined : { all: [k as Theme]}, 
-        passivePowers: 'miscPower' in x ? { none: [x]} : x?.passivePowers,
+        themes: k==='any' ? undefined as never : { all: [k as Theme]},
+        passivePowers: 'miscPower' in x ? { none: [
+            {
+                miscPower: 'miscPower' in x ? true as true : undefined as never,
+                language: 'miscPower' in x ? undefined as never : true as true,
+                desc: typeof x.desc === 'string' ? mkGen(x.desc) : x.desc,
+            } satisfies MiscPower | Language
+        ]} : x?.passivePowers,
         isSentient: 'language' in x ? true : x?.isSentient, // languages should always require the weapon to be sentient
         languages: 
             'languages' in x 
@@ -144,10 +170,9 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource(passivePowers as Record<
                 } 
             : 
                 undefined,
-
         rarity: x?.rarity,
         shapeFamily: x?.shapeFamily
-    }}));
+    }}))];
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [

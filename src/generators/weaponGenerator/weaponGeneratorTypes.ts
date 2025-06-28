@@ -1,6 +1,7 @@
 import type seedrandom from "seedrandom";
 import type { Comp, Cond, Quant } from "./provider";
 import shapes from './config/shapes.json'
+import type { TGenerator } from "../recursiveGenerator";
 
 export const themes = [
     "fire", "ice",
@@ -107,10 +108,7 @@ export type ActivePower = ChargedPower | UnlimitedChargedPower;
 
 export interface MiscPower extends Power {
     miscPower: true;
-    /**
-     * Desc of the power. If the desc is null, nothing should be displayed on the view.
-     */
-    desc: string | null;
+    desc: string | TGenerator<string>;
     bonus?: PassiveBonus;
 }
 export interface Language extends Power {
