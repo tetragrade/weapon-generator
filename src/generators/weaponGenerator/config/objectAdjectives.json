@@ -193,6 +193,16 @@
             "rarity": {
                 "gte": "epic"
             }
+        },
+        {
+            "name": "glass",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "themes": {
+                "any": ["ice", "fire", "light", "cloud"]
+            }
         }
     ],
     "fire": [
@@ -204,7 +214,6 @@
         "icy",
         "frigid",
         "silent",
-        "glassy",
         "polar",
         "Frostbound",
         "Icebound"

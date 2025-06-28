@@ -32,7 +32,7 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 4),
             nActive: [0,1].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 0
+            sentienceChance: 0.1
         })
     },
     rare: {
@@ -43,7 +43,7 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 4),
             nActive: [1,2].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 0.25
+            sentienceChance: 1/3
         })
     },
     epic: {
@@ -54,7 +54,7 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 8),
             nActive: [1,2,3].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 0.5
+            sentienceChance: 1/2
         })
     },
     legendary: {

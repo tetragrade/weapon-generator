@@ -46,10 +46,6 @@ const objectAdjectivesProvider =  new WeaponFeatureProvider<string>(POSSIBLE_OBJ
 const articles = new Set(['the', 'a', 'an', 'by', 'of'])
 const mkNonSentientNameGenerator = (weapon: Weapon, shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
-        mkGen(() => rng()>.9 ? 
-            `${[grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng)}, ${['', 'the '].choice(rng)}`
-            : ''
-        ),
         mkGen((x) => objectAdjectivesProvider.draw(x, weapon).generate(x)),
         mkGen(' '),
         mkGen(shape)
