@@ -161,7 +161,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         passivePowers: [],
         sentient: isSentient ? {
             personality: [],
-            languages: ['Common']
+            languages: ['Common.']
         } : false as false,
     };
 

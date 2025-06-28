@@ -50,7 +50,7 @@
         {
             "desc": "Chilling Strike",
             "cost": 2,
-            "additionalNotes": ["Struck foes save or be frozen solid next turn."],
+            "additionalNotes": ["Struck foes must save or be frozen solid next turn."],
             "rarity": {
                 "lte": "rare"
             }

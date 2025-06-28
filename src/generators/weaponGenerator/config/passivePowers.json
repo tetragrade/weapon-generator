@@ -2,7 +2,7 @@
     "fire": [
         {
             "language": true,
-            "desc": "The language of Fire"
+            "desc": "The language of fire."
         },
         {
             "miscPower": true,
@@ -10,7 +10,7 @@
         },
         {
             "miscPower": true,
-            "desc": "Wielder cannot be harmed by fire",
+            "desc": "Wielder cannot be harmed by fire.",
             "rarity": {
                 "gte": "rare"
             }
@@ -32,7 +32,7 @@
     "ice": [
         {
             "language": true,
-            "desc": "The language of Ice & Snow"
+            "desc": "The language of ice & snow."
         },
         {
             "miscPower": true,
@@ -72,13 +72,13 @@
         },
         {
             "miscPower": true,
-            "desc": "Wielder can walk on all kinds of ice without breaking it."
+            "desc": "Wielder can walk on any kind of ice without breaking it."
         }
     ],
     "dark": [
         {
             "miscPower": true,
-            "desc": "Menacing aura. Bonus to saves to frighten & intimate."
+            "desc": "Menacing aura. Bonus to saves to frighten & intimidate."
         },
         {
             "miscPower": true,
@@ -101,11 +101,11 @@
         },
         {
             "miscPower": true,
-            "desc":"Wielder takes half damage from rays & beams"
+            "desc":"Wielder takes half damage from rays & beams."
         },
         {
             "miscPower": true,
-            "desc": "Wielder is immune to the effects of rays & beams"
+            "desc": "Wielder is immune to the effects of rays & beams."
         },
         {
             "miscPower": true,
@@ -113,7 +113,7 @@
         },
         {
             "miscPower": true,
-            "desc": "Can reflect and focus light as a damaging beam (2d6 damage)"
+            "desc": "Can reflect and focus light as a damaging beam (2d6 damage)."
         },
         {
             "miscPower": true,
@@ -228,7 +228,10 @@
         },
         {
             "miscPower": true,
-            "desc": "Unaware targets that are hit by the weapon must save or be petrified."
+            "desc": "Unaware targets that are hit by the weapon must save or be petrified.",
+            "rarity": {
+                "gte": "rare"
+            }
         }
     ]
 }
