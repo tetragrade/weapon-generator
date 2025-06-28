@@ -173,7 +173,7 @@
             "rarity": {
                 "lte": "uncommon"
             },
-            "theme": {
+            "themes": {
                 "any": ["fire", "dark", "earth"]
             }
         },
@@ -183,7 +183,7 @@
             "rarity": {
                 "gte": "epic"
             },
-            "theme": {
+            "themes": {
                 "any": ["fire", "dark", "earth"]
             }
         },
@@ -205,7 +205,9 @@
         "frigid",
         "silent",
         "glassy",
-        "polar"
+        "polar",
+        "Frostbound",
+        "Icebound"
     ],
     "dark": [
         "Shadow-Wreathed",
@@ -219,6 +221,9 @@
         "translucent",
         "moonlit",
         "glittery",
+        "luminous",
+        "glowing",
+        "lunar",
         "lucent",
         "prismatic",
         {
