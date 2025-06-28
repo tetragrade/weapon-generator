@@ -1,8 +1,8 @@
 import { mkGen } from "./recursiveGenerator";
 
 export const singularHolyFoe = mkGen((rng) => [
-    "angel",
-    "priest"
+    "an angel",
+    "a priest"
 ].choice(rng));
 
 export const pluralHolyFoe = mkGen((rng) => [
@@ -11,17 +11,17 @@ export const pluralHolyFoe = mkGen((rng) => [
 ].choice(rng))
 
 export const singularUnholyFoe = mkGen((rng) => [
-    "satanist",
-    "cannibal",
+    "a satanist",
+    "a cannibal",
 
-    "vampire",
-    "undead",
-    "ghost",
-    "ghoul",
-    "wendigo",
-    "skinwalker",
+    "a vampire",
+    "an undead",
+    "a ghost",
+    "a ghoul",
+    "a wendigo",
+    "a skinwalker",
     
-    "automaton",
+    "an automaton",
 ].choice(rng));
 
 export const pluralUnholyFoe = mkGen((rng) => [
@@ -40,9 +40,9 @@ export const pluralUnholyFoe = mkGen((rng) => [
 ].choice(rng));
 
 export const singularBeastFoe = mkGen((rng) => [
-    "shark",
-    "bear",
-    "dinosaurs",
-    "giant animal",
-    "human-eating worm",
+    "a shark",
+    "a bear",
+    "a dinosaur",
+    "a giant animal",
+    "a human-eating worm",
 ].choice(rng))

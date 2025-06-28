@@ -2,7 +2,6 @@
     - typos.
         - 'intimate' -> 'intimidate'
 
-    - Split languages from passive powers. Current way of doing it is stupid & it's now possible to just have a Language or Misc Power provider. 
 
     - Basic Functionality
         - ~~Color-coded rarities.~~
@@ -15,7 +14,8 @@
             - ~~Quant for active & passive powers.~~
             - UUID based Quant.                         HARD SHORT  4
                 - Until this is impemented, Quant won't function properly providers that yield generators.
-                - Nah, won't work.
+                - Split languages from passive powers. Current way of doing it is stupid & it's now possible to just have a Language or Misc Power provider. 
+                - Nah, won't work (why not?).
 
         - ~~Implement bonuses for passive abilities.~~
 

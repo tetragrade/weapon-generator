@@ -268,7 +268,7 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen("regains all charges after an hour in a sacred space"),
         mkGen("regains all charges each day at sunrise"),
         new StringGenerator([
-            mkGen("regains a charge after defeating a "), 
+            mkGen("regains a charge after defeating "), 
             singularUnholyFoe,
         ])
     ],
