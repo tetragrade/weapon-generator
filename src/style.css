@@ -195,8 +195,6 @@ h1 {
 .weapon-name {
 	width: 100%;
 	text-align: center;
-	padding-top: 16pt;
-	padding-bottom: 16pt;
 }
 .weapon-damage-title {
 	font-weight: bold;
@@ -230,41 +228,14 @@ h1 {
 	color: white;
 }
 .weapon-rarity-uncommon {
-	color: hsl(108, 64%, 40%);
+	color: #46dc21;
 }
 .weapon-rarity-rare {
-	color: hsl(212, 74%, 50%);
+	color: #2178dc;
 }
 .weapon-rarity-epic {
-	color: hsl(273, 74%, 50%);
+	color: #8821dc;
 }
 .weapon-rarity-legendary {
-	color: hsl(51, 64%, 50%);
-}
-
-@media (prefers-color-scheme: dark) {
-	.weapon-rarity-uncommon, .weapon-rarity-rare, .weapon-rarity-epic, .weapon-rarity-legendary {
-   paint-order: stroke fill;
-		-webkit-text-stroke: 0.333rem white;
-		text-shadow:
-			-10pt 0 15pt white,
-			-15pt 0 15pt white,
-
-			10pt 0 15pt white,
-			15pt 0 15pt white,
-
-			0 0 15pt white,
-			0 0 14pt white,
-			0 0 13pt white,
-			0 0 12pt white,
-			0 0 11pt white,
-			0 0 9pt white,
-			0 0 8pt white,
-			0 0 7pt white,
-			0 0 6pt white,
-			0 0 5pt white,
-			0 0 4pt white,
-			0 0 3pt white,
-			0 0 2pt white;
-	}
+	color: #dcc021;
 }
