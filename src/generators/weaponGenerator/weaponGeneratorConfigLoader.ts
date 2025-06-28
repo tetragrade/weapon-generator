@@ -255,7 +255,8 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     dark: [
         mkGen("regains a charge upon absorbing a human soul"),
         mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
-        mkGen("regains all charges each day at the witching hour")
+        mkGen("regains all charges each day at the witching hour"),
+        mkGen("regains a charge when its wielder defenestrates a priest, or all charges if it was a high ranking priest")
     ],
     light: [
         mkGen("regains all charges after an hour in a sacred space"),

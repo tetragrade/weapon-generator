@@ -126,7 +126,7 @@ export interface PassiveBonus {
 
 export interface ChargedPower extends Power {
     desc: string; // | TGenerator<string>;
-    cost: number;
+    cost: number | string;
 }
 export interface UnlimitedChargedPower extends Power {
     desc: string;

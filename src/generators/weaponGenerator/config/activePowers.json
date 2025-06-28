@@ -29,6 +29,14 @@
             "rarity": {
                 "lte": "rare"
             }
+        },
+        {
+            "desc": "Summon Fire Elemental",
+            "cost": 6,
+            "additionalNotes": ["Dissipates after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "ice": [
@@ -54,6 +62,14 @@
             "rarity": {
                 "lte": "rare"
             }
+        },
+        {
+            "desc": "Summon Ice Elemental",
+            "cost": 6,
+            "additionalNotes": ["Dissipates after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "dark": [
@@ -66,7 +82,7 @@
         },
         {
             "desc": "Turn Priests & Angels",
-            "cost": 1,
+            "cost": 2,
             "rarity": {
                 "gte": "uncommon"
             }
@@ -74,6 +90,14 @@
         {
             "desc": "Darkness",
             "cost": 1
+        },
+        {
+            "desc": "Summon Demon",
+            "cost": 6,
+            "additionalNotes": ["Returns to hell after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "light": [
@@ -91,6 +115,14 @@
         {
             "desc": "Light",
             "cost": 1
+        },
+        {
+            "desc": "Summon Angel",
+            "cost": 6,
+            "additionalNotes": ["Returns to heaven after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "sweet": [
@@ -124,27 +156,94 @@
             "desc": "Cause Nausea",
             "cost": 1,
             "additionalNotes": ["Target must save or waste their turn vomiting."]
+        },
+        {
+            "desc": "Summon Acid Elemental",
+            "cost": 6,
+            "additionalNotes": ["Dissipates after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "wizard": [
         {
             "desc": "Magic Missile",
-            "cost": 1
+            "cost": 2
         },
         {
             "desc": "Magic Shield",
-            "cost": 1
+            "cost": 2
+        },
+        {
+            "desc": "Magic Parry",
+            "cost": "equal to spell's level",
+            "additionalNotes": [
+                "Deflect a harmful spell that was targeted at you specifically.", 
+                "You save. On a success the spell is nullified.",
+                "If you succeeded with the best possible roll, the spell is instead reflected back at the attacker."
+            ]
+        },
+        {
+            "desc": "Instant Message",
+            "cost": 1,
+            "additionalNotes": ["Point the weapon at someone in your line of sight, send them a telepathic message."]
+        },
+        {
+            "desc": "Create Servant",
+            "cost": 5,
+            "additionalNotes": [
+                "Create an small ichorous being that obeys you without question. It dissolves into sludge after 2d6 days."
+            ]
+
         }
     ],
     "steampunk": [
         {
             "desc": "Summon Steam Elemental",
-            "cost": 6
+            "cost": 6,
+            "additionalNotes": ["Dissipates after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         },
         {
             "desc": "Power Machine",
             "cost": 1,
             "additionalNotes": ["Touching the weapon to a machine causes it to activate under magical power. It operates for 24 hours."]
+        }
+    ],
+    "cloud": [
+        {
+            "desc": "Summon Water Elemental",
+            "cost": 6,
+            "additionalNotes": ["Dissipates after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "desc": "Zephyr Strike",
+            "cost": 2,
+            "additionalNotes": [
+                "Move up to 4× your normal movement to attack someone.",
+                "They must save or be knocked down by the attack."
+            ]
+        },
+        {
+            "desc": "Wind Blast",
+            "cost": 2,
+            "additionalNotes": [
+                "Characters in melee range must save, or be thrown back out of melee range and knocked down."
+            ]
+        },
+        {
+            "desc": "Summon Lightning",
+            "cost": 4,
+            "additionalNotes": [
+                "Summon a bolt of lightning to strike something in your line of sight.",
+                "You know, that guy with the lightning makes a good point."
+            ]
         }
     ],
     "earth": [
@@ -165,6 +264,14 @@
         {
             "desc": "Cure Petrification",
             "cost": 2
+        },
+        {
+            "desc": "Summon Earth Elemental",
+            "cost": 6,
+            "additionalNotes": ["Crumbles after 1 hour."],
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ]
 }

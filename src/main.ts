@@ -99,16 +99,19 @@ class WeaponGeneratorController {
     }
   }
 
-  textForCharges(n: number | 'at will') {
-    if(n === 'at will') {
-      return n;
+  textForCharges(c: number | string | 'at will') {
+    if(c === 'at will') {
+      return c;
+    }
+    if(typeof c === 'string') {
+      return `charges ${c}`;
     }
     else {
-      if(n == 1) {
+      if(c == 1) {
         return '1 charge';
       }
       else {
-        return `${n} charges`;
+        return `${c} charges`;
       }
     }
   }

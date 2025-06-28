@@ -121,7 +121,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
 
     // draw themes until we have enough to cover our number of powers
     const unusedThemes = new Set<Theme>(themes); // this could be a provider but whatever go my Set<Theme>
-    const minThemes = [1,2].choice(rng);
+    const minThemes = Math.min(1, Math.max(Math.ceil((params.nActive + params.nUnlimitedActive + params.nPassive) / 2)), 3);
     while(
         weapon.themes.length < minThemes ||
         activePowersProvider.available(weapon).size < params.nActive+params.nUnlimitedActive ||
@@ -150,8 +150,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     weapon.description = 'TODO';
 
     if(weapon.sentient) {
-        // choose one personality for each theme
-        for(const _ of weapon.themes) {
+        const nPersonalities = 2;
+        while(weapon.sentient.personality.length < nPersonalities) {
             const choice = personalityProvider.draw(rng, weapon)?.generate(rng);
             if(choice!=undefined) {
                 weapon.sentient.personality.push(choice);
@@ -229,7 +229,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     weapon.active.maxCharges = 
         weapon.active.powers
         .filter(x => x.cost!='at will')
-        .reduce((acc,x) => Math.max(x.cost, acc), weapon.active.maxCharges);
+        .reduce((acc,x) => Math.max(typeof x.cost === 'string' ? 0 : x.cost, acc), weapon.active.maxCharges);
     
         
 
