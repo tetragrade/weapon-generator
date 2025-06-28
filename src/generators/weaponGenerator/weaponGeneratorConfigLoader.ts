@@ -7,7 +7,6 @@ import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
 import shapes from './config/shapes.json';
 import type seedrandom from "seedrandom";
-import { mundaneNameGenerator } from "../nameGenerator";
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
@@ -75,7 +74,34 @@ export const weaponRarityConfig: WeaponRarityConfig = {
     the adjective should be simple and describe its physical state,
     no vibes/moral/metaphysical descriptors i.e. just, terrifying, gothic
 */
-export const OBJECT_ADJECTIVES = objectAdjectives satisfies Record<Theme | string, string[]>;
+export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource<(string | {name: string} & WeaponPowerCond), TGenerator<string>>(
+    objectAdjectives as Record<Theme | string, (string | {name: string} & WeaponPowerCond)[]>,
+    (k,x) => {
+        switch(typeof x) {
+            case 'string':
+                return ({
+                    thing: mkGen(x), 
+                    cond: {
+                        themes: k ==='any' ? undefined : { all: [k as Theme]}
+                    }
+                })
+            case 'object':
+                const y = x as {name: string} & WeaponPowerCond;
+                if(y !== null) {
+                    return({
+                    thing: mkGen(x.name), 
+                    cond: {
+                        themes: y?.themes ??  (k ==='any' ? undefined : { all: [k as Theme]}),
+                        activePowers: y?.activePowers,
+                        rarity: y?.rarity,
+                        shapeFamily: y?.shapeFamily
+                    }
+                })
+                }
+        }
+        throw new Error('invalid shape config');
+    }    
+);
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
@@ -279,80 +305,6 @@ export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>
         throw new Error('invalid shape config');
     }
 );
-
-
-const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
-    themes.map(x => OBJECT_ADJECTIVES[x])
-    .choice(rng)   //choose a category
-    .choice(rng);  //choose an adjective
-
-export const mkNonSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new StringGenerator([
-        mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
-        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
-        mkGen(' '),
-        mkGen(shape)
-    ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
-});
-export const mkSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new StringGenerator([
-        mundaneNameGenerator,
-        mkGen(', the '),
-        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
-        mkGen(' '),
-        mkGen(shape)
-    ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
-});
-        
-
-const exoticWeaponMaterialsGenerator = mkGen((rng) => [
-    "silver",
-    "gold",
-    "black iron",
-    "lumensteel",
-    "mithrel",
-    "adamantium",
-    "cobalt",
-    "radium",
-    "diamond",
-    "ruby",
-    "sapphire",
-].choice(rng));
-
-const normalWeaponMaterialsGenerator = mkGen((rng) => [
-    "bronze",
-    "iron",
-    "steel",
-    "Silver-Plated"
-].choice(rng));
-
-const crummyWeaponMaterialsGenerator = mkGen((rng) => [
-    "tin",
-    "copper",
-    "oak",
-    "pine",
-    "granite",
-    "marble",
-    "alabaster",
-    "sandstone",
-    "flint",
-    "quartz",
-].choice(rng));
-
-const weaponMaterialGenerator = mkGen((rng) => {
-    const n = rng();
-    if(n>.75) {
-        return exoticWeaponMaterialsGenerator.generate(rng);
-    }
-    else if(n>.05) {
-        return normalWeaponMaterialsGenerator.generate(rng);
-    }
-    else {
-        return crummyWeaponMaterialsGenerator.generate(rng);
-    }
-});
 
 export const WEAPON_TO_HIT: Record<WeaponRarity, TGenerator<number>> = {
     common: mkGen((rng: seedrandom.PRNG) => {

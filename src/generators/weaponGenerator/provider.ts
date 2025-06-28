@@ -53,6 +53,7 @@ export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCond
 
     protected abstract condExecutor(cond: TCond, params: TCondParams): boolean;
     
+    // note that the complexity on this implementation is awful, O(n). it should build a decision tree on construction & be O(1)
     /**
      * returns a thing that is available given this condition
      * @param rng seedrandom randomness source to pick using
@@ -61,6 +62,7 @@ export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCond
      */
     draw = (rng: seedrandom.PRNG, params: TCondParams) => this.source.filter(x => this.condExecutor(x.cond, params)).choice(rng)?.thing;
     
+    // note that the complexity on ths implementation is awful, O(n). it should build a decision tree on construction & be O(1)
     /**
      * Returns the set of things whose condition holds for given params.
      * @param params the params to get all the things whose condition must hold for

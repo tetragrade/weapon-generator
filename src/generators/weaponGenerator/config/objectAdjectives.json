@@ -1,8 +1,199 @@
 {
     "any": [
-        "adamant",
-        "unbreakable",
-        "razor-sharp"
+        
+        "bronze",
+        "iron",
+        "steel",
+        "Silver-Plated",
+        {
+            "name": "tin",
+            
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "copper",
+            
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "oak",
+            
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "pine",
+            
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "sandstone",
+            
+            "rarity": {
+                "lte": "uncommon"
+            },
+            "themes": {
+                "any": ["fire", "earth"]
+            }
+        },
+        {
+            "name": "granite",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "marble",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "alabaster",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "marble",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "silver",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "gold",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "black iron",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "silver",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "mythril",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "adamant",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "cobalt",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        },
+        {
+            "name": "radium",
+            
+            "rarity": {
+                "gte": "legendary"
+            }
+        },
+        {
+            "name": "diamond",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "themes": {
+                "any": ["light", "earth"]
+            }
+        },
+        {
+            "name": "ruby",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "themes": {
+                "any": ["fire", "earth"]
+            }
+        },
+        {
+            "name": "emerald",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "themes": {
+                "any": ["fire", "earth"]
+            }
+        },
+        {
+            "name": "sapphire",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "themes": {
+                "any": ["light", "cloud", "earth"]
+            }
+        },
+        {
+            "name": "flint",
+            
+            "rarity": {
+                "lte": "uncommon"
+            },
+            "theme": {
+                "any": ["fire", "dark", "earth"]
+            }
+        },
+        {
+            "name": "onyx",
+            
+            "rarity": {
+                "gte": "epic"
+            },
+            "theme": {
+                "any": ["fire", "dark", "earth"]
+            }
+        },
+        {
+            "name": "quartz",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        }
     ],
     "fire": [
         "fiery",
@@ -29,7 +220,21 @@
         "moonlit",
         "glittery",
         "lucent",
-        "prismatic"
+        "prismatic",
+        {
+            "name": "quartz",
+            
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "name": "lumensteel",
+            
+            "rarity": {
+                "gte": "epic"
+            }
+        }
     ],
     "sweet": ["saccharine", "candied", "glazed"], 
     "sour": ["corroded", "corrosive"],
@@ -45,7 +250,6 @@
     "earth": [
         "heavy",
         "rough",
-        "onyx",
         "slag"
     ],
     "cloud": [
