@@ -1,27 +1,28 @@
-- TODO
+- TODO                                                  Difficulty, Time, Impact (1-10)
     - typos.
         - 'intimate' -> 'intimidate'
 
     - Basic Functionality
         - ~~Color-coded rarities.~~
+        - ~~Weapon shape type based damage.~~
         - Support for conditionally available abilities, beyond themes.
             - ~~Personality.~~
             - ~~Active Abilities.~~
             - ~~Passive Abilities.~~
             - ~~Recharge Method.~~
-            - ~~Implement Quant for active & passive powers.~~
+            - ~~Quant for active & passive powers.~~
+            - UUID based Quant.                         HARD SHORT  1
 
-        - Implement bonuses for passive abilities.
+        - ~~Implement bonuses for passive abilities.~~
 
-        - More themes & abilities.                      EASY LONG
+        - More themes & abilities.                      EASY LONG   8
             - 'pets'
-        - Weapon shape type based damage.               EASY SHORT
         
-        - Better names & descriptions.                  HARD LONG
-        - UX.                                           EASY LONG
-        - Proper namelist.                              EASY LONG
-        - Automated Testing.                            HARD LONG
+        - Names / Namelist                              EASY LONG   7
+        - descriptions.                                 HARD LONG   4
+        - UX.                                           EASY LONG   6
+        - Automated Testing.                            HARD LONG   ~
     - Advanced.
-        - User configuration menu & settings.           EASY SHORT
-        - Bookmark weapons functionality.               EASY SHORT
-        - Automated Testing.                            HARD SHORT
+        - User configuration menu & settings.           EASY SHORT  4
+        - Bookmark weapons functionality.               EASY SHORT  3
+        - Automated Testing.                            HARD SHORT  ~
