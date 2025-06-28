@@ -1,7 +1,7 @@
 import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, Language, MiscPower } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
