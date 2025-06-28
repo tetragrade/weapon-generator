@@ -1,7 +1,7 @@
 import { type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, mkSentientNameGenerator, mkNonSentientNameGenerator } from "./weaponGeneratorConfigLoader.ts";
+import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, mkSentientNameGenerator, mkNonSentientNameGenerator, WEAPON_TO_HIT } from "./weaponGeneratorConfigLoader.ts";
 import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 
@@ -78,7 +78,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         },
         damage: {
             as: 'sword'
-        }, 
+        },
+        toHit: WEAPON_TO_HIT[rarity].generate(rng),
         active: {
             maxCharges: params.nCharges,
             rechargeMethod: '',
@@ -139,21 +140,34 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
                 weapon.sentient.languages.push(choice.desc);
             }
             else if ('miscPower' in choice) {
-                weapon.passivePowers.push(choice);
-                for(const bonus in choice.bonus) {
-                    switch(bonus as keyof PassiveBonus) {
+                if(choice.desc !== null) {                
+                    weapon.passivePowers.push(choice);
+                }
+                for(const k in choice.bonus) {
+                    const bonus = k as keyof PassiveBonus
+                    switch(bonus) {
                         case 'addDamageDie':
                             // apply all damage dice to the weapon
                             for(const k in choice.bonus.addDamageDie) {
                                 const die = k as keyof DamageDice;
                                 if(typeof choice.bonus.addDamageDie[die] === 'number') {
-                                    if(weapon.damage[die] === undefined) {                                    
+                                    if(weapon.damage[die] === undefined) {
                                         weapon.damage[die] = 0;
                                     }
                                     weapon.damage[die] += choice.bonus.addDamageDie[die];
                                 }
                             }
-                        break;
+                            break;
+                        case "plus":
+                                weapon.toHit += choice.bonus.plus;
+
+                                if(weapon.damage.const === undefined) {
+                                    weapon.damage.const = 0;
+                                }
+                                weapon.damage.const += 1;
+                            break;
+                        default:
+                            return bonus satisfies never;
                     }
                 }
             }

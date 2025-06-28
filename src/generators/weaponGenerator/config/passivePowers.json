@@ -1,4 +1,16 @@
 {
+    "any": [
+        {
+            "miscPower": true,
+            "desc": "Wielder is able to move completely silently.",
+            "shapeFamily": {
+                "any": ["dagger", "club"]
+            },
+            "rarity": {
+                "gte": "epic"
+            }
+        }
+    ],
     "fire": [
         {
             "language": true,
@@ -92,6 +104,16 @@
                 "addDamageDie": {
                     "d6": 1
                 }
+            }
+        },
+        {
+            "miscPower": true,
+            "desc": "Wielder is able to move completely silently.",
+            "shapeFamily": {
+                "any": ["dagger", "club"]
+            },
+            "rarity": {
+                "gte": "epic"
             }
         }
     ],
@@ -206,6 +228,13 @@
         },
         {
             "miscPower": true,
+            "desc": "Wielder gains a stealth bonus during rain & snow, as if invisible.",
+            "shapeFamily": {
+                "any": ["dagger", "club"]
+            }
+        },
+        {
+            "miscPower": true,
             "desc": "You can fly, as fast as you can walk.",
             "rarity": {"gte": "epic" }
         }
@@ -237,6 +266,9 @@
             "desc": "Unaware targets that are hit by the weapon must save or be petrified.",
             "rarity": {
                 "gte": "rare"
+            },
+            "shapeFamily": {
+                "any": ["dagger"]
             }
         }
     ]

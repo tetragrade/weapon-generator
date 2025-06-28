@@ -1,7 +1,7 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
@@ -103,15 +103,21 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
 export const POSSIBLE_PASSIVE_POWERS = toProviderSource(passivePowers as Record<
     Theme | string,
     (PassivePower & WeaponPowerCond)[]
->, (k,x) => ({ 
+>, (k,x) => ({
     thing: mkGen(x), 
     cond: {
-        themes: { all: [k as Theme]}, 
+        themes: k==='any' ? undefined : { all: [k as Theme]}, 
         passivePowers: 'miscPower' in x ? { none: [x]} : x?.passivePowers,
         isSentient: 'language' in x ? true : x?.isSentient, // languages should always require the weapon to be sentient
-        languages: 'language' in x ? {
-            none: [x.desc]
-        } : x?.languages,
+        languages: 
+            'languages' in x 
+                ? x.languages 
+            : 'language' in x && x.desc!==null ? 
+                {
+                    none: [x.desc]
+                } 
+            : 
+                undefined,
 
         rarity: x?.rarity,
         shapeFamily: x?.shapeFamily
@@ -347,3 +353,58 @@ const weaponMaterialGenerator = mkGen((rng) => {
         return crummyWeaponMaterialsGenerator.generate(rng);
     }
 });
+
+export const WEAPON_TO_HIT: Record<WeaponRarity, TGenerator<number>> = {
+    common: mkGen((rng: seedrandom.PRNG) => {
+        return (
+            rng() > .75 ? 
+                1 
+            : 
+                0
+        );
+    }),
+    uncommon: mkGen((rng: seedrandom.PRNG) => {
+        const n = rng();
+        return (
+            n > .75 ?
+                2
+            : n > .25 ?
+                1
+            : 
+                0
+        );
+    }),
+    rare: mkGen((rng: seedrandom.PRNG) => {
+        const n = rng();
+        return (
+            n > .75 ?
+                4
+            : n > .25 ?
+                3
+            : 
+                2
+        );
+    }),
+    epic: mkGen((rng: seedrandom.PRNG) => {
+        const n = rng();
+        return (
+            n > .5 ?
+                4
+            : n > .5 ?
+                3
+            : 
+                2
+        );
+    }),
+    legendary: mkGen((rng: seedrandom.PRNG) => {
+        const n = rng();
+        return (
+            n > .75 ?
+                5
+            : n > .25 ?
+                4
+            : 
+                3
+        );
+    })
+};

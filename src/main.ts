@@ -13,6 +13,7 @@ interface WeaponView {
   name: HTMLElement;
 
   damage: HTMLElement;
+  toHit: HTMLElement;
   active: {
     maxCharges: HTMLElement;
     rechargeMethod: HTMLElement;
@@ -33,7 +34,8 @@ function isWeaponView(x: unknown): x is WeaponView {
     wv.root &&
     wv.outputRoot && 
     wv.name &&
-    wv.damage && 
+    wv.damage &&
+    wv.toHit && 
     wv.active &&
     wv.active.maxCharges && 
     wv.active.rechargeMethod && 
@@ -56,6 +58,7 @@ class WeaponGeneratorController {
         outputRoot: root.querySelector('.weapon-generator-output') as HTMLElement,
         name: root.querySelector('.weapon-name') as HTMLElement,
         damage: root.querySelector('.weapon-damage') as HTMLElement,
+        toHit: root.querySelector('.weapon-tohit') as HTMLElement,
         active: {
           maxCharges: root.querySelector('.weapon-active-powers-n-charges') as HTMLElement,
           rechargeMethod: root.querySelector('.weapon-active-powers-recharge-method') as HTMLElement,
@@ -145,16 +148,22 @@ class WeaponGeneratorController {
         this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
         this.view.name.classList.add(`weapon-rarity-${weapon.rarity}`);
 
-
+        // add damage 
         const acc = `as ${weapon.damage.as}`;
         const damageKeys = Object.keys(weapon.damage) as [keyof typeof weapon['damage']];
         this.view.damage.innerText = damageKeys.length>1 ?
           damageKeys
           .filter(k => k!='as')
           .reduce<string>(
-            (acc, k) => acc + ` + ${weapon.damage[k]}${k}`, 
+            (acc, k) => acc + ` + ${weapon.damage[k]}${k==='const' ? '' : k}`, 
             acc
           ) : acc;
+
+        // add tohit
+        this.view.toHit.innerText = '';
+        if(weapon.toHit>0) {
+          this.view.toHit.innerText = ` (+${weapon.toHit} to hit)`;
+        }
   
         // add the active powers
         this.view.active.maxCharges.innerText = `${this.textForCharges(weapon.active.maxCharges)}.`;
@@ -185,9 +194,9 @@ class WeaponGeneratorController {
         // add the passive powers
         this.buildList(
           this.view.passivePowers,
-          weapon.passivePowers,
+          weapon.passivePowers.filter(x => x.desc !== null),
           (elem, x) => {
-            elem.innerText = x.desc;
+            elem.innerText = x.desc as string;
             elem.classList.add('weapon-generator-active-list-item');
           }
         );

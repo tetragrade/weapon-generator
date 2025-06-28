@@ -60,6 +60,8 @@ export type Weapon = {
     shape: WeaponShape;
 
     damage: DamageDice & { as: string };
+    toHit: number;
+
     active: {
         maxCharges: number,
         rechargeMethod: string
@@ -73,7 +75,6 @@ export type Weapon = {
 }
 
 export interface Power {
-    desc: string;
     additionalNotes?: string[];
 }
 
@@ -88,22 +89,33 @@ export interface DamageDice {
 }
 export interface PassiveBonus {
     addDamageDie?: DamageDice;
+    /**
+     * Plus this many to attack and damage
+     */
+    plus: number;
 } // TODO
 
 export interface ChargedPower extends Power {
+    desc: string;
     cost: number;
 }
 export interface UnlimitedChargedPower extends Power {
+    desc: string;
     cost: "at will";
 }
 export type ActivePower = ChargedPower | UnlimitedChargedPower;
 
 export interface MiscPower extends Power {
     miscPower: true;
+    /**
+     * Desc of the power. If the desc is null, nothing should be displayed on the view.
+     */
+    desc: string | null;
     bonus?: PassiveBonus;
 }
 export interface Language extends Power {
     language: true;
+    desc: string;
 }
 
 export type PassivePower = Language | MiscPower;
