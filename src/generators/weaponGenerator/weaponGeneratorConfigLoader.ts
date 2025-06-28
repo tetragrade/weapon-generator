@@ -282,7 +282,7 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     steampunk: [
         mkGen('regains all charges when its wielder invents something'),
         mkGen('regains all charge when its wielder throws a tea party'),
-        mkGen("regains a charge when its wielder breaks news."),
+        mkGen("regains a charge when its wielder breaks news"),
     ],
     earth: [
         mkGen('regains a charge when you throw a rock at something important'),
