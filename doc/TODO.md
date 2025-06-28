@@ -20,7 +20,7 @@
             - 'pets'
         
         - Names / Namelist                              EASY LONG   7
-        - descriptions.                                 HARD LONG   4
+        - Descriptions.                                 HARD LONG   4
         - UX.                                           EASY LONG   6
         - Automated Testing.                            HARD LONG   ~
     - Advanced.

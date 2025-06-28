@@ -186,7 +186,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     
     //determine shape
     weapon.shape = shapeProvider.draw(rng, weapon).generate(rng);
-    weapon.damage.as = weapon.shape.particular;
+    weapon.damage.as = weapon.shape.group;
 
     // determine name
     weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, weapon.shape.particular, rng) : mkNonSentientNameGenerator(weapon.themes, weapon.shape.particular, rng))?.generate(rng);

@@ -14,10 +14,15 @@
     
     "sword": [
         "sword",
+        "saber",
+        "rapier",
+        "foil",
+        "epee",
         "macuahuitl"
     ],
     "axe": [
-        "axe"
+        "axe",
+        "war-axe"
     ],
     "mace": [
         "mace",
@@ -25,10 +30,12 @@
     ],
 
     "great-axe": [
-        "great-axe"
+        "great-axe",
+        "battle-axe"
     ],
     "greatsword": [
-        "greatsword"
+        "greatsword",
+        "ultra-greatsword"
     ],
 
     "spear": [
@@ -38,5 +45,8 @@
     "halberd": [
         "halberd",
         "glaive"
+    ],
+    "lance": [
+        "lance"
     ]
 }
