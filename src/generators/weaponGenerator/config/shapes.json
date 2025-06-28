@@ -1,10 +1,27 @@
 {
     "club": [
-        "Club",
-        "Rod"
+        {
+            "name": "Club",
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "Cudgel",
+            "rarity": {
+                "lte": "uncommon"
+            }
+        },
+        {
+            "name": "Rod",
+            "rarity": {
+                "lte": "uncommon"
+            }
+        }
     ],
     "staff": [
         "Staff",
+        "Quarterstaff",
         "Bo-Stick"
     ],
 
@@ -16,20 +33,48 @@
         "Tanto",
         "Khanjar",
         "Kukri",
-        "Short-Sword"
+        "Shortsword"
     ],
     
     "sword": [
-        "Sword",
+        "Longsword",
         "Saber",
         "Rapier",
         "Foil",
         "Epee",
-        "Macuahuitl",
         "Machete",
+        "Scimitar",
         "Gladius",
-        "Khopesh",
-        "Shotel"
+        {
+            "name": "Flamberge",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "name": "Macuahuitl",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "name": "Khopesh",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "name": "Shotel",
+            "rarity": {
+                "gte": "rare"
+            }
+        },
+        {
+            "name": "Keyblade",
+            "rarity": {
+                "gte": "legendary"
+            }
+        }
     ],
     "axe": [
         "Tomahawk",
@@ -43,21 +88,45 @@
         "Flail",
         "Morning-Star",
         "Shishpar",
-        "Meteor Hammer",
-        "Nunchuks"
+        "Nunchuks",
+        {
+            "name": "Meteor Hammer",
+            "rarity": {
+                "gte": "rare"
+            }
+        }
     ],
 
     "great-axe": [
-        "Great-Axe"
+        "Great-Axe",
+        {
+            "name": "Great-Scythe",
+            "rarity": {
+                "gte": "rare"
+            }
+        }
     ],
     "greatsword": [
         "Greatsword",
-        "Ultra-Greatsword"
+        "Zweihander",
+        "Nodachi",
+        {
+            "name": "Ultra-Greatsword",
+            "rarity": {
+                "gte": "rare"
+            }
+        }
     ],
 
     "spear": [
         "Spear",
-        "Trident"
+        "Trident",
+        {
+            "name": "Bident",
+            "rarity": {
+                "gte": "epic"
+            }
+        }
     ],
     "polearm": [
         "Polearm",
@@ -65,9 +134,47 @@
         "Glaive",
         "Naginata",
         "Bardiche",
-        "Raven's Beak"
+        "Raven's Beak",
+        "Pike",
+        {
+            "name": "Crescent Blade",
+            "rarity": {
+                "gte": "legendary"
+            }
+        }
     ],
     "lance": [
         "Lance"
+    ],
+
+    "sword (or bow)": [
+        {
+            "name": "Bladed Bow",
+            "rarity": {
+                "gte": "legendary"
+            }
+        }
+    ],
+    "dagger (or pistol)": [
+        {
+            "name": "Pistol Sword",
+            "rarity": {
+                "gte": "legendary"
+            }
+        }
+    ],
+    "sword (or musket)": [
+        {
+            "name": "Gunblade",
+            "rarity": {
+                "gte": "legendary"
+            }
+        },
+        {
+            "name": "Transforming Sniper Scythle",
+            "rarity": {
+                "gte": "legendary"
+            }
+        }
     ]
 }

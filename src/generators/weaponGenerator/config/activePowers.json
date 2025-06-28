@@ -50,7 +50,7 @@
         {
             "desc": "Chilling Strike",
             "cost": 2,
-            "additionalNotes": ["Struck foes must save or be frozen solid next turn."],
+            "additionalNotes": ["Upon hitting, you can choose to infuse the attack. Characters must save or be frozen solid next turn."],
             "rarity": {
                 "lte": "rare"
             }
@@ -113,7 +113,7 @@
         {
             "desc": "Caustic Strike",
             "cost": 2,
-            "additionalNotes": ["Melts objects, damages armor of struck characters."]
+            "additionalNotes": ["Upon hitting, you can choose to infuse the attack. Melts objects, or damages armor of characters."]
         },
         {
             "desc": "Locate Lemon",
@@ -144,7 +144,7 @@
         {
             "desc": "Power Machine",
             "cost": 1,
-            "additionalNotes": ["Touching the weapon to a machine causes it to activates under magical power. It operates for 24 hours."]
+            "additionalNotes": ["Touching the weapon to a machine causes it to activate under magical power. It operates for 24 hours."]
         }
     ],
     "earth": [

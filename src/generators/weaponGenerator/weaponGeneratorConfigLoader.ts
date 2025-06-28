@@ -6,6 +6,8 @@ import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
 import shapes from './config/shapes.json';
+import type seedrandom from "seedrandom";
+import { mundaneNameGenerator } from "../nameGenerator";
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
@@ -68,52 +70,6 @@ export const weaponRarityConfig: WeaponRarityConfig = {
         })
     }
 }
-
-export const weaponShapeGenerator = mkGen((rng) => {
-    const n = rng();
-    if(n>.75) {
-        return exoticWeaponShapeGenerator.generate(rng);
-    }
-    else if(n>.05) {
-        return normalWeaponShapeGenerator.generate(rng);
-    }
-    else {
-        return crummyWeaponShapeGenerator.generate(rng);
-    }
-});
-
-export const exoticWeaponShapeGenerator = mkGen((rng) => [
-    "ultra-greatsword",
-    "scimitar",
-    "macuahuitl",
-    "katana",
-    "lance",
-    "chain whip",
-    "pair of clawed gauntlets"
-].choice(rng));
-
-const normalWeaponShapeGenerator = mkGen((rng) => [
-    "greataxe",
-    "axe",
-    "handaxe",
-    "greatsword",
-    "longsword",
-    "sword",
-    "shortsword",
-    "sabre",
-    "mace",
-    "spear",
-    "pike",
-    "staff",
-    "rapier",
-].choice(rng));
-
-const crummyWeaponShapeGenerator = mkGen((rng) => [
-    "club",
-    "rod"
-].choice(rng));
-
-
 /*
     an adjective that could describe a physical object
     the adjective should be simple and describe its physical state,
@@ -291,7 +247,103 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
 
-export const POSSIBLE_SHAPES = toProviderSource<string,TGenerator<WeaponShape>>(
-    shapes satisfies Record<string, Iterable<string>>,
-    (k,x) => ({ thing: mkGen({ particular: x, group: k as WeaponShape['group']}), cond: {}})
+export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>(
+    shapes as Record<string, (string | ({name: string} & WeaponPowerCond))[]>,
+    (k,x) => {
+        switch(typeof x) {
+            case 'string':
+                return ({
+                    thing: mkGen({ particular: x, group: k as WeaponShape['group']}), 
+                    cond: {}
+                })
+            case 'object':
+                const y = x as {name: string} & WeaponPowerCond;
+                if(y !== null) {
+                    return({
+                    thing: mkGen({ particular: y.name, group: k as WeaponShape['group']}), 
+                    cond: {
+                        themes: y?.themes,
+                        activePowers: y?.activePowers,
+                        rarity: y?.rarity,
+                        shapeFamily: y?.shapeFamily
+                    }
+                })
+                }
+        }
+        throw new Error('invalid shape config');
+    }
 );
+
+
+const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
+    themes.map(x => OBJECT_ADJECTIVES[x])
+    .choice(rng)   //choose a category
+    .choice(rng);  //choose an adjective
+
+export const mkNonSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
+    const string = new StringGenerator([
+        mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
+        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
+        mkGen(' '),
+        mkGen(shape)
+    ])?.generate(rng);
+    return string.split(/\s/).map(x => x.capFirst()).join(' ');
+});
+export const mkSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
+    const string = new StringGenerator([
+        mundaneNameGenerator,
+        mkGen(', the '),
+        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
+        mkGen(' '),
+        mkGen(shape)
+    ])?.generate(rng);
+    return string.split(/\s/).map(x => x.capFirst()).join(' ');
+});
+        
+
+const exoticWeaponMaterialsGenerator = mkGen((rng) => [
+    "silver",
+    "gold",
+    "black iron",
+    "lumensteel",
+    "mithrel",
+    "adamantium",
+    "cobalt",
+    "radium",
+    "diamond",
+    "ruby",
+    "sapphire",
+].choice(rng));
+
+const normalWeaponMaterialsGenerator = mkGen((rng) => [
+    "bronze",
+    "iron",
+    "steel",
+    "Silver-Plated"
+].choice(rng));
+
+const crummyWeaponMaterialsGenerator = mkGen((rng) => [
+    "tin",
+    "copper",
+    "oak",
+    "pine",
+    "granite",
+    "marble",
+    "alabaster",
+    "sandstone",
+    "flint",
+    "quartz",
+].choice(rng));
+
+const weaponMaterialGenerator = mkGen((rng) => {
+    const n = rng();
+    if(n>.75) {
+        return exoticWeaponMaterialsGenerator.generate(rng);
+    }
+    else if(n>.05) {
+        return normalWeaponMaterialsGenerator.generate(rng);
+    }
+    else {
+        return crummyWeaponMaterialsGenerator.generate(rng);
+    }
+});

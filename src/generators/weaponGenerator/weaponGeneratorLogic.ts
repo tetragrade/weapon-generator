@@ -1,8 +1,7 @@
-import { mundaneNameGenerator } from "../nameGenerator.ts";
-import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
+import { type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, OBJECT_ADJECTIVES, POSSIBLE_SHAPES } from "./weaponGeneratorConfigLoader.ts";
+import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, mkSentientNameGenerator, mkNonSentientNameGenerator } from "./weaponGeneratorConfigLoader.ts";
 import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 
@@ -40,82 +39,9 @@ const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACT
 const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
 const shapeProvider = new WeaponFeatureProvider<WeaponShape>(POSSIBLE_SHAPES);
 
-const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
-    themes.map(x => OBJECT_ADJECTIVES[x])
-    .choice(rng)   //choose a category
-    .choice(rng);  //choose an adjective
-
-const mkNonSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new StringGenerator([
-        mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
-        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
-        mkGen(' '),
-        mkGen(shape)
-    ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
-});
-const mkSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
-    const string = new StringGenerator([
-        mundaneNameGenerator,
-        mkGen(', the '),
-        [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
-        mkGen(' '),
-        mkGen(shape)
-    ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
-});
-        
-
-const exoticWeaponMaterialsGenerator = mkGen((rng) => [
-    "silver",
-    "gold",
-    "black iron",
-    "lumensteel",
-    "mithrel",
-    "adamantium",
-    "cobalt",
-    "radium",
-    "diamond",
-    "ruby",
-    "sapphire",
-].choice(rng));
-
-const normalWeaponMaterialsGenerator = mkGen((rng) => [
-    "bronze",
-    "iron",
-    "steel",
-    "Silver-Plated"
-].choice(rng));
-
-const crummyWeaponMaterialsGenerator = mkGen((rng) => [
-    "tin",
-    "copper",
-    "oak",
-    "pine",
-    "granite",
-    "marble",
-    "alabaster",
-    "sandstone",
-    "flint",
-    "quartz",
-].choice(rng));
-
-const weaponMaterialGenerator = mkGen((rng) => {
-    const n = rng();
-    if(n>.75) {
-        return exoticWeaponMaterialsGenerator.generate(rng);
-    }
-    else if(n>.05) {
-        return normalWeaponMaterialsGenerator.generate(rng);
-    }
-    else {
-        return crummyWeaponMaterialsGenerator.generate(rng);
-    }
-});
-
 export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
-        const n = rng();
+        const n = 0;//rng();
         // sort in ascending order of draw chance
         const xs = Object.entries(weaponRarityConfig).sort(([_,v1],[__,v2]) => v1.percentile - v2.percentile);
         for(const [k,v] of xs) {
