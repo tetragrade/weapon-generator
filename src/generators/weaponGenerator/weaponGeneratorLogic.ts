@@ -2,8 +2,8 @@ import { mundaneNameGenerator } from "../nameGenerator.ts";
 import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { weaponRarityConfig, POSSIBLE_PERSONALITIES, weaponShapeGenerator, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
-import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, allThemes, isRarity } from "./weaponGeneratorTypes.ts";
+import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, OBJECT_ADJECTIVES, POSSIBLE_SHAPES } from "./weaponGeneratorConfigLoader.ts";
+import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
 
 class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>, WeaponPowerCond, WeaponPowerCondParams> {
@@ -26,8 +26,9 @@ class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>,
             (!cond.themes || evQuant(cond.themes, params.themes)) && // themes OK
             (!cond.personality || evQuant(cond.personality, params.sentient ? params.sentient.personality : [])) && // personality OK
             (!cond.activePowers || evQuant(cond.activePowers, params.active.powers)) && // actives OK
-            (!cond.passivePowers || evQuant(cond.passivePowers, params.passivePowers)) &&   // passives OK
-            (!cond.languages || evQuant(cond.languages, params.sentient ? params.sentient.languages : []))    // passives OK
+            (!cond.passivePowers || evQuant(cond.passivePowers, params.passivePowers)) && // passives OK
+            (!cond.languages || evQuant(cond.languages, params.sentient ? params.sentient.languages : [])) && // languages OK
+            (!cond.shapeFamily || evQuant(cond.shapeFamily, params.shape.group)) // shapes OK
         );
     }
 }
@@ -37,28 +38,29 @@ const rechargeMethodsProvider = new WeaponFeatureProvider<string>(POSSIBLE_RECHA
 
 const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACTIVE_POWERS);
 const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
+const shapeProvider = new WeaponFeatureProvider<WeaponShape>(POSSIBLE_SHAPES);
 
 const generateObjectAdjective = (themes: Theme[], rng: seedrandom.PRNG) => 
     themes.map(x => OBJECT_ADJECTIVES[x])
     .choice(rng)   //choose a category
     .choice(rng);  //choose an adjective
 
-const mkNonSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen(() => {
+const mkNonSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
         mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
         mkGen(' '),
-        weaponShapeGenerator
+        mkGen(shape)
     ])?.generate(rng);
     return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
-const mkSentientNameGenerator = (themes: Theme[], rng: seedrandom.PRNG) => mkGen(() => {
+const mkSentientNameGenerator = (themes: Theme[], shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
         mundaneNameGenerator,
         mkGen(', the '),
         [mkGen(generateObjectAdjective(themes, rng)), weaponMaterialGenerator].choice(rng),
         mkGen(' '),
-        weaponShapeGenerator
+        mkGen(shape)
     ])?.generate(rng);
     return string.split(/\s/).map(x => x.capFirst()).join(' ');
 });
@@ -95,7 +97,7 @@ const crummyWeaponMaterialsGenerator = mkGen((rng) => [
     "alabaster",
     "sandstone",
     "flint",
-    "quartz"
+    "quartz",
 ].choice(rng));
 
 const weaponMaterialGenerator = mkGen((rng) => {
@@ -144,7 +146,13 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         rarity,
         themes: [],
         name: '',
-        damage: { d6: 1}, // params.damage 
+        shape: {
+            particular: "sword",
+            group: "sword"
+        },
+        damage: {
+            as: 'sword'
+        }, 
         active: {
             maxCharges: params.nCharges,
             rechargeMethod: '',
@@ -156,10 +164,9 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             languages: ['Common']
         } : false as false,
     };
-    
-    
+
     // draw themes until we have enough to cover our number of powers
-    const unusedThemes = new Set<Theme>(allThemes); // this could be a provider but whatever go my Set<Theme>
+    const unusedThemes = new Set<Theme>(themes); // this could be a provider but whatever go my Set<Theme>
     const minThemes = [1,2].choice(rng);
     while(
         weapon.themes.length < minThemes ||
@@ -176,8 +183,14 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             break;
         }
     }
+    
+    //determine shape
+    weapon.shape = shapeProvider.draw(rng, weapon).generate(rng);
+    weapon.damage.as = weapon.shape.particular;
+
     // determine name
-    weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, rng) : mkNonSentientNameGenerator(weapon.themes, rng))?.generate(rng);
+    weapon.name = (isSentient ? mkSentientNameGenerator(weapon.themes, weapon.shape.particular, rng) : mkNonSentientNameGenerator(weapon.themes, weapon.shape.particular, rng))?.generate(rng);
+
     
     // determine description
     weapon.description = 'TODO';

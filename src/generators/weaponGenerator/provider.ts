@@ -2,15 +2,21 @@ import type seedrandom from "seedrandom";
 import * as _ from 'lodash';
 
 export type Quant<T> = { any: T[]} | { all: T[] } | { none: T[] }
-export function evQuant<T>(req: Quant<T>, actual: T[]) {
+export function evQuant<T>(req: Quant<T>, actual: T | T[]) {
+    const isArray = Array.isArray(actual);
+    const eq: (x:T) => boolean = isArray ? 
+        (x: T) => actual.some(y => _.isEqual(x,y)) :
+        (x) => x === actual;
+    const length = isArray ? actual.length : 1;
+
     if('any' in req) {
-        return actual.length>0 && req.any.some(x => actual.some(y => _.isEqual(x,y)));
+        return length>0 && req.any.some(eq);
     }
     else if('all' in req) {
-        return actual.length>0 && req.all.every(x => actual.some(y => _.isEqual(x,y)));
+        return length>0 && req.all.every(eq);
     }
     else if('none' in req) {
-        return actual.length===0 || !req.none.some(x => actual.some(y => _.isEqual(x,y)));
+        return length===0 || !req.none.some(eq);
     }
     return true;
 }

@@ -1,0 +1,42 @@
+{
+    "club": [
+        "club",
+        "rod"
+    ],
+    "staff": [
+        "staff",
+        "bo stick"
+    ],
+
+    "dagger": [
+        "dagger"
+    ],
+    
+    "sword": [
+        "sword",
+        "macuahuitl"
+    ],
+    "axe": [
+        "axe"
+    ],
+    "mace": [
+        "mace",
+        "flail"
+    ],
+
+    "great-axe": [
+        "great-axe"
+    ],
+    "greatsword": [
+        "greatsword"
+    ],
+
+    "spear": [
+        "spear",
+        "trident"
+    ],
+    "halberd": [
+        "halberd",
+        "glaive"
+    ]
+}

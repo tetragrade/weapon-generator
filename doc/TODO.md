@@ -1,4 +1,7 @@
 - TODO
+    - typos.
+        - 'intimate' -> 'intimidate'
+
     - Basic Functionality
         - ~~Color-coded rarities.~~
         - Support for conditionally available abilities, beyond themes.

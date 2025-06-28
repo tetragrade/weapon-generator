@@ -44,11 +44,26 @@
         },
         {
             "miscPower": true,
+            "desc": "Wreathed in frigid mist.",
+            "bonus": {
+                "addDamageDie": {
+                    "d6": 1
+                }
+            },
+            "shapeFamily": {
+                "none": ["dagger","sword","greatsword"]
+            }
+        },
+        {
+            "miscPower": true,
             "desc": "Wreathed in ice, always frozen into its sheath. Requires a strength save to draw.",
             "bonus": {
                 "addDamageDie": {
-                    "d8": 1
+                    "d10": 1
                 }
+            },
+            "shapeFamily": {
+                "any": ["dagger","sword","greatsword"]
             }
         },
         {

@@ -1,10 +1,11 @@
 import { singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import type { ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
+import shapes from './config/shapes.json';
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
@@ -130,7 +131,9 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
     cond: {
         themes: { all: [k as Theme]},
         activePowers: { none: [x]},
-        rarity: 'rarity' in x ? x.rarity : undefined
+
+        rarity: x?.rarity,
+        shapeFamily: x?.shapeFamily
     }
 }));
 
@@ -148,12 +151,14 @@ export const POSSIBLE_PASSIVE_POWERS = toProviderSource(passivePowers as Record<
     thing: mkGen(x), 
     cond: {
         themes: { all: [k as Theme]}, 
-        passivePowers: { none: [x]}, 
-        rarity: x?.rarity,
-        isSentient: 'language' in x ? true : x.isSentient, // languages should always require the weapon to be sentient
-        languages: {
+        passivePowers: 'miscPower' in x ? { none: [x]} : x?.passivePowers,
+        isSentient: 'language' in x ? true : x?.isSentient, // languages should always require the weapon to be sentient
+        languages: 'language' in x ? {
             none: [x.desc]
-        }
+        } : x?.languages,
+
+        rarity: x?.rarity,
+        shapeFamily: x?.shapeFamily
     }}));
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
@@ -285,3 +290,8 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen('regains all charges when driven into the ground while something important is happening')
     ]
 } satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
+
+export const POSSIBLE_SHAPES = toProviderSource<string,TGenerator<WeaponShape>>(
+    shapes satisfies Record<string, Iterable<string>>,
+    (k,x) => ({ thing: mkGen({ particular: x, group: k as WeaponShape['group']}), cond: {}})
+);

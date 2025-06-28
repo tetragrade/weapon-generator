@@ -1,7 +1,8 @@
 import type seedrandom from "seedrandom";
 import type { Comp, Cond, Quant } from "./provider";
+import shapes from './config/shapes.json'
 
-export const allThemes = [
+export const themes = [
     "fire", "ice",
     "cloud",
     "dark", "light",
@@ -13,10 +14,9 @@ export const allThemes = [
     // "wizard", "thief"
     // "jungle",
     // "space"
-    // 
 ] as const;
-export type Theme = (typeof allThemes)[number];
-const themesSet = new Set(allThemes);
+export type Theme = (typeof themes)[number];
+const themesSet = new Set(themes);
 export const isTheme = (x: unknown): x is Theme => themesSet.has(x as Theme);
 
 export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'] as const;
@@ -57,8 +57,9 @@ export type Weapon = {
     rarity: WeaponRarity;
     name: string;
     description: string;
+    shape: WeaponShape;
 
-    damage: DamageDice;
+    damage: DamageDice & { as: string };
     active: {
         maxCharges: number,
         rechargeMethod: string
@@ -77,6 +78,7 @@ export interface Power {
 }
 
 export interface DamageDice {
+    const?: number;
     d4?: number;
     d6?: number;
     d8?: number;
@@ -107,12 +109,18 @@ export interface Language extends Power {
 export type PassivePower = Language | MiscPower;
 export type AnyPower = ActivePower | PassivePower;
 
+export type WeaponShape = {
+    particular: string;
+    group: keyof typeof shapes;
+}
+
 export interface WeaponPowerCond extends Cond {
     themes?: Quant<Theme>;
     personality?: Quant<string>;
     languages?: Quant<string>;
     activePowers?: Quant<ActivePower>;
     passivePowers?: Quant<PassivePower>;
+    shapeFamily?: Quant<WeaponShape['group']>;
     rarity?: Comp<WeaponRarity>;
     isSentient?: boolean;
 }
@@ -120,4 +128,4 @@ export interface WeaponPowerCond extends Cond {
 /**
  * TODO this should really just accept weapon
  */
-export type WeaponPowerCondParams = Pick<Weapon, 'active' | 'passivePowers' | 'sentient' | 'rarity' | 'themes'>
+export type WeaponPowerCondParams = Pick<Weapon, 'active' | 'passivePowers' | 'sentient' | 'rarity' | 'themes' | 'shape'>

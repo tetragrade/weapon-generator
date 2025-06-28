@@ -145,16 +145,16 @@ class WeaponGeneratorController {
         this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
         this.view.name.classList.add(`weapon-rarity-${weapon.rarity}`);
 
-  
-        const damageEntries = Object.entries(weapon.damage);
-        this.view.damage.innerText = damageEntries.length>1 ?
-          damageEntries
-          .filter(([k]) => k!='d4')
-          .slice(1)
+
+        const acc = `as ${weapon.damage.as}`;
+        const damageKeys = Object.keys(weapon.damage) as [keyof typeof weapon['damage']];
+        this.view.damage.innerText = damageKeys.length>1 ?
+          damageKeys
+          .filter(k => k!='as')
           .reduce<string>(
-            (acc, [k,v]) => acc + ` + ${v}${k}`, 
-            `${damageEntries[0][1]}${damageEntries[0][0]}`
-          ) : `${damageEntries[0][1]}${damageEntries[0][0]}`;
+            (acc, k) => acc + ` + ${weapon.damage[k]}${k}`, 
+            acc
+          ) : acc;
   
         // add the active powers
         this.view.active.maxCharges.innerText = `${this.textForCharges(weapon.active.maxCharges)}.`;
