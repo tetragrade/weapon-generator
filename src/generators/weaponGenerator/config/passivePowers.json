@@ -26,7 +26,8 @@
         },
         {
             "miscPower": true,
-            "desc": "Weapon is an expert blacksmith."
+            "desc": "Weapon is an expert blacksmith.",
+            "isSentient": true
         }
     ],
     "ice": [
@@ -123,7 +124,8 @@
     "sweet": [
         {
             "miscPower": true,
-            "desc": "Weapon is an expert chef."
+            "desc": "Weapon is an expert chef.",
+            "isSentient": true
         },
         {
             "miscPower": true,
@@ -141,7 +143,8 @@
     "sour": [
         {
             "miscPower": true,
-            "desc": "Weapon is an expert alchemist."
+            "desc": "Weapon is an expert alchemist.",
+            "isSentient": true
         },
         {
             "miscPower": true,
@@ -159,7 +162,8 @@
     "wizard": [
         {
             "miscPower": true,
-            "desc": "Weapon is an expert astrologer."
+            "desc": "Weapon is an expert astrologer.",
+            "isSentient": true
         },
         {
             "miscPower": true,
@@ -179,11 +183,12 @@
     "steampunk": [
         {
             "miscPower": true,
-            "desc": "Weapon is an expert tinkerer."
+            "desc": "Weapon is an expert tinkerer.",
+            "isSentient": true
         },
         {
             "miscPower": true,
-            "desc": "Weapon always knows which was is north."
+            "desc": "Wielder always knows which was is north."
         },
         {
             "miscPower": true,
@@ -220,7 +225,8 @@
         },
         {
             "miscPower": true,
-            "desc": "Weapon is an expert jeweller. It can identify any gemstone."
+            "desc": "Weapon is an expert jeweller. It can identify any gemstone.",
+            "isSentient": true
         },
         {
             "miscPower": true,
