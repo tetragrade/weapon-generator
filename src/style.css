@@ -228,14 +228,14 @@ h1 {
 	color: white;
 }
 .weapon-rarity-uncommon {
-	color: #46dc21;
+	color: hsl(108, 74%, 50%);
 }
 .weapon-rarity-rare {
-	color: #2178dc;
+	color: hsl(212, 74%, 50%);
 }
 .weapon-rarity-epic {
-	color: #8821dc;
+	color: hsl(273, 74%, 55%);
 }
 .weapon-rarity-legendary {
-	color: #dcc021;
+	color: hsl(51, 84%, 50%);
 }
