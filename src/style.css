@@ -231,10 +231,10 @@ h1 {
 	color: hsl(108, 74%, 50%);
 }
 .weapon-rarity-rare {
-	color: hsl(212, 74%, 50%);
+	color: hsl(212, 74%, 55%);
 }
 .weapon-rarity-epic {
-	color: hsl(273, 74%, 55%);
+	color: hsl(273, 74%, 60%);
 }
 .weapon-rarity-legendary {
 	color: hsl(51, 84%, 50%);
