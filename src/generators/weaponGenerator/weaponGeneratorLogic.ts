@@ -47,7 +47,7 @@ const articles = new Set(['the', 'a', 'an', 'by', 'of'])
 const mkNonSentientNameGenerator = (weapon: Weapon, shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
         mkGen(() => rng()>.9 ? 
-            [grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng) + ', the ' 
+            `${[grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng)}, ${['', 'the '].choice(rng)}`
             : ''
         ),
         mkGen((x) => objectAdjectivesProvider.draw(x, weapon).generate(x)),
@@ -59,12 +59,12 @@ const mkNonSentientNameGenerator = (weapon: Weapon, shape: string, rng: seedrand
 const mkSentientNameGenerator = (weapon: Weapon,shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
         mkGen((rng) => [grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng)),
-        mkGen(', the '),
+        mkGen([', ', ', the '].choice(rng)),
         mkGen((x) => objectAdjectivesProvider.draw(x, weapon).generate(x)),
         mkGen(' '),
         mkGen(shape)
     ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
+    return string.split(/\s/).map(x => articles.has(x) ? x : x.capFirst()).join(' ');
 });
 
 export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
