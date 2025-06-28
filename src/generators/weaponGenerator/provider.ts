@@ -57,6 +57,10 @@ export class UUIDIssuer {
     }
 
     Issue<T extends object>(x: T): WithUUID<T> {
+        try {
+            console.log(`issued id ${this.count} for`, (x as any)?.thing?.desc?.generate(seedrandom()));
+        }
+        catch(e) {}
         return {
             ...x,
             UUID: this.count++,
@@ -74,10 +78,14 @@ export abstract class ConditionalThingProvider<TThing extends object, TCond exte
     }
 
     protected condExecutor(UUID: number, cond: TCond, params: TParams): boolean {
-        // if the cond is unique, then no iterable on params can have the same UUID
-        return !cond.unique || !Object.values(params).some(x => {
-            Array.isArray(x) && x.map(y => y?.UUID === UUID);
-        });
+        // if the cond reqires unique, then no iterable on params can have the same UUID
+        return (
+            // unique implies no same UUID (de-morgan's)
+            !cond.unique || 
+            !Object.values(params).some(x => // no property
+                x?.UUID === UUID || // has this UUID
+                Array.isArray(x) && x.some(y => y?.UUID === UUID) // or has an element with this UUID (doesn't handle recursion)
+            ));
     };
     
     // note that the complexity on this implementation is awful, O(n). it should build a decision tree on construction & be O(1)
@@ -87,7 +95,13 @@ export abstract class ConditionalThingProvider<TThing extends object, TCond exte
      * @param params the params that the return value's condition must hold for
      * @returns a random thing meeting that is valid for conditions
      */
-    draw = (rng: seedrandom.PRNG, params: TParams) => this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).choice(rng)?.thing;
+    draw(rng: seedrandom.PRNG, params: TParams): WithUUID<TThing> {
+        const choice = this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).choice(rng);
+        return {
+            ...choice.thing,
+            UUID: choice.UUID
+        }
+    }
     
     // note that the complexity on ths implementation is awful, O(n). it should build a decision tree on construction & be O(1)
     /**
@@ -95,5 +109,8 @@ export abstract class ConditionalThingProvider<TThing extends object, TCond exte
      * @param params the params to get all the things whose condition must hold for
      * @returns the set of things that may possibly be returned by calling this.draw with conditions 
      */
-    available = (params: TParams) => new Set(this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).map(x => x.thing));
+    available: (params: TParams) => Set<WithUUID<TThing>> = (params) => new Set(this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).map(x => ({
+        ...(x.thing),
+        UUID: x.UUID
+    })));
 }
