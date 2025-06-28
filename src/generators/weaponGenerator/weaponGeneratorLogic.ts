@@ -41,7 +41,7 @@ const shapeProvider = new WeaponFeatureProvider<WeaponShape>(POSSIBLE_SHAPES);
 
 export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
-        const n = 0;//rng();
+        const n = rng();
         // sort in ascending order of draw chance
         const xs = Object.entries(weaponRarityConfig).sort(([_,v1],[__,v2]) => v1.percentile - v2.percentile);
         for(const [k,v] of xs) {
