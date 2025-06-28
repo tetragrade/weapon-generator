@@ -1,6 +1,6 @@
 import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
-import type { ProviderElement } from "./provider";
+import { GLOBAL_UUID_ISSUER, type ProviderElement } from "./provider";
 import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
@@ -74,15 +74,16 @@ export const weaponRarityConfig: WeaponRarityConfig = {
     the adjective should be simple and describe its physical state,
     no vibes/moral/metaphysical descriptors i.e. just, terrifying, gothic
 */
-export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource<(string | {name: string} & WeaponPowerCond), TGenerator<string>>(
-    objectAdjectives as Record<Theme | string, (string | {name: string} & WeaponPowerCond)[]>,
+export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource(
+    objectAdjectives as Record<Theme | string, (string | {name: string} & Omit<WeaponPowerCond, 'unique'>)[]>,
     (k,x) => {
         switch(typeof x) {
             case 'string':
                 return ({
                     thing: mkGen(x), 
                     cond: {
-                        themes: k ==='any' ? undefined : { all: [k as Theme]}
+                        themes: k ==='any' ? undefined : { all: [k as Theme]},
+                        unique: true
                     }
                 })
             case 'object':
@@ -91,23 +92,24 @@ export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource<(string | {name: stri
                     return({
                     thing: mkGen(x.name), 
                     cond: {
-                        themes: y?.themes ??  (k ==='any' ? undefined : { all: [k as Theme]}),
+                        themes: y?.themes ?? (k ==='any' ? undefined : { all: [k as Theme]}),
                         activePowers: y?.activePowers,
                         rarity: y?.rarity,
-                        shapeFamily: y?.shapeFamily
+                        shapeFamily: y?.shapeFamily,
+                        unique: true
                     }
                 })
                 }
         }
         throw new Error('invalid shape config');
     }    
-);
+).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
 export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
     Theme | string,
-    (ActivePower & WeaponPowerCond)[]
+    (ActivePower & Omit<WeaponPowerCond,'unique'>)[]
 >, (k,x) => ({
     thing: mkGen(x),
     cond: {
@@ -115,9 +117,10 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
         activePowers: { none: [x]},
 
         rarity: x?.rarity,
-        shapeFamily: x?.shapeFamily
+        shapeFamily: x?.shapeFamily,
+        unique: true
     }
-}));
+})).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 
 // this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
@@ -133,20 +136,17 @@ const mixinPassivePowers = ([
         },
         cond: {
             themes: {
-                any: ['light']
+                any: ['light'],
             },
+            unique: true
         }
     }
-] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]).map(x => {
-    x.cond.passivePowers = { none: [x.thing] };
-    return x;
-});
+] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]);
 
 export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSource(passivePowers as Record<
     Theme | string,
-    (PassivePower & WeaponPowerCond)[]
+    (PassivePower & Omit<WeaponPowerCond, 'unique'>)[]
 >, (k,x) => {
-    // quant only works by comparing the desc generator of this by reference, it seems. so this has to be a single object
     const thing = ('miscPower' in x ? {
         miscPower: true,
         desc: typeof x.desc === 'string' ? mkGen(x.desc) : x.desc,
@@ -159,21 +159,14 @@ export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSour
     thing: thing,
     cond: {
         themes: k==='any' ? undefined as never : { all: [k as Theme]},
-        passivePowers: 'miscPower' in x ? { none: [thing]} : x?.passivePowers,
         isSentient: 'language' in x ? true : x?.isSentient, // languages should always require the weapon to be sentient
-        languages: 
-            'languages' in x 
-                ? x.languages 
-            : 'language' in x && x.desc!==null ? 
-                {
-                    none: [x.desc]
-                } 
-            : 
-                undefined,
+        languages: x?.languages,
         rarity: x?.rarity,
-        shapeFamily: x?.shapeFamily
+        shapeFamily: x?.shapeFamily,
+        passivePowers: x?.passivePowers,
+        unique: true
     }}
-})];
+})].map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
@@ -245,8 +238,8 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
     ]
 } satisfies Record<Theme | string, string[]>, (k,x) => {
     const formatted = x.capFirst() + '.';
-    return ({ thing: mkGen(formatted), cond: { themes: { all: [k as Theme]}, personality: { none: [formatted] } }})
-});
+    return ({ thing: mkGen(formatted), cond: { themes: { all: [k as Theme]}, unique: true }})
+}).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     fire: [
@@ -303,16 +296,24 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen('regains all charges when its wielder meditates atop a mountain'),
         mkGen('regains all charges when driven into the ground while something important is happening')
     ]
-} satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ thing: x, cond: { themes: { all: [k as Theme]}}}));
+} satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ 
+    thing: x, 
+    cond: { 
+        themes: { all: [k as Theme]},
+        unique: true,
+    },
+})).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>(
-    shapes as Record<string, (string | ({name: string} & WeaponPowerCond))[]>,
+    shapes as Record<string, (string | ({name: string} & Omit<WeaponPowerCond, 'unique'>))[]>,
     (k,x) => {
         switch(typeof x) {
             case 'string':
                 return ({
                     thing: mkGen({ particular: x, group: k as WeaponShape['group']}), 
-                    cond: {}
+                    cond: {
+                        unique: true,
+                    }
                 })
             case 'object':
                 const y = x as {name: string} & WeaponPowerCond;
@@ -323,14 +324,15 @@ export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>
                         themes: y?.themes,
                         activePowers: y?.activePowers,
                         rarity: y?.rarity,
-                        shapeFamily: y?.shapeFamily
+                        shapeFamily: y?.shapeFamily,
+                        unique: true,
                     }
                 })
                 }
         }
         throw new Error('invalid shape config');
     }
-);
+).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 export const WEAPON_TO_HIT: Record<WeaponRarity, TGenerator<number>> = {
     common: mkGen((rng: seedrandom.PRNG) => {

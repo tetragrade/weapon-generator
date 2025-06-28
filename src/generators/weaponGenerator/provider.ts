@@ -35,23 +35,50 @@ export function evComp<T> (comp: Comp<T>, x: T, ord: (x: T) => number) {
     return true;
 }
 
-export interface Cond {
-    unique?: boolean;
-}
-
-export interface ProviderElement<TThing, TCond extends Cond> { 
+export interface ProviderElement<TThing, TCond> { 
     thing: TThing;
     cond: TCond;
 }
 
-export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCondParams> {
-    protected source: ProviderElement<TThing, TCond>[];
+export interface Cond {
+    unique: true
+}
 
-    constructor(source: ProviderElement<TThing, TCond>[]) {
+export type WithUUID<T extends object> = {   
+    [k in keyof T]: T[k]
+} & {
+    UUID: number;
+}
+export class UUIDIssuer {
+    count: number;
+    
+    constructor() {
+        this.count = 0;
+    }
+
+    Issue<T extends object>(x: T): WithUUID<T> {
+        return {
+            ...x,
+            UUID: this.count++,
+        }
+    }
+}
+
+export const GLOBAL_UUID_ISSUER = new UUIDIssuer();
+
+export abstract class ConditionalThingProvider<TThing extends object, TCond extends Cond, TParams extends object> {
+    protected source: WithUUID<ProviderElement<TThing, TCond>>[];
+
+    constructor(source: WithUUID<ProviderElement<TThing, TCond>>[]) {
         this.source = source;
     }
 
-    protected abstract condExecutor(cond: TCond, params: TCondParams): boolean;
+    protected condExecutor(UUID: number, cond: TCond, params: TParams): boolean {
+        // if the cond is unique, then no iterable on params can have the same UUID
+        return !cond.unique || !Object.values(params).some(x => {
+            Array.isArray(x) && x.map(y => y?.UUID === UUID);
+        });
+    };
     
     // note that the complexity on this implementation is awful, O(n). it should build a decision tree on construction & be O(1)
     /**
@@ -60,7 +87,7 @@ export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCond
      * @param params the params that the return value's condition must hold for
      * @returns a random thing meeting that is valid for conditions
      */
-    draw = (rng: seedrandom.PRNG, params: TCondParams) => this.source.filter(x => this.condExecutor(x.cond, params)).choice(rng)?.thing;
+    draw = (rng: seedrandom.PRNG, params: TParams) => this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).choice(rng)?.thing;
     
     // note that the complexity on ths implementation is awful, O(n). it should build a decision tree on construction & be O(1)
     /**
@@ -68,5 +95,5 @@ export abstract class ConditionalThingProvider<TThing, TCond extends Cond, TCond
      * @param params the params to get all the things whose condition must hold for
      * @returns the set of things that may possibly be returned by calling this.draw with conditions 
      */
-    available = (params: TCondParams) => new Set(this.source.filter(x => this.condExecutor(x.cond, params)).map(x => x.thing));
+    available = (params: TParams) => new Set(this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).map(x => x.thing));
 }

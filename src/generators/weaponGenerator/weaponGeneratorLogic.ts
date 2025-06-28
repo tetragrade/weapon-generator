@@ -3,15 +3,16 @@ import '../../string.ts';
 import seedrandom from "seedrandom";
 import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
 import { type ActivePower, type DamageDice, type PassiveBonus, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity, type PassivePower } from "./weaponGeneratorTypes.ts";
-import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
+import { ConditionalThingProvider, evComp, evQuant, type ProviderElement, type WithUUID } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
-class WeaponFeatureProvider<T> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
-    constructor(source: ProviderElement<T, WeaponPowerCond>[]) {
+class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
+    constructor(source: WithUUID<ProviderElement<T, WeaponPowerCond>>[]) {
         super(source);
     }
     
-    protected condExecutor(cond: WeaponPowerCond, params: WeaponPowerCondParams): boolean {
+    protected override condExecutor(UUID: number, cond: WeaponPowerCond, params: WeaponPowerCondParams): boolean {
+        
         const ord = (x: WeaponRarity) => ({
             common: 0,
             uncommon: 1,
@@ -21,6 +22,7 @@ class WeaponFeatureProvider<T> extends ConditionalThingProvider<T, WeaponPowerCo
         }[x])
 
         return (
+            super.condExecutor(UUID, cond, params) && //uniqueness OK
             (!cond.isSentient || params.sentient) && // sentience OK
             (!cond.rarity || evComp(cond.rarity, params.rarity, ord)) && // rarity OK
             (!cond.themes || evQuant(cond.themes, params.themes)) && // themes OK
@@ -162,7 +164,6 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         const choice = passivePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             if('language' in choice && weapon.sentient) {
-                console.log(choice, choice.language);
                 weapon.sentient.languages.push(choice.desc);
             }
             else if ('miscPower' in choice) {
