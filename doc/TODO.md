@@ -13,13 +13,14 @@
             - ~~Quant for active & passive powers.~~
             - UUID based Quant.                         HARD SHORT  4
                 - Until this is impemented, Quant won't function properly providers that yield generators.
+                - Nah, won't work.
 
         - ~~Implement bonuses for passive abilities.~~
 
         - More themes & abilities.                      EASY LONG   8
             - 'pets'
         
-        - Names / Namelist                              EASY LONG   7
+        - ~~Names / Namelist~~                          EASY LONG   7
         - Descriptions.                                 HARD LONG   4
         - UX.                                           EASY LONG   6
         - Automated Testing.                            HARD LONG   ~

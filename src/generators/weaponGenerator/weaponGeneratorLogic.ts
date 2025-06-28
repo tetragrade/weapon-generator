@@ -4,7 +4,7 @@ import seedrandom from "seedrandom";
 import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
 import { type ActivePower, type DamageDice, type PassiveBonus, type PassivePower, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement } from "./provider.ts";
-import { mundaneNameGenerator } from "../nameGenerator.ts";
+import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
 class WeaponFeatureProvider<T1> extends ConditionalThingProvider<TGenerator<T1>, WeaponPowerCond, WeaponPowerCondParams> {
     constructor(source: ProviderElement<TGenerator<T1>, WeaponPowerCond>[]) {
@@ -43,18 +43,22 @@ const shapeProvider = new WeaponFeatureProvider<WeaponShape>(POSSIBLE_SHAPES);
 
 const objectAdjectivesProvider =  new WeaponFeatureProvider<string>(POSSIBLE_OBJECT_ADJECTIVES);
 
+const articles = new Set(['the', 'a', 'an', 'by', 'of'])
 const mkNonSentientNameGenerator = (weapon: Weapon, shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
-        mkGen(() => rng()>.9 ? mundaneNameGenerator.generate(rng) + ', the ' : ''),
+        mkGen(() => rng()>.9 ? 
+            [grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng) + ', the ' 
+            : ''
+        ),
         mkGen((x) => objectAdjectivesProvider.draw(x, weapon).generate(x)),
         mkGen(' '),
         mkGen(shape)
     ])?.generate(rng);
-    return string.split(/\s/).map(x => x.capFirst()).join(' ');
+    return string.split(/\s/).map(x => articles.has(x) ? x : x.capFirst()).join(' ');
 });
 const mkSentientNameGenerator = (weapon: Weapon,shape: string, rng: seedrandom.PRNG) => mkGen(() => {
     const string = new StringGenerator([
-        mundaneNameGenerator,
+        mkGen((rng) => [grecoRomanFirstNameGenerator, angloFirstNameGenerator].choice(rng).generate(rng)),
         mkGen(', the '),
         mkGen((x) => objectAdjectivesProvider.draw(x, weapon).generate(x)),
         mkGen(' '),
@@ -86,7 +90,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const paramsClone = structuredClone(params)
 
     // determine sentience
-    const isSentient = rng() < params.sentienceChance;
+    const isSentient = true; //rng() < params.sentienceChance;
 
     const toHit = WEAPON_TO_HIT[rarity].generate(rng);
     
