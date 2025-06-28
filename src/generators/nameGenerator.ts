@@ -1,4 +1,3 @@
-import seedrandom from "seedrandom";
 import { mkGen, StringGenerator } from "./recursiveGenerator";
 
 const angloNamesByPartShortSuffixGenerator = new StringGenerator([
