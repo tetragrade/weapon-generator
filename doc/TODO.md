@@ -2,6 +2,8 @@
     - typos.
         - 'intimate' -> 'intimidate'
 
+    - Split languages from passive powers. Current way of doing it is stupid & it's now possible to just have a Language or Misc Power provider. 
+
     - Basic Functionality
         - ~~Color-coded rarities.~~
         - ~~Weapon shape type based damage.~~

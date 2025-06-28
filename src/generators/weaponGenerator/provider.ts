@@ -1,12 +1,12 @@
-import type seedrandom from "seedrandom";
+import seedrandom from "seedrandom";
 import * as _ from 'lodash';
 
 export type Quant<T> = { any: T[]} | { all: T[] } | { none: T[] }
 export function evQuant<T>(req: Quant<T>, actual: T | T[]) {
     const isArray = Array.isArray(actual);
     const eq: (x:T) => boolean = isArray ? 
-        (x: T) => actual.some(y => _.isEqual(x,y)) :
-        (x) => _.isEqual(x,actual);
+        (x) => actual.some(y => _.isEqual(x,y)) :
+        (x) =>  _.isEqual(x,actual);
     const length = isArray ? actual.length : 1;
 
     if('any' in req) {

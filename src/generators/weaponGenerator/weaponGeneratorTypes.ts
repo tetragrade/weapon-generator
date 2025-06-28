@@ -75,6 +75,34 @@ export type Weapon = {
     }
 }
 
+export type WeaponViewModel = {
+    /**
+     * The RNG seed that produces this weapon.
+     */
+    id: string;
+
+    themes: Theme[],
+    
+    rarity: WeaponRarity;
+    name: string;
+    description: string;
+    shape: WeaponShape;
+
+    damage: DamageDice & { as: string };
+    toHit: number;
+
+    active: {
+        maxCharges: number,
+        rechargeMethod: string
+        powers: ActivePower[];
+    }
+    passivePowers: PassivePower[];
+    sentient: false | {
+        personality: string[];
+        languages: string[];
+    }
+}
+
 export interface Power {
     additionalNotes?: string[];
 }

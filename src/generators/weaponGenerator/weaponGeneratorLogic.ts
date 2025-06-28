@@ -162,6 +162,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         const choice = passivePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             if('language' in choice && weapon.sentient) {
+                console.log(choice, choice.language);
                 weapon.sentient.languages.push(choice.desc);
             }
             else if ('miscPower' in choice) {
@@ -243,6 +244,9 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     // })
 
     console.log('generated weapon', weapon, paramsClone);
+    
+    // TODO convert to viewmodel
+    
     return weapon;
 }
 

@@ -145,21 +145,21 @@ const mixinPassivePowers = ([
 export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSource(passivePowers as Record<
     Theme | string,
     (PassivePower & WeaponPowerCond)[]
->, (k,x) => ({
-    thing: {
-        miscPower: 'miscPower' in x ? true as true : undefined as never,
-        language: 'miscPower' in x ? undefined as never : true as true,
+>, (k,x) => {
+    // quant only works by comparing the desc generator of this by reference, it seems. so this has to be a single object
+    const thing = ('miscPower' in x ? {
+        miscPower: true,
         desc: typeof x.desc === 'string' ? mkGen(x.desc) : x.desc,
-    } satisfies MiscPower | Language as MiscPower | Language,
+        bonus: x.bonus,
+    } : {
+        language: true,
+        desc: x.desc
+    }) satisfies PassivePower;
+    return {
+    thing: thing,
     cond: {
         themes: k==='any' ? undefined as never : { all: [k as Theme]},
-        passivePowers: 'miscPower' in x ? { none: [
-            {
-                miscPower: 'miscPower' in x ? true as true : undefined as never,
-                language: 'miscPower' in x ? undefined as never : true as true,
-                desc: typeof x.desc === 'string' ? mkGen(x.desc) : x.desc,
-            } satisfies MiscPower | Language
-        ]} : x?.passivePowers,
+        passivePowers: 'miscPower' in x ? { none: [thing]} : x?.passivePowers,
         isSentient: 'language' in x ? true : x?.isSentient, // languages should always require the weapon to be sentient
         languages: 
             'languages' in x 
@@ -172,7 +172,8 @@ export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSour
                 undefined,
         rarity: x?.rarity,
         shapeFamily: x?.shapeFamily
-    }}))];
+    }}
+})];
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
