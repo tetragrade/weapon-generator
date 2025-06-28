@@ -1,52 +1,73 @@
 {
     "club": [
-        "club",
-        "rod"
+        "Club",
+        "Rod"
     ],
     "staff": [
-        "staff",
-        "bo stick"
+        "Staff",
+        "Bo-Stick"
     ],
 
     "dagger": [
-        "dagger"
+        "Dagger",
+        "Knife",
+        "Dirk",
+        "Stiletto",
+        "Tanto",
+        "Khanjar",
+        "Kukri",
+        "Short-Sword"
     ],
     
     "sword": [
-        "sword",
-        "saber",
-        "rapier",
-        "foil",
-        "epee",
-        "macuahuitl"
+        "Sword",
+        "Saber",
+        "Rapier",
+        "Foil",
+        "Epee",
+        "Macuahuitl",
+        "Machete",
+        "Gladius",
+        "Khopesh",
+        "Shotel"
     ],
     "axe": [
-        "axe",
-        "war-axe"
+        "Tomahawk",
+        "Hand-Axe",
+        "Axe",
+        "War-Axe",
+        "Battle-Axe"
     ],
     "mace": [
-        "mace",
-        "flail"
+        "Mace",
+        "Flail",
+        "Morning-Star",
+        "Shishpar",
+        "Meteor Hammer",
+        "Nunchuks"
     ],
 
     "great-axe": [
-        "great-axe",
-        "battle-axe"
+        "Great-Axe"
     ],
     "greatsword": [
-        "greatsword",
-        "ultra-greatsword"
+        "Greatsword",
+        "Ultra-Greatsword"
     ],
 
     "spear": [
-        "spear",
-        "trident"
+        "Spear",
+        "Trident"
     ],
-    "halberd": [
-        "halberd",
-        "glaive"
+    "polearm": [
+        "Polearm",
+        "Halberd",
+        "Glaive",
+        "Naginata",
+        "Bardiche",
+        "Raven's Beak"
     ],
     "lance": [
-        "lance"
+        "Lance"
     ]
 }

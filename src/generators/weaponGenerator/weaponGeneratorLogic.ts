@@ -84,7 +84,7 @@ const normalWeaponMaterialsGenerator = mkGen((rng) => [
     "bronze",
     "iron",
     "steel",
-    "silver-plated"
+    "Silver-Plated"
 ].choice(rng));
 
 const crummyWeaponMaterialsGenerator = mkGen((rng) => [
