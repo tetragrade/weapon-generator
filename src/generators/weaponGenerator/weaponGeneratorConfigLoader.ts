@@ -261,7 +261,7 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     sweet: [
         mkGen("regains a charge each time it eats an extravagant dessert"),
         mkGen("regains all charges each time its wielder hosts a feast"),
-        mkGen("regains charge whenever its wielder compliments someone")
+        mkGen("regains a charge whenever its wielder compliments someone")
     ],
     sour: [
         mkGen("regains all charges after an hour immersed in acid"),
@@ -270,19 +270,19 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
     ],
     cloud: [
         mkGen("regains all charges when struck by lightning"),
-        mkGen('regains all charges when you survive a significant fall'),
+        mkGen('regains all charges when its wielder survives a significant fall'),
         mkGen('regains a charge when you kill a winged creature, or all charges if it was also a powerful foe'),
     ],
     wizard: [
         mkGen('regains a charge when you cast one of your own spells'),
-        mkGen('regains all charges when you learn a new spell'),
-        mkGen('regains all charges when you win a wizard duel'),
-        mkGen('regains a charges when you finish reading a new book'),
+        mkGen('regains all charges when its wielder learns a new spell'),
+        mkGen('regains all charges when its wielder wins a wizard duel'),
+        mkGen('regains a charges when its wielder finishes reading a new book'),
     ],
     steampunk: [
-        mkGen('regains all charges when you invent something'),
-        mkGen('regains all charge when you throw a tea party'),
-        mkGen("regains a charge when you fulfil someone's desire to know the time"),
+        mkGen('regains all charges when its wielder invents something'),
+        mkGen('regains all charge when its wielder throws a tea party'),
+        mkGen("regains a charge when its wielder breaks news."),
     ],
     earth: [
         mkGen('regains a charge when you throw a rock at something important'),

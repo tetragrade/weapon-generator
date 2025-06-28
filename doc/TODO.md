@@ -11,7 +11,8 @@
             - ~~Passive Abilities.~~
             - ~~Recharge Method.~~
             - ~~Quant for active & passive powers.~~
-            - UUID based Quant.                         HARD SHORT  1
+            - UUID based Quant.                         HARD SHORT  4
+                - Until this is impemented, Quant won't function properly providers that yield generators.
 
         - ~~Implement bonuses for passive abilities.~~
 
