@@ -166,10 +166,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             }
             else if ('miscPower' in choice) {
                 if(choice.desc !== null) {
-                    weapon.passivePowers.push({
-                        ...choice,
-                        desc: typeof choice.desc === 'string' ? choice.desc : choice.desc.generate(rng)
-                    });
+                    weapon.passivePowers.push(choice);
                 }
                 for(const k in choice.bonus) {
                     const bonus = k as keyof PassiveBonus
@@ -232,6 +229,19 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         .filter(x => x.cost!='at will')
         .reduce((acc,x) => Math.max(x.cost, acc), weapon.active.maxCharges);
     
+        
+
+    // ensure that all the powers are string
+    weapon.passivePowers.forEach(x => {
+        x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
+    })
+    // weapon.active.powers.forEach(x => {
+    //     x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
+    // })
+    // weapon.passivePowers.forEach(x => {
+    //     x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
+    // })
+
     console.log('generated weapon', weapon, paramsClone);
     return weapon;
 }

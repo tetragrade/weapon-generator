@@ -6,7 +6,7 @@ export function evQuant<T>(req: Quant<T>, actual: T | T[]) {
     const isArray = Array.isArray(actual);
     const eq: (x:T) => boolean = isArray ? 
         (x: T) => actual.some(y => _.isEqual(x,y)) :
-        (x) => x === actual;
+        (x) => _.isEqual(x,actual);
     const length = isArray ? actual.length : 1;
 
     if('any' in req) {
