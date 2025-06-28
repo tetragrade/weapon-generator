@@ -57,10 +57,6 @@ export class UUIDIssuer {
     }
 
     Issue<T extends object>(x: T): WithUUID<T> {
-        try {
-            console.log(`issued id ${this.count} for`, (x as any)?.thing?.desc?.generate(seedrandom()));
-        }
-        catch(e) {}
         return {
             ...x,
             UUID: this.count++,
