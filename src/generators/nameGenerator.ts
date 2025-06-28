@@ -43,9 +43,6 @@ const angloNamesByPartGenerator = new StringGenerator([
     mkGen(rng => [angloNamesByPartShortSuffixGenerator, angloNamesByPartLongSuffixGenerator].choice(rng).generate(rng))
 ]);
 
-console.log(Array(100).fill(null).map(_ => angloNamesByPartGenerator.generate(seedrandom(Math.random().toString()))))
-
-
 export const angloFirstNameGenerator = mkGen((rng) => [
     mkGen((rng) => [
         "Tom",
