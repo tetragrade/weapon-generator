@@ -93,9 +93,14 @@ export abstract class ConditionalThingProvider<TThing extends object, TCond exte
      */
     draw(rng: seedrandom.PRNG, params: TParams): WithUUID<TThing> {
         const choice = this.source.filter(x => this.condExecutor(x.UUID, x.cond, params)).choice(rng);
-        return {
-            ...choice.thing,
-            UUID: choice.UUID
+        if(choice === undefined) {
+            throw new Error(`Provider failed to draw. No valid options for:\n${JSON.stringify(params, undefined, 1)}.\nFirst option:\n${JSON.stringify(this.source.length>=1 ? this.source[0] : undefined)}`);
+        }
+        else {
+            return {
+                ...choice.thing,
+                UUID: choice.UUID
+            }
         }
     }
     

@@ -46,10 +46,24 @@ export const pluralUnholyFoe = mkGen((rng) => [
     "goblins",
 ].choice(rng));
 
-export const singularBeastFoe = mkGen((rng) => [
-    "a shark",
+export const singularWildAnimal = mkGen((rng) => [
+    "a wolf",
+    "a fox",
     "a bear",
-    "a dinosaur",
-    "a giant animal",
-    "a human-eating worm",
+    "a badger",
+    "a hedgehog",
+    "a python",
+    "a cobra",
+    "an elephant",
+    "an anteater",
+    "a giant ant",
+    "a giant bee",
+    "a giant dragonfly",
+    "a hawk",
+    "an owl",
+    "an eagle",
+    "a seal",
+    "a tiger",
+    "a lion",
+    "a crow"
 ].choice(rng))

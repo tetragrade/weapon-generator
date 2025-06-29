@@ -1,4 +1,4 @@
-import { pluralUnholyFoe, singularBeastFoe as singularBeast, singularUnholyFoe } from "../foes";
+import { pluralUnholyFoe, singularWildAnimal, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import { GLOBAL_UUID_ISSUER, type ProviderElement } from "./provider";
 import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower } from "./weaponGeneratorTypes";
@@ -115,7 +115,7 @@ const mixinActivePowers = ([
             additionalNotes: [
                  new StringGenerator([
                     mkGen("The weapon transforms into"),
-                    singularBeast,
+                    singularWildAnimal,
                     mkGen("until the end of the scene. You can command it to turn back into its regular form.")
                 ]),
             ]
@@ -134,12 +134,12 @@ export const POSSIBLE_ACTIVE_POWERS = [...mixinActivePowers, ...toProviderSource
 >, (k,x) => ({
     thing: x,
     cond: {
+        unique: true,
         themes: { all: [k as Theme]},
         activePowers: { none: [x]},
 
         rarity: x?.rarity,
         shapeFamily: x?.shapeFamily,
-        unique: true
     }
 }))].map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
@@ -231,15 +231,6 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
         "manic",
         "sassy"
     ],
-    "poison": [
-        "antagonistic",
-        "cruel",
-        "pitiless",
-        "violent",
-        "standoffish",
-        "sadistic",
-        "enjoys provoking others"
-    ],
     "dark": [
         "shy",
         "tries to act mysterious",
@@ -256,13 +247,52 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
         "honest",
         "pious",
         "zealous",
+    ],
+    "wizard": [
+        "curious",
+        "traditionalist",
+        "know-it-all",
+        "overconfident"
+    ],
+    "steampunk": [
+        "curious",
+        "open-minded",
+        "know-it-all",
+        "impatient"
+    ],
+    "nature": [
+        "traditionalist",
+        "hard-working",
+        "gullible",
+        "patient"
     ]
-} satisfies Record<Theme | string, string[]>, (k,x) => {
+} satisfies Record<Theme, [string, ...string[]]>, (k,x) => {
     const formatted = x.capFirst() + '.';
     return ({ thing: mkGen(formatted), cond: { themes: { all: [k as Theme]}, unique: true }})
 }).map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
-export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
+const mixinRechargeMethods = [
+    {
+        thing: mkGen("regains all charges at noon on the winter solstice"),
+        cond: {
+            unique: true,
+            themes: {
+                any: ["ice", "nature"]
+            }
+        }
+    },
+    {
+        thing: mkGen("regains all charges at noon on the summer solstice"),
+        cond: {
+            unique: true,
+            themes: {
+                any: ["fire", "nature"]
+            }
+        }
+    }
+] satisfies ProviderElement<TGenerator<string>, WeaponPowerCond>[];
+
+export const POSSIBLE_RECHARGE_METHODS = [ ...mixinRechargeMethods, ...toProviderSource({
     fire: [
         mkGen("regains all charges after being superheated"),
         mkGen("regains a charge at the end of each scene where its wielder started a fire"),
@@ -317,14 +347,20 @@ export const POSSIBLE_RECHARGE_METHODS = toProviderSource({
         mkGen('regains a charge when its wielder throws a rock at something important'),
         mkGen('regains all charges when its wielder meditates atop a mountain'),
         mkGen('regains all charges when driven into the ground while something important is happening')
+    ],
+    nature: [
+        mkGen("regains all charges")
     ]
-} satisfies Record<Theme | string, Iterable<TGenerator<string>>>, (k,x) => ({ 
+} satisfies Record<
+    Theme | string, 
+    [TGenerator<string>, ...(TGenerator<string>[]) // we need at least one method or it'll crash.
+]>, (k,x) => ({ 
     thing: x, 
     cond: { 
         themes: { all: [k as Theme]},
         unique: true,
     },
-})).map(x => GLOBAL_UUID_ISSUER.Issue(x));
+}))].map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>(
     shapes as Record<string, (string | ({name: string} & Omit<WeaponPowerCond, 'unique'>))[]>,

@@ -211,7 +211,6 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         }
     }
     
-
     // draw active powers
     weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon)?.generate(rng);
     while(params.nActive-->0) {

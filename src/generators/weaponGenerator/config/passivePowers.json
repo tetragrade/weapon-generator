@@ -12,7 +12,7 @@
         },
         {
             "miscPower": true,
-            "desc": "Can hover in the air, will attack for you hands free. Won't fight if another weapon's already doing this.",
+            "desc": "Can hover in the air, will attack for you hands free. Commanding a floating weapon uses the same rules as followers / retainers.",
             "rarity": {
                 "gte": "rare"
             },
