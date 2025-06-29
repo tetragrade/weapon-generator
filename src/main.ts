@@ -173,7 +173,7 @@ class WeaponGeneratorController {
   
         // add the active powers
         this.view.active.maxCharges.innerText = `${this.textForCharges(weapon.active.maxCharges)}.`;
-        this.view.active.rechargeMethod.innerText = weapon.active.rechargeMethod.capFirst() + '.';
+        this.view.active.rechargeMethod.innerText = (weapon.active.rechargeMethod.desc as string).capFirst() + '.';
         this.buildList(
           this.view.active.powers, 
           weapon.active.powers,
@@ -181,7 +181,7 @@ class WeaponGeneratorController {
             elem.classList.add('weapon-generator-active-list-item');
 
             const descNode = document.createElement('p');
-            descNode.innerText  = `${x.desc.capFirst()} (${this.textForCharges(x.cost)}).`; 
+            descNode.innerText  = `${(x.desc as string).capFirst()} (${this.textForCharges(x.cost)}).`; 
             elem.appendChild(descNode);
             
             if(x.additionalNotes && x.additionalNotes.length > 0) {
@@ -189,7 +189,7 @@ class WeaponGeneratorController {
               elem.appendChild(additionalContainer);
               for(const additionalNote of x.additionalNotes) {
                 const additionalNode = document.createElement('p');
-                additionalNode.innerText = additionalNote; 
+                additionalNode.innerText = additionalNote as string; 
                 additionalNode.classList.add('weapon-generator-active-list-item');
                 additionalContainer.appendChild(additionalNode);
               }
@@ -215,7 +215,7 @@ class WeaponGeneratorController {
             elem.classList.add('weapon-generator-active-list-item');
           });
           this.buildList(this.view.personality, weapon.sentient.personality, (elem, x) => {
-            elem.innerText = x;
+            elem.innerText = x.desc as string;
             elem.classList.add('weapon-generator-active-list-item');
           });
         }

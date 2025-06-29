@@ -1,7 +1,7 @@
 import { pluralUnholyFoe, singularWildAnimal, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import { GLOBAL_UUID_ISSUER, type ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower, RechargeMethod, Personality } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
@@ -103,7 +103,7 @@ export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource(
         }
         throw new Error('invalid shape config');
     }    
-).map(x => GLOBAL_UUID_ISSUER.Issue(x));
+).map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<string | TGenerator<string>, WeaponPowerCond>[];
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
@@ -142,7 +142,7 @@ export const POSSIBLE_ACTIVE_POWERS = [...mixinActivePowers, ...toProviderSource
         rarity: x?.rarity,
         shapeFamily: x?.shapeFamily,
     }
-}))].map(x => GLOBAL_UUID_ISSUER.Issue(x));
+}))].map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<ActivePower, WeaponPowerCond>[];
 
 
 // this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
@@ -200,7 +200,7 @@ export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSour
         passivePowers: x?.passivePowers,
         unique: true
     }}
-})].map(x => GLOBAL_UUID_ISSUER.Issue(x));
+})].map(x => GLOBAL_UUID_ISSUER.Issue(x))  satisfies ProviderElement<PassivePower, WeaponPowerCond>[];
 
 export const POSSIBLE_PERSONALITIES = toProviderSource({
     "fire": [
@@ -281,12 +281,22 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
     ]
 } satisfies Record<Theme, [string, ...string[]]>, (k,x) => {
     const formatted = x.capFirst() + '.';
-    return ({ thing: mkGen(formatted), cond: { themes: { all: [k as Theme]}, unique: true }})
-}).map(x => GLOBAL_UUID_ISSUER.Issue(x));
+    return ({ 
+        thing: {
+            desc: mkGen(formatted)
+        }, 
+        cond: { 
+            themes: { all: [k as Theme]}, 
+            unique: true 
+        }
+    })
+}).map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<Personality, WeaponPowerCond>[];
 
 const mixinRechargeMethods = [
     {
-        thing: mkGen("regains all charges at noon on the winter solstice"),
+        thing: {
+            desc: mkGen("regains all charges at noon on the winter solstice")
+        },
         cond: {
             unique: true,
             themes: {
@@ -295,7 +305,9 @@ const mixinRechargeMethods = [
         }
     },
     {
-        thing: mkGen("regains all charges at noon on the summer solstice"),
+        thing: {
+            desc: mkGen("regains all charges at noon on the summer solstice")
+        },
         cond: {
             unique: true,
             themes: {
@@ -303,7 +315,7 @@ const mixinRechargeMethods = [
             }
         }
     }
-] satisfies ProviderElement<TGenerator<string>, WeaponPowerCond>[];
+] satisfies ProviderElement<RechargeMethod, WeaponPowerCond>[];
 
 export const POSSIBLE_RECHARGE_METHODS = [ ...mixinRechargeMethods, ...toProviderSource({
     fire: [
@@ -369,12 +381,14 @@ export const POSSIBLE_RECHARGE_METHODS = [ ...mixinRechargeMethods, ...toProvide
     Theme | string, 
     [TGenerator<string>, ...(TGenerator<string>[]) // we need at least one method or it'll crash.
 ]>, (k,x) => ({ 
-    thing: x, 
+    thing: {
+        desc: x
+    }, 
     cond: { 
         themes: { all: [k as Theme]},
         unique: true,
     },
-}))].map(x => GLOBAL_UUID_ISSUER.Issue(x));
+}))].map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<RechargeMethod, WeaponPowerCond>[];
 
 export const POSSIBLE_SHAPES = toProviderSource<unknown,TGenerator<WeaponShape>>(
     shapes as Record<string, (string | ({name: string} & Omit<WeaponPowerCond, 'unique'>))[]>,

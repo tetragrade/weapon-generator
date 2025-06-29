@@ -2,7 +2,7 @@ import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.t
 import '../../string.ts';
 import seedrandom from "seedrandom";
 import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
-import { type ActivePower, type DamageDice, type PassiveBonus, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity, type PassivePower } from "./weaponGeneratorTypes.ts";
+import { type ActivePower, type DamageDice, type PassiveBonus, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity, type PassivePower, type Personality, type RechargeMethod } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, type ProviderElement, type WithUUID } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
@@ -35,8 +35,8 @@ class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T
     }
 }
 
-const personalityProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_PERSONALITIES);
-const rechargeMethodsProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_RECHARGE_METHODS);
+const personalityProvider = new WeaponFeatureProvider<Personality>(POSSIBLE_PERSONALITIES);
+const rechargeMethodsProvider = new WeaponFeatureProvider<RechargeMethod>(POSSIBLE_RECHARGE_METHODS);
 const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACTIVE_POWERS);
 const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
 const shapeProvider = new WeaponFeatureProvider<TGenerator<WeaponShape>>(POSSIBLE_SHAPES);
@@ -110,7 +110,9 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         toHit,
         active: {
             maxCharges: params.nCharges,
-            rechargeMethod: '',
+            rechargeMethod: {
+                desc: '',
+            },
             powers: []
         },
         passivePowers: [],
@@ -159,9 +161,12 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     if(weapon.sentient) {
         const nPersonalities = 2;
         while(weapon.sentient.personality.length < nPersonalities) {
-            const choice = personalityProvider.draw(rng, weapon)?.generate(rng);
+            const choice = personalityProvider.draw(rng, weapon);
             if(choice!=undefined) {
-                weapon.sentient.personality.push(choice);
+                weapon.sentient.personality.push({
+                    ...choice,
+                    desc: genStr(choice?.desc)
+                });
             }
         }
     }
@@ -218,7 +223,11 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     }
     
     // draw active powers
-    weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon)?.generate(rng);
+    const rechargeMethodChoice = rechargeMethodsProvider.draw(rng, weapon);
+    weapon.active.rechargeMethod = {
+        ...rechargeMethodChoice,
+        desc: genStr(rechargeMethodChoice.desc)
+    };
     while(params.nActive-->0) {
         const choice = activePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {

@@ -66,12 +66,12 @@ export type Weapon = {
 
     active: {
         maxCharges: number,
-        rechargeMethod: string
+        rechargeMethod: RechargeMethod
         powers: ActivePower[];
     }
     passivePowers: PassivePower[];
     sentient: false | {
-        personality: string[];
+        personality: Personality[];
         languages: string[];
     }
 }
@@ -135,6 +135,13 @@ export interface UnlimitedChargedPower extends Power {
 }
 export type ActivePower = ChargedPower | UnlimitedChargedPower;
 
+export interface Personality {
+    desc: string | TGenerator<string>;
+};
+export interface RechargeMethod {
+    desc: string | TGenerator<string>;
+}
+
 export interface MiscPower extends Power {
     miscPower: true;
     desc: string | TGenerator<string>;
@@ -155,7 +162,7 @@ export type WeaponShape = {
 
 export interface WeaponPowerCond extends Cond {
     themes?: Quant<Theme>;
-    personality?: Quant<string>;
+    personality?: Quant<Personality>;
     languages?: Quant<string>;
     activePowers?: Quant<ActivePower>;
     passivePowers?: Quant<PassivePower>;
