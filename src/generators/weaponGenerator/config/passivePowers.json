@@ -9,6 +9,16 @@
             "rarity": {
                 "gte": "epic"
             }
+        },
+        {
+            "miscPower": true,
+            "desc": "Can hover in the air, will attack for you hands free. Won't fight if another weapon's already doing this.",
+            "rarity": {
+                "gte": "rare"
+            },
+            "themes": {
+                "any": ["cloud", "wizard"]
+            }
         }
     ],
     "fire": [
@@ -215,6 +225,16 @@
         {
             "miscPower": true,
             "desc": "A widget on the weapon displays the time."
+        }
+    ],
+    "nature": [
+        {
+            "miscPower": true,
+            "desc": "Weapon can telephathically control bees within 100-ft. They can only understand simple commands."
+        },
+        {
+            "miscPower": true,
+            "desc": "Can transform into a bouquet of flowers."
         }
     ],
     "cloud": [

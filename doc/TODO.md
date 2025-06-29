@@ -2,6 +2,8 @@
     - typos.
         - 'intimate' -> 'intimidate'
 
+    - Bugs.
+        - Broken weapon @ 60724988481853520000
 
     - Basic Functionality
         - ~~Color-coded rarities.~~

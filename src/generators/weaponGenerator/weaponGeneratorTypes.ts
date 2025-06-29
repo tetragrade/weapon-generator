@@ -8,7 +8,8 @@ export const themes = [
     "cloud",
     "dark", "light",
     "sweet", "sour",
-    "wizard", "steampunk"
+    "wizard", 
+    "steampunk", "nature"
     // "poison", "water"
     // "earth", "cloud",
     // "psychic", "electric"
@@ -104,7 +105,7 @@ export type WeaponViewModel = {
 }
 
 export interface Power {
-    additionalNotes?: string[];
+    additionalNotes?: (string | TGenerator<string>)[];
 }
 
 export interface DamageDice {
@@ -125,7 +126,7 @@ export interface PassiveBonus {
 } // TODO
 
 export interface ChargedPower extends Power {
-    desc: string; // | TGenerator<string>;
+    desc: string | TGenerator<string>;
     cost: number | string;
 }
 export interface UnlimitedChargedPower extends Power {

@@ -37,7 +37,7 @@ class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T
 
 const personalityProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_PERSONALITIES);
 const rechargeMethodsProvider = new WeaponFeatureProvider<TGenerator<string>>(POSSIBLE_RECHARGE_METHODS);
-const activePowersProvider = new WeaponFeatureProvider<TGenerator<ActivePower>>(POSSIBLE_ACTIVE_POWERS);
+const activePowersProvider = new WeaponFeatureProvider<ActivePower>(POSSIBLE_ACTIVE_POWERS);
 const passivePowersProvider = new WeaponFeatureProvider<PassivePower>(POSSIBLE_PASSIVE_POWERS);
 const shapeProvider = new WeaponFeatureProvider<TGenerator<WeaponShape>>(POSSIBLE_SHAPES);
 
@@ -65,6 +65,7 @@ const mkSentientNameGenerator = (weapon: Weapon,shape: string, rng: seedrandom.P
 });
 
 export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
+    const genStr = (x: string | TGenerator<string>) => typeof x === 'string' ? x : x.generate(rng);
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
         // sort in ascending order of draw chance
@@ -158,6 +159,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             }
         }
     }
+    
 
     // draw passive powers
     while(params.nPassive-->0) {
@@ -168,7 +170,10 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             }
             else if ('miscPower' in choice) {
                 if(choice.desc !== null) {
-                    weapon.passivePowers.push(choice);
+                    weapon.passivePowers.push({
+                        ...choice,
+                        desc: genStr(choice.desc)
+                    });
                 }
                 for(const k in choice.bonus) {
                     const bonus = k as keyof PassiveBonus
@@ -205,22 +210,29 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             }
         }
     }
+    
 
     // draw active powers
     weapon.active.rechargeMethod = rechargeMethodsProvider.draw(rng, weapon)?.generate(rng);
     while(params.nActive-->0) {
-        const choice = activePowersProvider.draw(rng, weapon)?.generate(rng);
+        const choice = activePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
-            weapon.active.powers.push(choice);
+            weapon.active.powers.push({
+                ...choice,
+                desc: genStr(choice.desc),
+                additionalNotes: choice.additionalNotes?.map(genStr)
+            });
         }
     }
 
     while(params.nUnlimitedActive-->0) {
-        const choice = activePowersProvider.draw(rng, weapon)?.generate(rng);
+        const choice = activePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             weapon.active.powers.push({
                 ...choice,
                 cost: 'at will',
+                desc: genStr(choice.desc),
+                additionalNotes: choice.additionalNotes?.map(genStr)
             });
         }
     }
@@ -230,19 +242,6 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         weapon.active.powers
         .filter(x => x.cost!='at will')
         .reduce((acc,x) => Math.max(typeof x.cost === 'string' ? 0 : x.cost, acc), weapon.active.maxCharges);
-    
-        
-
-    // ensure that all the powers are string
-    weapon.passivePowers.forEach(x => {
-        x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
-    })
-    // weapon.active.powers.forEach(x => {
-    //     x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
-    // })
-    // weapon.passivePowers.forEach(x => {
-    //     x.desc = typeof x.desc === 'string' ? x.desc : x.desc.generate(rng);
-    // })
 
     console.log('generated weapon', weapon, paramsClone);
     

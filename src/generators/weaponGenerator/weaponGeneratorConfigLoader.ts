@@ -1,7 +1,7 @@
-import { pluralUnholyFoe, singularUnholyFoe } from "../foes";
+import { pluralUnholyFoe, singularBeastFoe as singularBeast, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
 import { GLOBAL_UUID_ISSUER, type ProviderElement } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower } from "./weaponGeneratorTypes";
+import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
@@ -107,11 +107,32 @@ export const POSSIBLE_OBJECT_ADJECTIVES = toProviderSource(
 
 // The text of these should not contain any references to charges
 // this is because we want to reuse them for unlimited charged abilities
-export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
+const mixinActivePowers = ([
+    {
+        thing: {
+            desc: mkGen("Animal Transformation"),
+            cost: 1,
+            additionalNotes: [
+                 new StringGenerator([
+                    mkGen("The weapon transforms into"),
+                    singularBeast,
+                    mkGen("until the end of the scene. You can command it to turn back into its regular form.")
+                ]),
+            ]
+        },
+        cond: {
+            themes: {
+                any: ['nature'],
+            },
+            unique: true
+        }
+    }
+] satisfies ProviderElement<ChargedPower, WeaponPowerCond>[] as ProviderElement<ChargedPower, WeaponPowerCond>[]);
+export const POSSIBLE_ACTIVE_POWERS = [...mixinActivePowers, ...toProviderSource(activePowers as Record<
     Theme | string,
     (ActivePower & Omit<WeaponPowerCond,'unique'>)[]
 >, (k,x) => ({
-    thing: mkGen(x),
+    thing: x,
     cond: {
         themes: { all: [k as Theme]},
         activePowers: { none: [x]},
@@ -120,7 +141,7 @@ export const POSSIBLE_ACTIVE_POWERS = toProviderSource(activePowers as Record<
         shapeFamily: x?.shapeFamily,
         unique: true
     }
-})).map(x => GLOBAL_UUID_ISSUER.Issue(x));
+}))].map(x => GLOBAL_UUID_ISSUER.Issue(x));
 
 
 // this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
