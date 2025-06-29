@@ -12,7 +12,7 @@
         },
         {
             "miscPower": true,
-            "desc": "Can hover in the air, will attack for you hands free. Commanding a floating weapon uses the same rules as followers / retainers.",
+            "desc": "Can hover in the air to attack for you hands free. Commanding a floating weapon uses the same rules as followers / retainers.",
             "rarity": {
                 "gte": "rare"
             },
@@ -162,10 +162,6 @@
         {
             "miscPower": true,
             "desc": "The wielder magically knows the recipe of any dessert they taste."
-        },
-        {
-            "miscPower": true,
-            "desc": "Cute animals follow the wielder's polite requests i.e. cats and forest birds."
         },
         {
             "miscPower": true,

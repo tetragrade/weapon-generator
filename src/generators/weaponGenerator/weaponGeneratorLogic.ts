@@ -122,7 +122,13 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
 
     // draw themes until we have enough to cover our number of powers
     const unusedThemes = new Set<Theme>(themes); // this could be a provider but whatever go my Set<Theme>
-    const minThemes = Math.min(1, Math.max(Math.ceil((params.nActive + params.nUnlimitedActive + params.nPassive) / 2)), 3);
+    const minThemes = Math.max(
+        1, 
+        Math.min(
+            Math.ceil((params.nActive + params.nUnlimitedActive + params.nPassive) / 2),
+            3
+        ), 
+    );
     while(
         weapon.themes.length < minThemes ||
         activePowersProvider.available(weapon).size < params.nActive+params.nUnlimitedActive ||

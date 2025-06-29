@@ -162,6 +162,18 @@ const mixinPassivePowers = ([
             },
             unique: true
         }
+    },
+    {
+        thing: {
+            "miscPower": true,
+            "desc": "Cute animals follow the wielder's polite requests i.e. cats and forest birds."
+        },
+        cond: {
+            unique: true,
+            themes: {
+                any: ["nature", "sweet"]
+            }
+        }
     }
 ] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]);
 
@@ -338,6 +350,7 @@ export const POSSIBLE_RECHARGE_METHODS = [ ...mixinRechargeMethods, ...toProvide
         mkGen('regains all charges when its wielder learns a new spell'),
         mkGen('regains all charges when its wielder wins a wizard duel'),
         mkGen('regains a charge when its wielder finishes reading a new book'),
+        mkGen('regains all charges when its wielder views the night sky'),
     ],
     steampunk: [
         mkGen('regains all charges when its wielder invents something'),
