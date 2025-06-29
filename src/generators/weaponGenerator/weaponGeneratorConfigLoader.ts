@@ -111,13 +111,14 @@ const mixinActivePowers = ([
     {
         thing: {
             desc: mkGen("Animal Transformation"),
-            cost: 1,
+            cost: 2,
             additionalNotes: [
                  new StringGenerator([
-                    mkGen("The weapon transforms into"),
+                    mkGen("The weapon transforms into "),
                     singularWildAnimal,
-                    mkGen("until the end of the scene. You can command it to turn back into its regular form.")
+                    mkGen(" until the end of the scene.")
                 ]),
+                "You can command it to turn back into its regular form early."
             ]
         },
         cond: {

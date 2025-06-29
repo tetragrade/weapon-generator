@@ -57,6 +57,11 @@ export class UUIDIssuer {
     }
 
     Issue<T extends object>(x: T): WithUUID<T> {
+        // try {
+        //     const genStr = (x: string | TGenerator<string>) => typeof x === 'string' ? x : x.generate(seedrandom());
+        //     console.log('will issue UUID', this.count, 'for', genStr((x as any)?.thing?.desc));
+        // }
+        // catch(e){}
         return {
             ...x,
             UUID: this.count++,
@@ -74,14 +79,12 @@ export abstract class ConditionalThingProvider<TThing extends object, TCond exte
     }
 
     protected condExecutor(UUID: number, cond: TCond, params: TParams): boolean {
-        // if the cond reqires unique, then no iterable on params can have the same UUID
-        return (
-            // unique implies no same UUID (de-morgan's)
-            !cond.unique || 
-            !Object.values(params).some(x => // no property
-                x?.UUID === UUID || // has this UUID
-                Array.isArray(x) && x.some(y => y?.UUID === UUID) // or has an element with this UUID (doesn't handle recursion)
-            ));
+        function recurse<T extends object>(UUID: number, x:T): boolean {
+            // any entry has this UUID or has an element in its subtree with this UUID
+            return Object.entries(x).some(([k,v]) => (k === 'UUID' && v === UUID) || (typeof v === 'object' && recurse(UUID, v)));
+        }
+        // unique implies no matching UUID (de-morgan's)
+        return !cond.unique || !recurse(UUID, params)
     };
     
     // note that the complexity on this implementation is awful, O(n). it should build a decision tree on construction & be O(1)
