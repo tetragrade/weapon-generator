@@ -97,7 +97,6 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         id: rngSeed,
         description: 'TODO',
         rarity,
-        themes: [],
         name: '',
         shape: {
             particular: "sword",
@@ -120,6 +119,9 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
             personality: [],
             languages: ['Common.']
         } : false as false,
+        
+        themes: [],
+        params: structuredClone(params),
     };
 
     // draw themes until we have enough to cover our number of powers

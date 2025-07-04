@@ -22,6 +22,7 @@
 
     // for jest
     "esModuleInterop": true,
+    "resolveJsonModule": true 
   },
   "include": ["src"]
 }

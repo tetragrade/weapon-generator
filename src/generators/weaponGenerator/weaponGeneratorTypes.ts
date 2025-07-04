@@ -54,7 +54,6 @@ export type Weapon = {
      */
     id: string;
 
-    themes: Theme[],
     
     rarity: WeaponRarity;
     name: string;
@@ -74,6 +73,9 @@ export type Weapon = {
         personality: Personality[];
         languages: string[];
     }
+    
+    themes: Theme[],
+    params: WeaponGenerationParams
 }
 
 export type WeaponViewModel = {
