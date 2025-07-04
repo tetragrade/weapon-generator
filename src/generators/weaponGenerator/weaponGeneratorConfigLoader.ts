@@ -1,6 +1,6 @@
 import { pluralUnholyFoe, singularWildAnimal, singularUnholyFoe } from "../foes";
 import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
-import { GLOBAL_UUID_ISSUER, type ProviderElement } from "./provider";
+import { GLOBAL_UUID_ISSUER, type ProviderElement, type WithUUID } from "./provider";
 import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower, RechargeMethod, Personality } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
@@ -127,7 +127,7 @@ const mixinActivePowers = ([
             },
             unique: true
         }
-    }
+    },
 ] satisfies ProviderElement<ChargedPower, WeaponPowerCond>[] as ProviderElement<ChargedPower, WeaponPowerCond>[]);
 export const POSSIBLE_ACTIVE_POWERS = [...mixinActivePowers, ...toProviderSource(activePowers as Record<
     Theme | string,
@@ -174,6 +174,19 @@ const mixinPassivePowers = ([
                 any: ["nature", "sweet"]
             }
         }
+    },
+    {
+        thing: 
+        {
+            miscPower: true,
+            desc: "Weapon can telepathically control bees within 100-ft. They can only understand simple commands."
+        },
+        cond: {
+            unique: true,
+            themes: {
+                any: ["nature", "sweet"]
+            }
+        }
     }
 ] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]);
 
@@ -200,9 +213,67 @@ export const POSSIBLE_PASSIVE_POWERS = [...mixinPassivePowers, ...toProviderSour
         passivePowers: x?.passivePowers,
         unique: true
     }}
-})].map(x => GLOBAL_UUID_ISSUER.Issue(x))  satisfies ProviderElement<PassivePower, WeaponPowerCond>[];
+})].map(x => GLOBAL_UUID_ISSUER.Issue(x))  satisfies WithUUID<ProviderElement<PassivePower, WeaponPowerCond>>[];
 
-export const POSSIBLE_PERSONALITIES = toProviderSource({
+const mixinPersonalities = [
+    {
+        thing: {
+            desc: "Vengeful."
+        },
+        cond: {
+            themes: {
+                any: ["fire","ice", "dark", "sweet"]
+            },
+            unique: true,
+        }
+    },
+    {
+        thing: {
+            desc: "Cruel."
+        },
+        cond: {
+            themes: {
+                any: ["sour", "dark"]
+            },
+            unique: true,
+        }
+    },
+    {
+        thing: {
+            desc: "Curious."
+        },
+        cond: {
+            themes: {
+                any: ["wizard", "steampunk", "cloud"]
+            },
+            unique: true,
+        }
+    },
+    {
+        thing: {
+            desc: "Know-it-All."
+        },
+        cond: {
+            themes: {
+                any: ["wizard", "steampunk"]
+            },
+            unique: true,
+        }
+    },
+    {
+        thing: {
+            desc: "Traditionalist."
+        },
+        cond: {
+            themes: {
+                any: ["wizard", "nature", "ice"]
+            },
+            unique: true,
+        }
+    },
+] satisfies ProviderElement<Personality, WeaponPowerCond>[];
+export const POSSIBLE_PERSONALITIES = [...mixinPersonalities, ...toProviderSource({
+    // this will break if there are duplicates
     "fire": [
             "compassionate",
             "irritable",
@@ -210,7 +281,7 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
             "standoffish",
             "zealous",
             "wrathful",
-            "warm",
+            "kind",
             "honest",
         ],
     "ice": [
@@ -223,23 +294,19 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
             "reserved",
             "serious",
             "stubborn",
-            "vengeful",
         ],
     "cloud": [
             "easy-going",
-            "easy-going",
-            "easy-going"
+            "acquiescent",
         ],
     "sweet": [
         "kind",
         "excitable",
         "manic",
         "neurotic",
-        "vengeful",
     ],
     "sour": [
         "antagonistic",
-        "cruel",
         "pitiless",
         "manic",
         "sassy"
@@ -249,9 +316,7 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
         "tries to act mysterious",
         "quiet",
         "depressive",
-        "cruel",
         "angry",
-        "vengeful",
         "sadistic",
         "enjoys provoking others"
     ],
@@ -262,19 +327,13 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
         "zealous",
     ],
     "wizard": [
-        "curious",
-        "traditionalist",
-        "know-it-all",
         "overconfident"
     ],
     "steampunk": [
-        "curious",
         "open-minded",
-        "know-it-all",
         "impatient"
     ],
     "nature": [
-        "traditionalist",
         "hard-working",
         "gullible",
         "patient"
@@ -290,7 +349,7 @@ export const POSSIBLE_PERSONALITIES = toProviderSource({
             unique: true 
         }
     })
-}).map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<Personality, WeaponPowerCond>[];
+})].map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies WithUUID<ProviderElement<Personality, WeaponPowerCond>>[];
 
 const mixinRechargeMethods = [
     {

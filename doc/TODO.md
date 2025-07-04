@@ -5,6 +5,12 @@
     - Bugs.
         - Broken weapon @ 60724988481853520000
 
+    - Generator setup.
+        - So, currently there's just one weapon type that's got things with generators inside them.
+        - Should be replaced with a weapon model generator that's got generators inside it.
+        - And all the features are generators on the outside, rather than containing generators in their desc.
+        - Generators should have a UUID and transfer it to the things they generate.  
+
     - Basic Functionality
         - ~~Color-coded rarities.~~
         - ~~Weapon shape type based damage.~~

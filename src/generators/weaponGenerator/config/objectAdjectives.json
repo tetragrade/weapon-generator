@@ -232,8 +232,8 @@
         "glittery",
         "luminous",
         "glowing",
+        "solar",
         "lunar",
-        "lucent",
         "prismatic",
         {
             "name": "quartz",
@@ -250,7 +250,12 @@
             }
         }
     ],
-    "sweet": ["saccharine", "candied", "glazed"], 
+    "sweet": [
+        "saccharine",
+        "candied", 
+        "Honey-Glazed", "Sugar-Glazed", 
+        "Honey-Frosted", "Sugar-Frosted"
+    ],
     "sour": ["corroded", "corrosive"],
     "wizard": [
         "crystal",

@@ -226,10 +226,6 @@
     "nature": [
         {
             "miscPower": true,
-            "desc": "Weapon can telephathically control bees within 100-ft. They can only understand simple commands."
-        },
-        {
-            "miscPower": true,
             "desc": "Can transform into a bouquet of flowers."
         }
     ],
