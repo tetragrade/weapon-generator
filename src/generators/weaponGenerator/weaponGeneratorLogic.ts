@@ -84,8 +84,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     
     // decide power level
     const rarity = generateRarity(rng);
-    const params = weaponRarityConfig[rarity].paramsProvider(rng);
-    const paramsClone = structuredClone(params)
+    const originalParams = weaponRarityConfig[rarity].paramsProvider(rng);
+    const params = structuredClone(originalParams)
 
     // determine sentience
     const isSentient = rng() < params.sentienceChance;
@@ -121,7 +121,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         } : false as false,
         
         themes: [],
-        params: structuredClone(params),
+        params,
     };
 
     // draw themes until we have enough to cover our number of powers
@@ -175,7 +175,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     
 
     // draw passive powers
-    while(params.nPassive-->0) {
+    for(let i=0; i<params.nPassive; i++ ) {
         const choice = passivePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             if('language' in choice && weapon.sentient) {
@@ -230,7 +230,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         ...rechargeMethodChoice,
         desc: genStr(rechargeMethodChoice.desc)
     };
-    while(params.nActive-->0) {
+    for(let i=0; i<params.nActive; i++ ) {
         const choice = activePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             weapon.active.powers.push({
@@ -241,7 +241,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         }
     }
 
-    while(params.nUnlimitedActive-->0) {
+    for(let i=0; i<params.nUnlimitedActive; i++ ) {
         const choice = activePowersProvider.draw(rng, weapon);
         if(choice!=undefined) {
             weapon.active.powers.push({
@@ -259,7 +259,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         .filter(x => x.cost!='at will')
         .reduce((acc,x) => Math.max(typeof x.cost === 'string' ? 0 : x.cost, acc), weapon.active.maxCharges);
 
-    console.log('generated weapon', weapon, paramsClone);
+    console.log('generated weapon', weapon, params);
     
     // TODO convert to viewmodel
     
