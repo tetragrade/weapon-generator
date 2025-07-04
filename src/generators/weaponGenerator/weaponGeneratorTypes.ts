@@ -1,7 +1,7 @@
-import type seedrandom from "seedrandom";
-import type { Comp, Cond, Quant } from "./provider";
+import seedrandom from "seedrandom";
+import { Comp, Cond, Quant } from "./provider";
 import shapes from './config/shapes.json'
-import type { TGenerator } from "../recursiveGenerator";
+import { TGenerator } from "../recursiveGenerator";
 
 export const themes = [
     "fire", "ice",

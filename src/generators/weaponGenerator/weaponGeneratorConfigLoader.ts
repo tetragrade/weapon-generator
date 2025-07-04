@@ -1,12 +1,12 @@
 import { pluralUnholyFoe, singularWildAnimal, singularUnholyFoe } from "../foes";
-import {mkGen, type TGenerator, StringGenerator } from "../recursiveGenerator";
-import { GLOBAL_UUID_ISSUER, type ProviderElement, type WithUUID } from "./provider";
-import type { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower, RechargeMethod, Personality } from "./weaponGeneratorTypes";
+import {mkGen,  TGenerator, StringGenerator } from "../recursiveGenerator";
+import { GLOBAL_UUID_ISSUER,  ProviderElement,  WithUUID } from "./provider";
+import  { WeaponRarityConfig, PassivePower, ActivePower, Theme, WeaponPowerCond, WeaponShape, WeaponRarity, MiscPower, ChargedPower, RechargeMethod, Personality } from "./weaponGeneratorTypes";
 import objectAdjectives from './config/objectAdjectives.json';
 import activePowers from './config/activePowers.json';
 import passivePowers from './config/passivePowers.json';
 import shapes from './config/shapes.json';
-import type seedrandom from "seedrandom";
+import  seedrandom from "seedrandom";
 
 function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T1) =>  ProviderElement<T2,WeaponPowerCond>): ProviderElement<T2,WeaponPowerCond>[] {
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();

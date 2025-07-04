@@ -1,9 +1,9 @@
-import { mkGen, StringGenerator, type TGenerator } from "../recursiveGenerator.ts";
+import { mkGen, StringGenerator, TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
 import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
-import { type ActivePower, type DamageDice, type PassiveBonus, type Theme, type Weapon, type WeaponPowerCond, type WeaponPowerCondParams, type WeaponRarity, type WeaponShape, themes, isRarity, type PassivePower, type Personality, type RechargeMethod } from "./weaponGeneratorTypes.ts";
-import { ConditionalThingProvider, evComp, evQuant, type ProviderElement, type WithUUID } from "./provider.ts";
+import { ActivePower, DamageDice, PassiveBonus, Theme, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponShape, themes, isRarity, PassivePower, Personality, RechargeMethod } from "./weaponGeneratorTypes.ts";
+import { ConditionalThingProvider, evComp, evQuant, ProviderElement, WithUUID } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
 class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
