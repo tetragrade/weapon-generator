@@ -259,7 +259,7 @@
     "sour": ["corroded", "corrosive"],
     "wizard": [
         "crystal",
-        "silk-wrapped",
+        "Silk-Wrapped",
         "amethyst"
     ],
     "steampunk": [
@@ -277,8 +277,8 @@
         "silver"
     ],
     "jungle": [
-        "gold-banded",
-        "silver-strapped",
+        "Gold-Banded",
+        "Silver-Strapped",
         "spiked"
     ]
 }
