@@ -1,11 +1,10 @@
+# Updated from SvelteKit docs. See https://kit.svelte.dev/docs/adapter-static#github-pages for more information
+
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: 'main'
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 
 jobs:
   build_site:
@@ -23,21 +22,22 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-  node-version: 20
-  cache: npm
-    - name: Install dependencies
-      run: npm install
+          node-version: 20
+          cache: npm
 
-    - name: build
-      env:
-  BASE_PATH: '/${{ github.event.repository.name }}'
+      - name: Install dependencies
+        run: npm install
+
+      - name: build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
         run: |
-  npm run build
+          npm run build
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-  # this should match the `pages` option in your adapter-static options
-  path: 'build/'
+          # this should match the `pages` option in your adapter-static options
+          path: 'build/'
 
   deploy:
     needs: build_site
