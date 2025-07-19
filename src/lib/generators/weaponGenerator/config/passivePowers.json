@@ -4,7 +4,10 @@
             "miscPower": true,
             "desc": "Wielder is able to move completely silently.",
             "shapeFamily": {
-                "any": ["dagger", "club"]
+                "any": [
+                    "dagger",
+                    "club"
+                ]
             },
             "rarity": {
                 "gte": "epic"
@@ -17,7 +20,10 @@
                 "gte": "rare"
             },
             "themes": {
-                "any": ["cloud", "wizard"]
+                "any": [
+                    "cloud",
+                    "wizard"
+                ]
             }
         }
     ],
@@ -74,7 +80,11 @@
                 }
             },
             "shapeFamily": {
-                "none": ["dagger","sword","greatsword"]
+                "none": [
+                    "dagger",
+                    "sword",
+                    "greatsword"
+                ]
             }
         },
         {
@@ -86,7 +96,11 @@
                 }
             },
             "shapeFamily": {
-                "any": ["dagger","sword","greatsword"]
+                "any": [
+                    "dagger",
+                    "sword",
+                    "greatsword"
+                ]
             }
         },
         {
@@ -120,7 +134,10 @@
             "miscPower": true,
             "desc": "Wielder is able to move completely silently.",
             "shapeFamily": {
-                "any": ["dagger", "club"]
+                "any": [
+                    "dagger",
+                    "club"
+                ]
             },
             "rarity": {
                 "gte": "epic"
@@ -134,7 +151,7 @@
         },
         {
             "miscPower": true,
-            "desc":"Wielder takes half damage from rays & beams."
+            "desc": "Wielder takes half damage from rays & beams."
         },
         {
             "miscPower": true,
@@ -143,10 +160,6 @@
         {
             "miscPower": true,
             "desc": "Extremely shiny, functions as a mirror."
-        },
-        {
-            "miscPower": true,
-            "desc": "Can reflect and focus light as a damaging beam (2d6 damage)."
         },
         {
             "miscPower": true,
@@ -242,13 +255,18 @@
             "miscPower": true,
             "desc": "Wielder gains a stealth bonus during rain & snow, as if invisible.",
             "shapeFamily": {
-                "any": ["dagger", "club"]
+                "any": [
+                    "dagger",
+                    "club"
+                ]
             }
         },
         {
             "miscPower": true,
             "desc": "You can fly, as fast as you can walk.",
-            "rarity": {"gte": "epic" }
+            "rarity": {
+                "gte": "epic"
+            }
         }
     ],
     "earth": [
@@ -280,7 +298,9 @@
                 "gte": "rare"
             },
             "shapeFamily": {
-                "any": ["dagger"]
+                "any": [
+                    "dagger"
+                ]
             }
         }
     ]

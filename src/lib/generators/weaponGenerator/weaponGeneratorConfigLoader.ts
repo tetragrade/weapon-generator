@@ -194,6 +194,17 @@ const mixinPassivePowers = ([
                 any: ["nature", "sweet"]
             }
         }
+    },
+    {
+        thing:
+        {
+            miscPower: true,
+            "desc": new StringGenerator(["Can reflect and focus ", mkGen((rng) => ['sun', 'moon'].choice(rng)), "light as a damaging beam (2d6 damage)."])
+        },
+        cond: {
+            unique: true,
+            themes: { any: ['light'] }
+        }
     }
 ] satisfies ProviderElement<(MiscPower), WeaponPowerCond>[] as ProviderElement<(MiscPower), WeaponPowerCond>[]);
 
