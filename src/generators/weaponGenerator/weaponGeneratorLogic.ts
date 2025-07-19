@@ -88,7 +88,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const params = structuredClone(originalParams)
 
     // determine sentience
-    const isSentient = true; //rng() < params.sentienceChance;
+    const isSentient = rng() < params.sentienceChance;
 
     const toHit = WEAPON_TO_HIT[rarity].generate(rng);
     
