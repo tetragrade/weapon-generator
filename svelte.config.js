@@ -22,7 +22,7 @@ const config = {
 		}),
 		paths: {
 			// eslint-disable-next-line no-undef
-			base: process.argv.includes('dev') ? '' : 'https://github.com/tetragrade/weapon-generator'
+			base: process.argv.includes('dev') ? '' : '/tetragrade/weapon-generator'
 		}
 	}
 };
