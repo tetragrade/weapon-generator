@@ -1,4 +1,4 @@
-import '../choice';
+import '../util/choice';
 
 import { mkWeapon } from "../generators/weaponGenerator/weaponGeneratorLogic";
 

@@ -1,5 +1,5 @@
 import { mkGen, StringGenerator, TGenerator } from "../recursiveGenerator.ts";
-import '../../string.ts';
+import '../../util/string.ts';
 import seedrandom from "seedrandom";
 import { defaultWeaponRarityConfigFactory, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
 import { ActivePower, DamageDice, PassiveBonus, Theme, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponShape, themes, isRarity, PassivePower, Personality, RechargeMethod, WeaponGenerationParams, WeaponRarityConfig } from "./weaponGeneratorTypes.ts";

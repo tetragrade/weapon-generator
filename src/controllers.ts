@@ -1,10 +1,9 @@
-import './choice.ts';
-import mkDemand from './generators/demandGenerator.ts';
-import { defaultWeaponRarityConfigFactory } from './generators/weaponGenerator/weaponGeneratorConfigLoader.ts';
-import { mkWeapon } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
-import { Weapon, weaponRarities, WeaponRarityConfig } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
+import mkDemand from "./generators/demandGenerator";
+import { defaultWeaponRarityConfigFactory } from "./generators/weaponGenerator/weaponGeneratorConfigLoader";
+import { mkWeapon } from "./generators/weaponGenerator/weaponGeneratorLogic";
+import { WeaponRarityConfig, Weapon, weaponRarities } from "./generators/weaponGenerator/weaponGeneratorTypes";
+import { Nullable } from "./util/nullable";
 
-type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
 
 interface WeaponView {
   root: HTMLElement;
@@ -118,8 +117,6 @@ class DemandGeneratorController {
 
           this.view.generateButton.addEventListener('click', this.boundGenerate);
         }
-
-        
       }
       else {
         this.view = null;
@@ -137,7 +134,7 @@ class DemandGeneratorController {
   }
 }
 
-class WeaponGeneratorController {
+export class WeaponGeneratorController {
   view: unknown;
   demandGenerator: DemandGeneratorController | null;
   weaponRarityConfig: WeaponRarityConfig;
@@ -348,9 +345,3 @@ class WeaponGeneratorController {
     }
   }
 }
-
-// load the seed if one exists
-new WeaponGeneratorController("main-generator");
-
-// testing
-// console.log('random names', new Array(100).fill(null).map(() => angloNamesByPartGenerator.generate(seedrandom())))
