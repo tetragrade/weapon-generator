@@ -23,11 +23,16 @@ interface WeaponView {
   };
   
   passivePowers: HTMLElement;
-  
-  isSentient: HTMLElement;
-  personality: HTMLElement;
-  languages: HTMLElement;
-  chanceOfDemands: HTMLElement;
+
+  sentient: {
+    main: HTMLElement;
+    personality: HTMLElement;
+    languages: HTMLElement;
+    demands: {
+      main: HTMLElement; 
+      chanceOfDemands: HTMLElement;
+    }
+  }
 }
 
 function isWeaponView(x: unknown): x is WeaponView {
@@ -44,9 +49,11 @@ function isWeaponView(x: unknown): x is WeaponView {
     wv.active.rechargeMethod && 
     wv.active.powers &&  
     wv.passivePowers &&
-    wv.isSentient && 
-    wv.personality && 
-    wv.languages
+    wv.sentient.main && 
+    wv.sentient.personality && 
+    wv.sentient.languages &&
+    wv.sentient.demands.main &&
+    wv.sentient.demands.chanceOfDemands 
   ) ? true : false;
 }
 
@@ -154,10 +161,15 @@ class WeaponGeneratorController {
         },
         passivePowers: root.querySelector('.weapon-passive-powers-root') as HTMLElement,
         
-        isSentient: root.querySelector(".weapon-is-sentient") as HTMLElement,
-        personality: root.querySelector('.weapon-personality-root') as HTMLElement,
-        languages: root.querySelector('.weapon-languages-root') as HTMLElement,
-        chanceOfDemands: root.querySelector('.weapon-chance-of-demands') as HTMLElement
+        sentient: {
+          main: root.querySelector(".weapon-is-sentient") as HTMLElement,
+          personality: root.querySelector('.weapon-personality-root') as HTMLElement,
+          languages: root.querySelector('.weapon-languages-root') as HTMLElement,
+          demands: {
+            main: root.querySelector('.weapon-demands-main') as HTMLElement,
+            chanceOfDemands: root.querySelector('.weapon-chance-of-demands') as HTMLElement
+          }
+        }
       } satisfies Nullable<WeaponView>;
       root.querySelector('.generate-button')?.addEventListener('click', (() => {
         const rngSeed = (Math.floor(Math.random() * 10e19)).toString();
@@ -299,23 +311,27 @@ class WeaponGeneratorController {
         );
         
         // add sentient box & info
-        this.view.isSentient.hidden = !this.weapon.sentient;
+        this.view.sentient.main.hidden = !this.weapon.sentient;
         this.view.active.sentientWeaponsDemandsRecharge.hidden = !this.weapon.sentient;
 
         if(this.weapon.sentient) {
-          this.buildList(this.view.languages, this.weapon.sentient.languages, (elem, x) => {
+          this.buildList(this.view.sentient.languages, this.weapon.sentient.languages, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });
-          this.buildList(this.view.personality, this.weapon.sentient.personality, (elem, x) => {
+          this.buildList(this.view.sentient.personality, this.weapon.sentient.personality, (elem, x) => {
             elem.innerText = x.desc as string;
             elem.classList.add('weapon-generator-active-list-item');
           });
-          this.view.chanceOfDemands.innerText = this.weapon.sentient.chanceOfMakingDemands.toString();
+          
+          this.view.sentient.demands.main.hidden = this.weapon.active.powers.length === 0;
+          if(this.weapon.active.powers.length!==0) {
+            this.view.sentient.demands.chanceOfDemands.innerText = this.weapon.sentient.chanceOfMakingDemands.toString();
+          }
         }
         else {
-          this.view.languages.innerHTML = '';
-          this.view.personality.innerHTML = '';
+          this.view.sentient.languages.innerHTML = '';
+          this.view.sentient.personality.innerHTML = '';
         }
       }
       catch(e) {
