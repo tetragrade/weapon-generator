@@ -113,10 +113,10 @@ class DemandGeneratorController {
         if(isDemandGeneratorView(this.view)) {
           this.view.outputRoot.innerText = '';
           
-          // we have to bind this function and store it as a variable so that add / remove event listener gets the same function reference
+          // we have to bind this function and store it as a property so that add / remove event listener gets the same function reference
           this.boundGenerate = this.generate.bind(this);
 
-          this.view.generateButton.addEventListener('click', this?.boundGenerate);
+          this.view.generateButton.addEventListener('click', this.boundGenerate);
         }
 
         
@@ -132,7 +132,7 @@ class DemandGeneratorController {
 
   dispose() {
     if(isDemandGeneratorView(this?.view) && this.boundGenerate) {
-      this.view.generateButton.removeEventListener('click', this?.boundGenerate);
+      this.view.generateButton.removeEventListener('click', this.boundGenerate);
     }
   }
 }
