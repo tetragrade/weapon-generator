@@ -97,9 +97,6 @@
         :global(button) {
             background-color: #f9f9f9;
         }
-        .weapon-is-sentient {
-            border-color: #00000047 !important;
-        }
         :global(button:hover) {
             border-color: #00000047 !important;
         }
