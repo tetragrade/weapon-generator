@@ -12,7 +12,7 @@ function toProviderSource<T1, T2>(x: Record<string, T1[]>, map: (k: string, x: T
     return Object.entries(x).map(([k,v]) => v.map(x => map(k,x))).flat();
 }
 
-export const weaponRarityConfig: WeaponRarityConfig = {
+export const defaultWeaponRarityConfigFactory = (): WeaponRarityConfig => ({
     common: {
         percentile: 1,
         paramsProvider: (rng) => ({
@@ -73,7 +73,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             chanceOfMakingDemands: ([4 as const, 6 as const, 8 as const]).choice(rng),
         })
     }
-}
+});
+
 /*
     an adjective that could describe a physical object
     the adjective should be simple and describe its physical state,

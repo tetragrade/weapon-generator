@@ -1,8 +1,8 @@
 import { mkGen, StringGenerator, TGenerator } from "../recursiveGenerator.ts";
 import '../../string.ts';
 import seedrandom from "seedrandom";
-import { weaponRarityConfig, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
-import { ActivePower, DamageDice, PassiveBonus, Theme, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponShape, themes, isRarity, PassivePower, Personality, RechargeMethod } from "./weaponGeneratorTypes.ts";
+import { defaultWeaponRarityConfigFactory, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_ACTIVE_POWERS, POSSIBLE_PASSIVE_POWERS, POSSIBLE_SHAPES, WEAPON_TO_HIT, POSSIBLE_OBJECT_ADJECTIVES } from "./weaponGeneratorConfigLoader.ts";
+import { ActivePower, DamageDice, PassiveBonus, Theme, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponShape, themes, isRarity, PassivePower, Personality, RechargeMethod, WeaponGenerationParams, WeaponRarityConfig } from "./weaponGeneratorTypes.ts";
 import { ConditionalThingProvider, evComp, evQuant, ProviderElement, WithUUID } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
@@ -64,7 +64,7 @@ const mkSentientNameGenerator = (weapon: Weapon,shape: string, rng: seedrandom.P
     return string.split(/\s/).map(x => articles.has(x) ? x : x.capFirst()).join(' ');
 });
 
-export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
+export const mkWeapon = (rngSeed: string, weaponRarityConfig: WeaponRarityConfig = defaultWeaponRarityConfigFactory()): Weapon => {
     const genStr = (x: string | TGenerator<string>) => typeof x === 'string' ? x : x.generate(rng);
     const generateRarity: (rng: seedrandom.PRNG) => WeaponRarity = (rng) => {
         const n = rng();
@@ -88,7 +88,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const params = structuredClone(originalParams)
 
     // determine sentience
-    const isSentient = true; //rng() < params.sentienceChance;
+    const isSentient = rng() < params.sentienceChance;
 
     const toHit = WEAPON_TO_HIT[rarity].generate(rng);
     
