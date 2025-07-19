@@ -26,7 +26,9 @@ const angloNamesByPartLongSuffixGenerator = new StringGenerator([
         "cey",
     ].choice(rng))
 ]);
-const angloNamesByPartGenerator = new StringGenerator([
+
+
+export const angloNamesByPartGenerator = new StringGenerator([
     mkGen(rng => [
         "A",
         "Cha",
@@ -38,8 +40,9 @@ const angloNamesByPartGenerator = new StringGenerator([
         "Ha",
         "Le",
         "La",
+        "Cla",
     ].choice(rng)),
-    mkGen(rng => [angloNamesByPartShortSuffixGenerator, angloNamesByPartLongSuffixGenerator].choice(rng).generate(rng))
+    mkGen(rng => [angloNamesByPartShortSuffixGenerator, angloNamesByPartLongSuffixGenerator].choice(rng).generate(rng)),
 ]);
 
 export const angloFirstNameGenerator = mkGen((rng) => [
@@ -64,8 +67,6 @@ export const angloFirstNameGenerator = mkGen((rng) => [
         "Simon",
         "James",
         "Andrew",
-        "Bart",
-        "Lisa",
 
         "Alex",
         "Sam",

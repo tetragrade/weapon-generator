@@ -31,13 +31,20 @@ body {
 	display: flex;
 	flex-direction: column;
 	place-items: center;
-	min-width: 320px;
-	min-height: 100vh;
+}
+
+#body {
+	width: 100%;
 }
 
 h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
+}
+h2 {
+	text-align: center;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
 }
 
 #app {
@@ -121,6 +128,32 @@ h1 {
 	
 	display: flex;
 }
+
+.fade-in-1 {
+	animation: .666s ease-in 0s 1 fade-in-1;
+}
+.fade-in-2 {
+	animation: .666s ease-in 0s 1 fade-in-2;
+}
+
+@keyframes fade-in-1 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-in-2 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 .weapon-generator {
 	display: flex;
 	flex-direction: column;
@@ -151,14 +184,22 @@ h1 {
 
 	margin-bottom: 10pt;
 }	
-.weapon-generator-output > div {
-	margin-left: 10pt;
-	margin-right: 10pt;
-}
 
 .weapon-generator-output-body {
 	display: flex;
 	gap: 20pt;
+}
+
+@media (orientation: landscape) {
+	.weapon-generator {
+		margin-left: 10vw;
+		margin-right: 10vw;
+	}
+	
+	.weapon-is-sentient-top-half {
+		display: flex;
+		justify-content: space-around;
+	}
 }
 
 @media (orientation: portrait) {
@@ -238,4 +279,44 @@ h1 {
 }
 .weapon-rarity-legendary {
 	color: hsl(51, 84%, 50%);
+}
+
+
+.weapon-demands-generator {
+	margin-top: 10pt;
+	padding: 5pt;
+
+	display: flex;
+	flex-direction: column;
+	gap: 5pt;
+	align-items: center;
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.weapon-demands-generator-output-header {
+	font-weight: bold;
+}
+
+.weapon-demands-generator-content {
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div > .weapon-demands-generator-button {
+	display: flex;
+	justify-content: center;
+}
+
+.weapon-demands-generator-button {
+	width: fit-content;
+}
+
+.weapon-demands-generator-output-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }

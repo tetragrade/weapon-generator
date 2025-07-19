@@ -14,7 +14,7 @@
     - Basic Functionality
         - ~~Color-coded rarities.~~
         - ~~Weapon shape type based damage.~~
-        - Support for conditionally available abilities, beyond themes.
+        - ~~Support for conditionally available abilities, beyond themes.~~
             - ~~Personality.~~
             - ~~Active Abilities.~~
             - ~~Passive Abilities.~~
@@ -23,16 +23,24 @@
             - ~~UUID based Quant.~~                         HARD SHORT  4
             - Split languages from passive powers. Current way of doing it is stupid & it's now possible to just have a Language or Misc Power provider. 
 
-                        
+        - Sentient demands
+            - ", and a charge when one of its demands is fulfilled."
+            - 1-in-x to make demands
+            - demand generator
 
         - ~~Implement bonuses for passive abilities.~~
 
+        - Configuration.
+            - Power level.
+            - 5e mode.
+        - UX.                                           EASY LONG   6
+            - Link to github.
+            - Link to this weapon button.
         - More themes & abilities.                      EASY LONG   8
             - 'pets'
         
         - ~~Names / Namelist~~                          EASY LONG   7
         - Descriptions.                                 HARD LONG   4
-        - UX.                                           EASY LONG   6
         - Automated Testing.                            HARD LONG   ~
     - Advanced.
         - User configuration menu & settings.           EASY SHORT  4

@@ -21,7 +21,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: 0,
             nActive: rng() > .9 ? 1 : 0,
             nUnlimitedActive: 0,
-            sentienceChance: 0
+            sentienceChance: 0,
+            chanceOfMakingDemands: ([10 as const, 12 as const]).choice(rng),
         })
     },
     uncommon: {
@@ -32,7 +33,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 4),
             nActive: [0,1].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 0.1
+            sentienceChance: 0.1,
+            chanceOfMakingDemands: ([8 as const, 10 as const]).choice(rng),
         })
     },
     rare: {
@@ -43,7 +45,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 4),
             nActive: [1,2].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 1/3
+            sentienceChance: 1/3,
+            chanceOfMakingDemands: ([8 as const, 10 as const]).choice(rng),
         })
     },
     epic: {
@@ -54,7 +57,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 8),
             nActive: [1,2,3].choice(rng),
             nUnlimitedActive: 0,
-            sentienceChance: 1/2
+            sentienceChance: 1/2,
+            chanceOfMakingDemands: ([6 as const, 8 as const, 10 as const]).choice(rng),
         })
     },
     legendary: {
@@ -65,7 +69,8 @@ export const weaponRarityConfig: WeaponRarityConfig = {
             nCharges: Math.ceil(rng() * 10),
             nActive: [2,3,4].choice(rng),
             nUnlimitedActive: 1,
-            sentienceChance: 1
+            sentienceChance: 1,
+            chanceOfMakingDemands: ([4 as const, 6 as const, 8 as const]).choice(rng),
         })
     }
 }
@@ -145,7 +150,6 @@ export const POSSIBLE_ACTIVE_POWERS = [...mixinActivePowers, ...toProviderSource
 }))].map(x => GLOBAL_UUID_ISSUER.Issue(x)) satisfies ProviderElement<ActivePower, WeaponPowerCond>[];
 
 
-// this isn't going to work, as the value of the generator can't be known at cond execution time, needs rethought.
 const mixinPassivePowers = ([
     {
         thing: {
@@ -289,7 +293,6 @@ export const POSSIBLE_PERSONALITIES = [...mixinPersonalities, ...toProviderSourc
             "formal",
             "haughty",
             "idealistic",
-            "impersonal",
             "pitiless",
             "reserved",
             "serious",
@@ -354,7 +357,7 @@ export const POSSIBLE_PERSONALITIES = [...mixinPersonalities, ...toProviderSourc
 const mixinRechargeMethods = [
     {
         thing: {
-            desc: mkGen("regains all charges at noon on the winter solstice")
+            desc: mkGen("all charges at noon on the winter solstice")
         },
         cond: {
             unique: true,
@@ -365,7 +368,7 @@ const mixinRechargeMethods = [
     },
     {
         thing: {
-            desc: mkGen("regains all charges at noon on the summer solstice")
+            desc: mkGen("all charges at noon on the summer solstice")
         },
         cond: {
             unique: true,
@@ -378,63 +381,61 @@ const mixinRechargeMethods = [
 
 export const POSSIBLE_RECHARGE_METHODS = [ ...mixinRechargeMethods, ...toProviderSource({
     fire: [
-        mkGen("regains all charges after being superheated"),
-        mkGen("regains a charge at the end of each scene where its wielder started a fire"),
-        mkGen("regains all charges when its wielder wins an argument"),
+        mkGen("all charges after being superheated"),
     ],
     ice: [
-        mkGen("regains all charges after being cooled to sub-zero"),
-        mkGen("regains a changes whenever its wielder builds a snowman"),
-        mkGen("regains a charge at the end of each scene where its wielder made an ice pun")
+        mkGen("all charges after being cooled to sub-zero"),
+        mkGen("a charge whenever its wielder builds a snowman"),
+        mkGen("a charge at the end of each scene where its wielder made an ice pun")
     ],
     dark: [
-        mkGen("regains a charge upon absorbing a human soul"),
-        mkGen("regains a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
-        mkGen("regains all charges each day at the witching hour"),
-        mkGen("regains a charge when its wielder defenestrates a priest, or all charges if it was a high ranking priest")
+        mkGen("a charge upon absorbing a human soul"),
+        mkGen("a charge at the end of each scene where its wielder destroyed an object unnecessarily"),
+        mkGen("all charges each day at the witching hour"),
+        mkGen("a charge when its wielder defenestrates a priest, or all charges if it was a high ranking priest")
     ],
     light: [
-        mkGen("regains all charges after an hour in a sacred space"),
-        mkGen("regains all charges each day at sunrise"),
+        mkGen("all charges after an hour in a sacred space"),
+        mkGen("all charges each day at sunrise"),
         new StringGenerator([
-            mkGen("regains a charge after defeating "), 
+            mkGen("a charge after defeating "), 
             singularUnholyFoe,
         ])
     ],
     sweet: [
-        mkGen("regains a charge each time it eats an extravagant dessert"),
-        mkGen("regains all charges each time its wielder hosts a feast"),
-        mkGen("regains a charge whenever its wielder compliments someone")
+        mkGen("a charge each time it eats an extravagant dessert"),
+        mkGen("all charges each time its wielder hosts a feast"),
+        mkGen("a charge whenever its wielder compliments someone")
     ],
     sour: [
-        mkGen("regains all charges after an hour immersed in acid"),
-        mkGen("regains all charges when used to fell a citrus tree"),
-        mkGen("regains a charge each time its wielder insults someone")
+        mkGen("all charges after an hour immersed in acid"),
+        mkGen("all charges when used to fell a citrus tree"),
+        mkGen("a charge each time its wielder insults someone")
     ],
     cloud: [
-        mkGen("regains all charges when struck by lightning"),
-        mkGen('regains all charges when its wielder survives a significant fall'),
-        mkGen('regains a charge when you kill a winged creature, or all charges if it was also a powerful foe'),
+        mkGen("all charges when struck by lightning"),
+        mkGen('all charges when its wielder survives a significant fall'),
+        mkGen('a charge when you kill a winged creature, or all charges if it was also a powerful foe'),
     ],
     wizard: [
-        mkGen('regains a charge when you cast one of your own spells'),
-        mkGen('regains all charges when its wielder learns a new spell'),
-        mkGen('regains all charges when its wielder wins a wizard duel'),
-        mkGen('regains a charge when its wielder finishes reading a new book'),
-        mkGen('regains all charges when its wielder views the night sky'),
+        mkGen('a charge when you cast one of your own spells'),
+        mkGen('all charges when its wielder learns a new spell'),
+        mkGen('all charges when its wielder wins a wizard duel'),
+        mkGen('a charge when its wielder finishes reading a new book'),
+        mkGen('all charges when its wielder views the night sky'),
     ],
     steampunk: [
-        mkGen('regains all charges when its wielder invents something'),
-        mkGen('regains all charges when its wielder throws a tea party'),
-        mkGen("regains a charge when its wielder breaks news"),
+        mkGen('all charges when its wielder invents something'),
+        mkGen('all charges when its wielder throws a tea party'),
+        mkGen("a charge when its wielder breaks news"),
     ],
     earth: [
-        mkGen('regains a charge when its wielder throws a rock at something important'),
-        mkGen('regains all charges when its wielder meditates atop a mountain'),
-        mkGen('regains all charges when driven into the ground while something important is happening')
+        mkGen('a charge when its wielder throws a rock at something important'),
+        mkGen('all charges when its wielder meditates atop a mountain'),
+        mkGen('all charges when driven into the ground while something important is happening')
     ],
     nature: [
-        mkGen("regains all charges")
+        mkGen("all charges")
     ]
 } satisfies Record<
     Theme | string, 

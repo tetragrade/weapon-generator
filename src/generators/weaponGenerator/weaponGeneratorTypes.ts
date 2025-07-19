@@ -10,7 +10,7 @@ export const themes = [
     "sweet", "sour",
     "wizard", 
     "steampunk", "nature"
-    // "poison", "water"
+    // "poison",
     // "earth", "cloud",
     // "psychic", "electric"
     // "wizard", "thief"
@@ -45,6 +45,7 @@ export interface WeaponGenerationParams {
     nActive: number;
     nUnlimitedActive: number;
     sentienceChance: number;
+    chanceOfMakingDemands: 2 | 4 | 6 | 8 | 10 | 12;
 }
 
 
@@ -72,6 +73,10 @@ export type Weapon = {
     sentient: false | {
         personality: Personality[];
         languages: string[];
+        /**
+         * Each scene, a sentient weapon has a 1-in-this chance of making a demand.
+         */
+        chanceOfMakingDemands: number;
     }
     
     themes: Theme[],

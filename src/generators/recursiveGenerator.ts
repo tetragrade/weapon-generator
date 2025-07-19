@@ -15,8 +15,8 @@ export type TGenerator<T> = LeafGenerator<T> | RecursiveGenerator<T>;
 export abstract class RecursiveGenerator<T> {
     children: (TGenerator<T>)[];
 
-    constructor(children: (TGenerator<T>)[]) {
-        this.children = children;
+    constructor(children: (T | TGenerator<T>)[]) {
+        this.children = children.map(x => typeof x === 'object' && x!==null && 'generate' in x ? x : mkGen(x));
     }
 
     /**

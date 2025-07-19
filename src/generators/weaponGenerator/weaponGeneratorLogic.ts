@@ -6,7 +6,7 @@ import { ActivePower, DamageDice, PassiveBonus, Theme, Weapon, WeaponPowerCond, 
 import { ConditionalThingProvider, evComp, evQuant, ProviderElement, WithUUID } from "./provider.ts";
 import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
 
-class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
+export class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
     constructor(source: WithUUID<ProviderElement<T, WeaponPowerCond>>[]) {
         super(source);
     }
@@ -88,7 +88,7 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
     const params = structuredClone(originalParams)
 
     // determine sentience
-    const isSentient = rng() < params.sentienceChance;
+    const isSentient = true; //rng() < params.sentienceChance;
 
     const toHit = WEAPON_TO_HIT[rarity].generate(rng);
     
@@ -117,7 +117,8 @@ export const mkWeapon: (rngSeed: string) => Weapon = (rngSeed) => {
         passivePowers: [],
         sentient: isSentient ? {
             personality: [],
-            languages: ['Common.']
+            languages: ['Common.'],
+            chanceOfMakingDemands: params.chanceOfMakingDemands
         } : false as false,
         
         themes: [],

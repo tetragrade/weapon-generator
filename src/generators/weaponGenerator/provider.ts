@@ -35,13 +35,13 @@ export function evComp<T> (comp: Comp<T>, x: T, ord: (x: T) => number) {
     return true;
 }
 
-export interface ProviderElement<TThing, TCond> { 
+export interface ProviderElement<TThing, TCond extends Cond> { 
     thing: TThing;
     cond: TCond;
 }
 
 export interface Cond {
-    unique: true
+    unique?: true;
 }
 
 export type WithUUID<T extends object> = {   

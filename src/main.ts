@@ -1,6 +1,7 @@
 import './choice.ts';
+import mkDemand from './generators/demandGenerator.ts';
 import { mkWeapon } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
-import { weaponRarities } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
+import { Weapon, weaponRarities } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
 
@@ -17,6 +18,7 @@ interface WeaponView {
   active: {
     maxCharges: HTMLElement;
     rechargeMethod: HTMLElement;
+    sentientWeaponsDemandsRecharge: HTMLElement;
     powers: HTMLElement;
   };
   
@@ -25,6 +27,7 @@ interface WeaponView {
   isSentient: HTMLElement;
   personality: HTMLElement;
   languages: HTMLElement;
+  chanceOfDemands: HTMLElement;
 }
 
 function isWeaponView(x: unknown): x is WeaponView {
@@ -47,14 +50,97 @@ function isWeaponView(x: unknown): x is WeaponView {
   ) ? true : false;
 }
 
+interface DemandGeneratorView {
+    root: HTMLElement;
+    outputRoot: HTMLElement;
+    generateButton: HTMLElement;
+  }
+
+function isDemandGeneratorView(x: unknown): x is DemandGeneratorView {
+  const view = (x as DemandGeneratorView);
+  return (
+    view!=null && view.root && view.outputRoot 
+  ) ? true : false
+}
+
+class DemandGeneratorController {
+  view: unknown;
+  boundWeaponGeneratorController: WeaponGeneratorController;
+  boundGenerate?: (() => void);
+
+  generate() {
+    if(isDemandGeneratorView(this.view) && this.boundWeaponGeneratorController.weapon !== null) {
+      try {
+        this.view.outputRoot.innerText = mkDemand(this.boundWeaponGeneratorController.weapon);
+        
+        // fade the new value in
+        if(this.view.outputRoot.classList.contains('fade-in-1')) {
+          this.view.outputRoot.classList.remove('fade-in-1');
+          this.view.outputRoot.classList.add('fade-in-2');
+        }
+        else {
+          this.view.outputRoot.classList.remove('fade-in-2');
+          this.view.outputRoot.classList.add('fade-in-1');
+        }
+      }
+      catch(e) {
+        this.view.outputRoot.hidden = true;
+        console.error(e);
+      }
+    }
+  }
+
+  constructor(boundWeaponGeneratorController: WeaponGeneratorController) {
+    this.boundWeaponGeneratorController = boundWeaponGeneratorController;
+    // get the view's root if the parent view has been constructed correctly
+    if(isWeaponView(boundWeaponGeneratorController?.view)) {
+      const root = boundWeaponGeneratorController.view.root.querySelector('.weapon-demands-generator');
+      if(root) {
+        this.view = {
+          root,
+          outputRoot: root.querySelector('.weapon-demands-generator-content'),
+          generateButton: root.querySelector('.weapon-demands-generator-button')
+        }
+        if(isDemandGeneratorView(this.view)) {
+          this.view.outputRoot.innerText = '';
+          
+          // we have to bind this function and store it as a variable so that add / remove event listener gets the same function reference
+          this.boundGenerate = this.generate.bind(this);
+
+          this.view.generateButton.addEventListener('click', this?.boundGenerate);
+        }
+
+        
+      }
+      else {
+        this.view = null;
+      }
+    }
+    else {
+      this.view = null;
+    }
+  }
+
+  dispose() {
+    if(isDemandGeneratorView(this?.view) && this.boundGenerate) {
+      this.view.generateButton.removeEventListener('click', this?.boundGenerate);
+    }
+  }
+}
+
 class WeaponGeneratorController {
   view: unknown;
+  demandGenerator: DemandGeneratorController | null;
+  weapon: Weapon | null;
 
   constructor(rootId: string) {
+    this.weapon = null;
+    this.demandGenerator = null;
+
     const root = document.getElementById(rootId);
     if(root) {
       this.view = {
-        root: root,
+        root,
         outputRoot: root.querySelector('.weapon-generator-output') as HTMLElement,
         name: root.querySelector('.weapon-name') as HTMLElement,
         damage: root.querySelector('.weapon-damage') as HTMLElement,
@@ -62,6 +148,8 @@ class WeaponGeneratorController {
         active: {
           maxCharges: root.querySelector('.weapon-active-powers-n-charges') as HTMLElement,
           rechargeMethod: root.querySelector('.weapon-active-powers-recharge-method') as HTMLElement,
+          sentientWeaponsDemandsRecharge: root.querySelector('.weapon-active-powers-sentient-demands-recharge') as HTMLElement,
+          
           powers: root.querySelector('.weapon-active-powers-root') as HTMLElement,
         },
         passivePowers: root.querySelector('.weapon-passive-powers-root') as HTMLElement,
@@ -69,6 +157,7 @@ class WeaponGeneratorController {
         isSentient: root.querySelector(".weapon-is-sentient") as HTMLElement,
         personality: root.querySelector('.weapon-personality-root') as HTMLElement,
         languages: root.querySelector('.weapon-languages-root') as HTMLElement,
+        chanceOfDemands: root.querySelector('.weapon-chance-of-demands') as HTMLElement
       } satisfies Nullable<WeaponView>;
       root.querySelector('.generate-button')?.addEventListener('click', (() => {
         const rngSeed = (Math.floor(Math.random() * 10e19)).toString();
@@ -92,7 +181,6 @@ class WeaponGeneratorController {
       window.addEventListener('popstate', (() => {
         this.onIDChanged();
       }).bind(this));
-
     }
     else {
       throw new Error(`couldn't find weapon generator root with id ${rootId}`)
@@ -142,18 +230,21 @@ class WeaponGeneratorController {
   update(rngSeed: string) {
     if(isWeaponView(this.view)) {
       try {
+        this.demandGenerator?.dispose();
+        this.demandGenerator = new DemandGeneratorController(this);
+
         this.view.outputRoot.hidden = false;
 
-        const weapon = mkWeapon(rngSeed);
+        this.weapon = mkWeapon(rngSeed);
 
-        this.view.name.innerText = weapon.name;
+        this.view.name.innerText = this.weapon.name;
         // remove the old rarity class & add the new one
         this.view.name.classList.remove(...weaponRarities.map(x => `weapon-rarity-${x}`));
-        this.view.name.classList.add(`weapon-rarity-${weapon.rarity}`);
+        this.view.name.classList.add(`weapon-rarity-${this.weapon.rarity}`);
 
         // add damage
-        const acc = `as ${weapon.damage.as}`;
-        const damageKeys = (Object.keys(weapon.damage) as [keyof typeof weapon['damage']])
+        const acc = `as ${this.weapon.damage.as}`;
+        const damageKeys = (Object.keys(this.weapon.damage) as [keyof typeof this.weapon['damage']])
           .filter(k => k!='as')
           .sort((k1,k2) => {
             const ord = ['d20', 'd12', 'd10', 'd8', 'd6', 'd4', 'const'];
@@ -161,22 +252,22 @@ class WeaponGeneratorController {
           });
         this.view.damage.innerText = damageKeys.length>0 ?
           damageKeys.reduce<string>(
-            (acc, k) => (weapon.damage[k] ?? 0) > 0 ? (acc + ` + ${weapon.damage[k]}${k==='const' ? '' : k}`) : acc, 
+            (acc, k) => (this?.weapon?.damage[k] ?? 0) > 0 ? (acc + ` + ${this?.weapon?.damage[k]}${k==='const' ? '' : k}`) : acc, 
             acc
           ) : acc;
 
         // add tohit
         this.view.toHit.innerText = '';
-        if(weapon.toHit>0) {
-          this.view.toHit.innerText = ` (+${weapon.toHit} to hit)`;
+        if(this.weapon.toHit>0) {
+          this.view.toHit.innerText = ` (+${this.weapon.toHit} to hit)`;
         }
   
         // add the active powers
-        this.view.active.maxCharges.innerText = `${this.textForCharges(weapon.active.maxCharges)}.`;
-        this.view.active.rechargeMethod.innerText = (weapon.active.rechargeMethod.desc as string).capFirst() + '.';
+        this.view.active.maxCharges.innerText = `${this.textForCharges(this.weapon.active.maxCharges)}.`;
+        this.view.active.rechargeMethod.innerText = (this.weapon.active.rechargeMethod.desc as string);
         this.buildList(
           this.view.active.powers, 
-          weapon.active.powers,
+          this.weapon.active.powers,
           (elem, x) => {
             elem.classList.add('weapon-generator-active-list-item');
 
@@ -200,7 +291,7 @@ class WeaponGeneratorController {
         // add the passive powers
         this.buildList(
           this.view.passivePowers,
-          weapon.passivePowers.filter(x => x.desc !== null),
+          this.weapon.passivePowers.filter(x => x.desc !== null),
           (elem, x) => {
             elem.innerText = x.desc as string;
             elem.classList.add('weapon-generator-active-list-item');
@@ -208,19 +299,21 @@ class WeaponGeneratorController {
         );
         
         // add sentient box & info
-        if(weapon.sentient) {
-          this.view.isSentient.hidden = false;
-          this.buildList(this.view.languages, weapon.sentient.languages, (elem, x) => {
+        this.view.isSentient.hidden = !this.weapon.sentient;
+        this.view.active.sentientWeaponsDemandsRecharge.hidden = !this.weapon.sentient;
+
+        if(this.weapon.sentient) {
+          this.buildList(this.view.languages, this.weapon.sentient.languages, (elem, x) => {
             elem.innerText = x;
             elem.classList.add('weapon-generator-active-list-item');
           });
-          this.buildList(this.view.personality, weapon.sentient.personality, (elem, x) => {
+          this.buildList(this.view.personality, this.weapon.sentient.personality, (elem, x) => {
             elem.innerText = x.desc as string;
             elem.classList.add('weapon-generator-active-list-item');
           });
+          this.view.chanceOfDemands.innerText = this.weapon.sentient.chanceOfMakingDemands.toString();
         }
         else {
-          this.view.isSentient.hidden = true;
           this.view.languages.innerHTML = '';
           this.view.personality.innerHTML = '';
         }
@@ -238,3 +331,6 @@ class WeaponGeneratorController {
 
 // load the seed if one exists
 new WeaponGeneratorController("main-generator");
+
+// testing
+// console.log('random names', new Array(100).fill(null).map(() => angloNamesByPartGenerator.generate(seedrandom())))
