@@ -1,7 +1,8 @@
 import './choice.ts';
 import mkDemand from './generators/demandGenerator.ts';
+import { defaultWeaponRarityConfigFactory } from './generators/weaponGenerator/weaponGeneratorConfigLoader.ts';
 import { mkWeapon } from './generators/weaponGenerator/weaponGeneratorLogic.ts';
-import { Weapon, weaponRarities } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
+import { Weapon, weaponRarities, WeaponRarityConfig } from './generators/weaponGenerator/weaponGeneratorTypes.ts';
 
 type Nullable<T extends object> = {[k in keyof T]: T[k] extends object ? (Nullable<T[k]> | null) : (T[k] | null)}; 
 
@@ -73,6 +74,7 @@ function isDemandGeneratorView(x: unknown): x is DemandGeneratorView {
 class DemandGeneratorController {
   view: unknown;
   boundWeaponGeneratorController: WeaponGeneratorController;
+
   boundGenerate?: (() => void);
 
   generate() {
@@ -138,10 +140,12 @@ class DemandGeneratorController {
 class WeaponGeneratorController {
   view: unknown;
   demandGenerator: DemandGeneratorController | null;
+  weaponRarityConfig: WeaponRarityConfig;
   weapon: Weapon | null;
 
   constructor(rootId: string) {
     this.weapon = null;
+    this.weaponRarityConfig = defaultWeaponRarityConfigFactory();
     this.demandGenerator = null;
 
     const root = document.getElementById(rootId);
