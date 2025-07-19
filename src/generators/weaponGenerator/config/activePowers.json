@@ -17,7 +17,9 @@
         {
             "desc": "Control Weather",
             "cost": 2,
-            "additionalNotes": ["Must move conditions towards heatwave."],
+            "additionalNotes": [
+                "Must move conditions towards heatwave."
+            ],
             "rarity": {
                 "lte": "rare"
             }
@@ -25,7 +27,9 @@
         {
             "desc": "Control Flames",
             "cost": 1,
-            "additionalNotes": ["Flames larger than wielder submit only after a save."],
+            "additionalNotes": [
+                "Flames larger than wielder submit only after a save."
+            ],
             "rarity": {
                 "lte": "rare"
             }
@@ -33,7 +37,9 @@
         {
             "desc": "Summon Fire Elemental",
             "cost": 6,
-            "additionalNotes": ["Dissipates after 1 hour."],
+            "additionalNotes": [
+                "Dissipates after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -50,7 +56,9 @@
         {
             "desc": "Control Weather",
             "cost": 3,
-            "additionalNotes": ["Must move conditions towards blizzard."],
+            "additionalNotes": [
+                "Must move conditions towards blizzard."
+            ],
             "rarity": {
                 "lte": "rare"
             }
@@ -58,7 +66,9 @@
         {
             "desc": "Chilling Strike",
             "cost": 2,
-            "additionalNotes": ["Upon hitting, you can choose to infuse the attack. Characters must save or be frozen solid next turn."],
+            "additionalNotes": [
+                "Upon hitting, you can choose to infuse the attack. Characters must save or be frozen solid next turn."
+            ],
             "rarity": {
                 "lte": "rare"
             }
@@ -66,7 +76,9 @@
         {
             "desc": "Summon Ice Elemental",
             "cost": 6,
-            "additionalNotes": ["Dissipates after 1 hour."],
+            "additionalNotes": [
+                "Dissipates after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -94,7 +106,9 @@
         {
             "desc": "Summon Demon",
             "cost": 6,
-            "additionalNotes": ["Returns to hell after 1 hour."],
+            "additionalNotes": [
+                "Returns to hell after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -119,7 +133,9 @@
         {
             "desc": "Summon Angel",
             "cost": 6,
-            "additionalNotes": ["Returns to heaven after 1 hour."],
+            "additionalNotes": [
+                "Returns to heaven after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -133,34 +149,46 @@
         {
             "desc": "Sweetberry",
             "cost": 1,
-            "additionalNotes": ["Create a small berry, stats as healing potion."]
+            "additionalNotes": [
+                "Create a small berry, stats as healing potion."
+            ]
         },
         {
             "desc": "Sugar Spray",
             "cost": 1,
-            "additionalNotes": ["Sprays a sweet and sticky syrup, enough to coat the floor of a small room. Makes movement difficult."]
+            "additionalNotes": [
+                "Sprays a sweet and sticky syrup, enough to coat the floor of a small room. Makes movement difficult."
+            ]
         }
     ],
     "sour": [
         {
             "desc": "Caustic Strike",
             "cost": 2,
-            "additionalNotes": ["Upon hitting, you can choose to infuse the attack. Melts objects, or damages armor of characters."]
+            "additionalNotes": [
+                "Upon hitting, you can choose to infuse the attack. Melts objects, or damages armor of characters."
+            ]
         },
         {
             "desc": "Locate Lemon",
             "cost": 1,
-            "additionalNotes": ["Wielder learns the exact location of the closest lemon."]
+            "additionalNotes": [
+                "Wielder learns the exact location of the closest lemon."
+            ]
         },
         {
             "desc": "Cause Nausea",
             "cost": 1,
-            "additionalNotes": ["Target must save or waste their turn vomiting."]
+            "additionalNotes": [
+                "Target must save or waste their turn vomiting."
+            ]
         },
         {
             "desc": "Summon Acid Elemental",
             "cost": 6,
-            "additionalNotes": ["Dissipates after 1 hour."],
+            "additionalNotes": [
+                "Dissipates after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -179,7 +207,7 @@
             "desc": "Magic Parry",
             "cost": "equal to spell's level",
             "additionalNotes": [
-                "Deflect a harmful spell that was targeted at you specifically.", 
+                "Deflect a harmful spell that was targeted at you specifically.",
                 "You save. On a success the spell is nullified.",
                 "If you succeeded with the best possible roll, the spell is instead reflected back at the attacker."
             ]
@@ -187,7 +215,9 @@
         {
             "desc": "Instant Message",
             "cost": 1,
-            "additionalNotes": ["Point the weapon at someone in your line of sight, send them a telepathic message."]
+            "additionalNotes": [
+                "Point the weapon at someone in your line of sight, send them a telepathic message."
+            ]
         },
         {
             "desc": "Create Servant",
@@ -195,14 +225,15 @@
             "additionalNotes": [
                 "Create an small ichorous being that obeys you without question. It dissolves into sludge after 2d6 days."
             ]
-
         }
     ],
     "steampunk": [
         {
             "desc": "Summon Steam Elemental",
             "cost": 6,
-            "additionalNotes": ["Dissipates after 1 hour."],
+            "additionalNotes": [
+                "Dissipates after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -210,14 +241,18 @@
         {
             "desc": "Power Machine",
             "cost": 1,
-            "additionalNotes": ["Touching the weapon to a machine causes it to activate under magical power. It operates for 24 hours."]
+            "additionalNotes": [
+                "Touching the weapon to a machine causes it to activate under magical power. It operates for 24 hours."
+            ]
         }
     ],
     "cloud": [
         {
             "desc": "Summon Water Elemental",
             "cost": 6,
-            "additionalNotes": ["Dissipates after 1 hour."],
+            "additionalNotes": [
+                "Dissipates after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -242,7 +277,6 @@
             "cost": 4,
             "additionalNotes": [
                 "Summon a bolt of lightning to strike something in your line of sight.",
-                "You know, that guy with the lightning makes a good point."
             ]
         }
     ],
@@ -268,7 +302,9 @@
         {
             "desc": "Summon Earth Elemental",
             "cost": 6,
-            "additionalNotes": ["Crumbles after 1 hour."],
+            "additionalNotes": [
+                "Crumbles after 1 hour."
+            ],
             "rarity": {
                 "gte": "epic"
             }
@@ -282,7 +318,9 @@
         {
             "desc": "Instant Chomp-Flower",
             "cost": 2,
-            "additionalNotes": ["Stats as shark but can't move."]
+            "additionalNotes": [
+                "Stats as shark but can't move."
+            ]
         },
         {
             "desc": "Vine Hook",
