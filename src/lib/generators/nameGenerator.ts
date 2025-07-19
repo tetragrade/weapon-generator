@@ -1,3 +1,4 @@
+import "$lib/util/choice";
 import { mkGen, StringGenerator } from "./recursiveGenerator";
 
 const angloNamesByPartShortSuffixGenerator = new StringGenerator([
@@ -15,7 +16,7 @@ const angloNamesByPartShortSuffixGenerator = new StringGenerator([
     ].choice(rng))
 ]);
 const angloNamesByPartLongSuffixGenerator = new StringGenerator([
-    mkGen(rng => ["t","y","rr","nn","s","sh"].choice(rng)),
+    mkGen(rng => ["t", "y", "rr", "nn", "s", "sh"].choice(rng)),
     mkGen(rng => [
         "on",
         "in",
@@ -111,14 +112,14 @@ export const grecoRomanFirstNameGenerator = new StringGenerator([
         "Pe",
     ].choice(rng)),
     mkGen((rng) => [
-            "mer",
-            "v",
-            "t",
-            "c",
-            "m",
-            "n",
-            "l",
-            "s"
+        "mer",
+        "v",
+        "t",
+        "c",
+        "m",
+        "n",
+        "l",
+        "s"
     ].choice(rng)),
     mkGen((rng) => [
         "ius",

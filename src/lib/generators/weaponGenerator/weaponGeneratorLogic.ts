@@ -1,10 +1,11 @@
+import "$lib/util/choice";
+import '$lib/util/string';
 import seedrandom from "seedrandom";
-import '../../util/string.ts';
-import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator.ts";
-import { mkGen, StringGenerator, TGenerator } from "../recursiveGenerator.ts";
-import { ConditionalThingProvider, evComp, evQuant, ProviderElement, WithUUID } from "./provider.ts";
-import { defaultWeaponRarityConfigFactory, POSSIBLE_ACTIVE_POWERS, POSSIBLE_OBJECT_ADJECTIVES, POSSIBLE_PASSIVE_POWERS, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_SHAPES, WEAPON_TO_HIT } from "./weaponGeneratorConfigLoader.ts";
-import { ActivePower, DamageDice, isRarity, PassiveBonus, PassivePower, Personality, RechargeMethod, Theme, themes, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponRarityConfig, WeaponShape } from "./weaponGeneratorTypes.ts";
+import { angloFirstNameGenerator, grecoRomanFirstNameGenerator } from "../nameGenerator";
+import { mkGen, StringGenerator, TGenerator } from "../recursiveGenerator";
+import { ConditionalThingProvider, evComp, evQuant, ProviderElement, WithUUID } from "./provider";
+import { defaultWeaponRarityConfigFactory, POSSIBLE_ACTIVE_POWERS, POSSIBLE_OBJECT_ADJECTIVES, POSSIBLE_PASSIVE_POWERS, POSSIBLE_PERSONALITIES, POSSIBLE_RECHARGE_METHODS, POSSIBLE_SHAPES, WEAPON_TO_HIT } from "./weaponGeneratorConfigLoader";
+import { ActivePower, DamageDice, isRarity, PassiveBonus, PassivePower, Personality, RechargeMethod, Theme, themes, Weapon, WeaponPowerCond, WeaponPowerCondParams, WeaponRarity, WeaponRarityConfig, WeaponShape } from "./weaponGeneratorTypes";
 
 export class WeaponFeatureProvider<T extends object> extends ConditionalThingProvider<T, WeaponPowerCond, WeaponPowerCondParams> {
     constructor(source: WithUUID<ProviderElement<T, WeaponPowerCond>>[]) {

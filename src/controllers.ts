@@ -1,8 +1,8 @@
-import mkDemand from "./generators/demandGenerator";
-import { defaultWeaponRarityConfigFactory } from "./generators/weaponGenerator/weaponGeneratorConfigLoader";
-import { mkWeapon } from "./generators/weaponGenerator/weaponGeneratorLogic";
-import { Weapon, weaponRarities, WeaponRarityConfig } from "./generators/weaponGenerator/weaponGeneratorTypes";
-import { Nullable } from "./util/nullable";
+import mkDemand from "./lib/generators/demandGenerator";
+import { defaultWeaponRarityConfigFactory } from "./lib/generators/weaponGenerator/weaponGeneratorConfigLoader";
+import { mkWeapon } from "./lib/generators/weaponGenerator/weaponGeneratorLogic";
+import { Weapon, weaponRarities, WeaponRarityConfig } from "./lib/generators/weaponGenerator/weaponGeneratorTypes";
+import { Nullable } from "./lib/util/nullable";
 
 
 interface WeaponView {

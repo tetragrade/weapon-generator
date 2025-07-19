@@ -1,5 +1,5 @@
 import { WeaponGeneratorController } from './controllers.ts';
-import './util/choice.ts';
+import './lib/util/choice.js';
 
 // load the seed if one exists
 new WeaponGeneratorController("main-generator");
