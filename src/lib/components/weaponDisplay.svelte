@@ -66,50 +66,56 @@
                     {toHitString}
                 </p>
             </div>
-            <div>
-                <h2>Active Powers</h2>
-                <div class="weapon-generator-row-flex">
-                    <p>
-                        {textForCharges(weapon.active.maxCharges)}. Regains
-                        {#if weapon.sentient}
-                            charges when its demands are fulfilled, and
-                        {/if}
-                        {weapon.active.rechargeMethod.desc}.
-                    </p>
-                </div>
-                <div class="weapon-active-powers-root">
-                    {#each weapon.active.powers as power}
-                        <div class="weapon-generator-list-item">
-                            <p>
-                                {`${(power.desc as string).capFirst()} (${textForCharges(power.cost)}).`}
-                            </p>
-                            {#if power.additionalNotes}
-                                <div>
-                                    {#each power.additionalNotes as additionalNote}
-                                        <div class="weapon-generator-list-item">
-                                            <p>
-                                                {additionalNote}
-                                            </p>
-                                        </div>
-                                    {/each}
-                                </div>
+            {#if weapon.active.powers.length !== 0}
+                <div>
+                    <h2>Active Powers</h2>
+                    <div class="weapon-generator-row-flex">
+                        <p>
+                            {textForCharges(weapon.active.maxCharges)}. Regains
+                            {#if weapon.sentient}
+                                charges when its demands are fulfilled, and
                             {/if}
-                        </div>
-                    {/each}
+                            {weapon.active.rechargeMethod.desc}.
+                        </p>
+                    </div>
+                    <div class="weapon-active-powers-root">
+                        {#each weapon.active.powers as power}
+                            <div class="weapon-generator-list-item">
+                                <p>
+                                    {`${(power.desc as string).capFirst()} (${textForCharges(power.cost)}).`}
+                                </p>
+                                {#if power.additionalNotes}
+                                    <div>
+                                        {#each power.additionalNotes as additionalNote}
+                                            <div
+                                                class="weapon-generator-list-item"
+                                            >
+                                                <p>
+                                                    {additionalNote}
+                                                </p>
+                                            </div>
+                                        {/each}
+                                    </div>
+                                {/if}
+                            </div>
+                        {/each}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <h2>Passive Powers</h2>
-                <div class="weapon-passive-powers-root">
-                    {#each weapon.passivePowers as power}
-                        <div class="weapon-generator-list-item">
-                            <p>
-                                {power.desc}
-                            </p>
-                        </div>
-                    {/each}
+            {/if}
+            {#if weapon.passivePowers.length !== 0}
+                <div>
+                    <h2>Passive Powers</h2>
+                    <div class="weapon-passive-powers-root">
+                        {#each weapon.passivePowers as power}
+                            <div class="weapon-generator-list-item">
+                                <p>
+                                    {power.desc}
+                                </p>
+                            </div>
+                        {/each}
+                    </div>
                 </div>
-            </div>
+            {/if}
         </div>
         {#if weapon.sentient !== false}
             <div class="weapon-display-sentient-info">
