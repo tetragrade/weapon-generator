@@ -4,5 +4,5 @@ module.exports = {
     '^.+\\.(ts|tsx)?$': 'ts-jest',
     '^.+\\.(js|jsx)$': 'babel-jest',
   },
-  moduleNameMapper: { '^\\$lib(.*)$': '<rootDir>/src/lib$1' }
+  moduleNameMapper: { '^\\$lib(.*)$': '<rootDir>/src/lib$' }
 };

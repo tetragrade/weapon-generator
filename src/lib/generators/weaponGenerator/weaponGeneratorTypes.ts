@@ -1,14 +1,14 @@
 import seedrandom from "seedrandom";
-import { Comp, Cond, Quant } from "./provider";
-import shapes from './config/shapes.json'
-import { TGenerator } from "../recursiveGenerator";
+import type { TGenerator } from "../recursiveGenerator";
+import shapes from './config/shapes.json';
+import type { Comp, Cond, Quant } from "./provider";
 
 export const themes = [
     "fire", "ice",
     "cloud",
     "dark", "light",
     "sweet", "sour",
-    "wizard", 
+    "wizard",
     "steampunk", "nature"
     // "poison",
     // "earth", "cloud",
@@ -25,7 +25,6 @@ export const weaponRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'
 const weaponRaritiesSet = new Set(weaponRarities);
 export type WeaponRarity = (typeof weaponRarities)[number];
 export const isRarity = (x: unknown): x is WeaponRarity => weaponRaritiesSet.has(x as WeaponRarity);
-
 
 export type WeaponRarityConfig = {
     common: {
@@ -49,13 +48,13 @@ export interface WeaponGenerationParams {
 }
 
 
-export type Weapon = {
+export interface Weapon {
     /**
      * The RNG seed that produces this weapon.
      */
     id: string;
 
-    
+
     rarity: WeaponRarity;
     name: string;
     description: string;
@@ -78,19 +77,19 @@ export type Weapon = {
          */
         chanceOfMakingDemands: number;
     }
-    
+
     themes: Theme[],
     params: WeaponGenerationParams
 }
 
-export type WeaponViewModel = {
+export interface WeaponViewModel {
     /**
      * The RNG seed that produces this weapon.
      */
     id: string;
 
     themes: Theme[],
-    
+
     rarity: WeaponRarity;
     name: string;
     description: string;

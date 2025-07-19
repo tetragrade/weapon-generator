@@ -6,11 +6,31 @@
 	<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	%sveltekit.head%
+
+	<style>
+		:global(*) {
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			min-height: 100vh;
+		}
+
+		#sveltekit-body {
+			flex-grow: 1;
+
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			margin-bottom: 10pt;
+		}
+	</style>
 </head>
 
 <body data-sveltekit-preload-data="hover">
-	<div>%sveltekit.body%</div>
-	<p>sdkljadjsajldks</p>
+	<div id="sveltekit-body">%sveltekit.body%</div>
 </body>
 
 </html>
